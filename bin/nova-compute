@@ -20,7 +20,7 @@
 """Starter script for Nova Compute."""
 
 import eventlet
-eventlet.monkey_patch()
+eventlet.monkey_patch(os=None)
 
 import os
 import sys
