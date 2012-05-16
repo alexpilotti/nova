@@ -297,11 +297,11 @@ class HyperVConnection(driver.ComputeDriver):
         #Find the default nic and clone it to create a new nic for the vm.
         #Use Msvm_SyntheticEthernetPortSettingData for Windows or Linux with
         #Linux Integration Components installed.
-        emulatednics_data = self._conn.Msvm_EmulatedEthernetPortSettingData()
+        emulatednics_data = self._conn.Msvm_SyntheticEthernetPortSettingData()
         default_nic_data = [n for n in emulatednics_data
                             if n.InstanceID.rfind('Default') > 0]
         new_nic_data = self._clone_wmi_obj(
-                'Msvm_EmulatedEthernetPortSettingData',
+                'Msvm_SyntheticEthernetPortSettingData',
                 default_nic_data[0])
         #Create a port on the vswitch.
         (new_port, ret_val) = switch_svc.CreateSwitchPort(vm_name, vm_name,
@@ -318,6 +318,7 @@ class HyperVConnection(driver.ComputeDriver):
         new_nic_data.ElementName = vm_name + ' nic'
         new_nic_data.Address = mac
         new_nic_data.StaticMacAddress = 'True'
+        new_nic_data.VirtualSystemIdentifiers = ['{' + str(uuid.uuid4()) + '}']
         #Add the new nic to the vm.
         new_resources = self._add_virt_resource(new_nic_data, vm)
         if new_resources is None:
