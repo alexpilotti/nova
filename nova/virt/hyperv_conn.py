@@ -341,8 +341,13 @@ class HyperVConnection(driver.ComputeDriver):
         #Find the default nic and clone it to create a new nic for the vm.
         #Use Msvm_SyntheticEthernetPortSettingData for Windows or Linux with
         #Linux Integration Components installed.
+<<<<<<< HEAD
         syntheticnics_data = self._conn.Msvm_SyntheticEthernetPortSettingData()
         default_nic_data = [n for n in syntheticnics_data
+=======
+        emulatednics_data = self._conn.Msvm_SyntheticEthernetPortSettingData()
+        default_nic_data = [n for n in emulatednics_data
+>>>>>>> Added synthetic ethernet port compatibility
                             if n.InstanceID.rfind('Default') > 0]
         new_nic_data = self._clone_wmi_obj(
                 'Msvm_SyntheticEthernetPortSettingData',
@@ -792,7 +797,6 @@ class HyperVConnection(driver.ComputeDriver):
     def _fetch_image(target, context, image_id, user, project, *args, **kwargs):
         """Grab image and optionally attempt to resize it"""
         images.fetch(context, image_id, target, user, project)
-        
         
     def snapshot(self, context, instance, name):
         """Create snapshot from a running VM instance."""
