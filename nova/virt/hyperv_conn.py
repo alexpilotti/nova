@@ -76,6 +76,7 @@ from nova import db
 from nova.openstack.common import cfg
 from nova.image import glance
 from xml.etree import ElementTree
+from nova.virt.hyperv import volumeops
 
 wmi = None
 
@@ -126,10 +127,12 @@ class HyperVConnection(driver.ComputeDriver):
         super(HyperVConnection, self).__init__()
         self._conn = wmi.WMI(moniker='//./root/virtualization')
         self._cim_conn = wmi.WMI(moniker='//./root/cimv2')
+        self._wmi_conn = wmi.WMI(moniker='//./root/wmi')
+        self._volumeops = volumeops.VolumeOps(wmi)
 
     def init_host(self, host):
         #FIXME(chiradeep): implement this
-         pass
+        self._host = host
 
     def list_instances(self):
         """ Return the names of all the instances known to Hyper-V. """
@@ -178,9 +181,11 @@ class HyperVConnection(driver.ComputeDriver):
         
         try:
             self._create_vm(instance)
-
+          
             self._create_disk(instance['name'], vhdfile)
-            
+                     
+            self._create_scsi_controller(instance['name'])
+          
             for (network, mapping) in network_info:
                 mac_address = mapping['mac'].replace(':', '')
                 
@@ -237,7 +242,26 @@ class HyperVConnection(driver.ComputeDriver):
         (job, ret_val) = vs_man_svc.ModifyVirtualSystemResources(
                 vm.path_(), [procsetting.GetText_(1)])
         LOG.debug(_('Set vcpus for vm %s...'), instance.name)
-
+        
+    def _create_scsi_controller (self,vm_name):
+        """ Create an iscsi controller ready to mount volumes """
+        LOG.debug(_('Creating a scsi controller for %(vm_name)s for volume '\
+                'attaching') % locals())
+        vms = self._conn.MSVM_ComputerSystem(ElementName=vm_name)
+        vm = vms[0]
+        scsicontrldefault = self._conn.query(
+                "SELECT * FROM Msvm_ResourceAllocationSettingData \
+                WHERE ResourceSubType = 'Microsoft Synthetic SCSI Controller'\
+                AND InstanceID LIKE '%Default%'")[0]
+        if scsicontrldefault is None:
+            raise Exception(_('Controller not found'))
+        scsicontrl = self._clone_wmi_obj(
+                'Msvm_ResourceAllocationSettingData', scsicontrldefault)
+        scsicontrl.VirtualSystemIdentifiers = ['{' + str(uuid.uuid4()) + '}']
+        scsiresource = self._add_virt_resource(scsicontrl, vm)
+        if scsiresource is None:
+            raise Exception(_('Failed to add scsi controller to VM %s'),vm_name)      
+        
     def _create_disk(self, vm_name, vhdfile):
         """Create a disk and attach it to the vm"""
         LOG.debug(_('Creating disk for %(vm_name)s by attaching'
@@ -344,7 +368,7 @@ class HyperVConnection(driver.ComputeDriver):
             return new_resources
         else:
             return None
-
+   
     #TODO: use the reactor to poll instead of sleep
     def _check_job_status(self, jobpath):
     	"""Poll WMI job state for completion"""
@@ -435,6 +459,15 @@ class HyperVConnection(driver.ComputeDriver):
         disks = [r for r in rasds \
                     if r.ResourceSubType == 'Microsoft Virtual Hard Disk']
         diskfiles = []
+        volumes = [r for r in rasds \
+                    if r.ResourceSubType == 'Microsoft Physical Disk Drive']
+        volumes_drives_list = []
+        #collect the volumes information before destroying the VM.
+        for volume in volumes:
+            hostResources = volume.HostResource
+            drive_path = hostResources[0]
+            #Appending the Msvm_Disk path
+            volumes_drives_list.append(drive_path)
         #Collect disk file information before destroying the VM.
         for disk in disks:
             diskfiles.extend([c for c in disk.Connection])
@@ -446,6 +479,9 @@ class HyperVConnection(driver.ComputeDriver):
             success = True
         if not success:
             raise Exception(_('Failed to destroy vm %s') % instance.name)
+        #Disconnect volumes
+        for volume_drive in volumes_drives_list:
+            self._volumeops.disconnect_volume(volume_drive)
         #Delete associated vhd disk files.
         for disk in diskfiles:
             vhdfile = self._cim_conn.CIM_DataFile(Name=disk)
@@ -520,17 +556,22 @@ class HyperVConnection(driver.ComputeDriver):
                     " to %(req_state)s") % locals()
             LOG.error(msg)
             raise Exception(msg)
-
-    def attach_volume(self, instance_name, device_path, mountpoint):
-        vm = self._lookup(instance_name)
-        if vm is None:
-            raise exception.InstanceNotFound(instance_id=instance_name)
-
-    def detach_volume(self, instance_name, mountpoint):
-        vm = self._lookup(instance_name)
-        if vm is None:
-            raise exception.InstanceNotFound(instance_id=instance_name)
-
+        
+    def attach_volume(self, connection_info, instance_name, mountpoint):
+        """Attach volume storage to VM instance"""
+        return self._volumeops.attach_volume(connection_info,
+                                             instance_name,
+                                             mountpoint)
+        
+    def detach_volume(self, connection_info, instance_name, mountpoint):
+        """Detach volume storage to VM instance"""
+        return self._volumeops.detach_volume(connection_info,
+                                             instance_name,
+                                             mountpoint)
+    
+    def get_volume_connector(self, instance):
+        return self._volumeops.get_volume_connector(instance)
+    
     def poll_rescued_instances(self, timeout):
         pass
 
