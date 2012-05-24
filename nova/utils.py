@@ -184,7 +184,12 @@ def execute(*cmd, **kwargs):
     :param run_as_root:        True | False. Defaults to False. If set to True,
                                the command is prefixed by the command specified
                                in the root_helper FLAG.
-
+    :param close_fds:          True | False. Defaults to True. If set to True, 
+                               all file descriptors excep 0,1,2 will
+                               be closed before the child process (Unix). For 
+                               Windows execution must be set to False
+                            
+    
     :raises exception.Error: on receiving unknown arguments
     :raises exception.ProcessExecutionError:
 
@@ -204,6 +209,7 @@ def execute(*cmd, **kwargs):
     attempts = kwargs.pop('attempts', 1)
     run_as_root = kwargs.pop('run_as_root', False)
     shell = kwargs.pop('shell', False)
+    close_fds = kwargs.pop('close_fds', True)
 
     if len(kwargs):
         raise exception.Error(_('Got unknown keyword args '
@@ -222,7 +228,7 @@ def execute(*cmd, **kwargs):
                                    stdin=_PIPE,
                                    stdout=_PIPE,
                                    stderr=_PIPE,
-                                   close_fds=True,
+                                   close_fds=close_fds,
                                    shell=shell)
             result = None
             if process_input is not None:
