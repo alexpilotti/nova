@@ -84,6 +84,7 @@ from nova.virt.hyperv import volumeops
 >>>>>>> Hyper-V snapshot support
 from nova.image import glance
 from xml.etree import ElementTree
+from nova.virt.hyperv import volumeops
 
 wmi = None
 
@@ -193,6 +194,7 @@ class HyperVConnection(driver.ComputeDriver):
         
         try:
             self._create_vm(instance)
+<<<<<<< HEAD
 
             if not ebs_root :
                 self._create_disk(instance['name'], vhdfile)
@@ -201,6 +203,11 @@ class HyperVConnection(driver.ComputeDriver):
                                              instance.name)
             
             #A SCSI controller for volumes connection is created 
+=======
+          
+            self._create_disk(instance['name'], vhdfile)
+                     
+>>>>>>> Adding preliminary version of attach and dettach volumes
             self._create_scsi_controller(instance['name'])
           
             for (network, mapping) in network_info:
@@ -596,6 +603,7 @@ class HyperVConnection(driver.ComputeDriver):
     
     def poll_rescued_instances(self, timeout):
         pass
+<<<<<<< HEAD
 
     def get_vcpu_total():
         """Get vcpu number of physical computer.
@@ -691,6 +699,8 @@ class HyperVConnection(driver.ComputeDriver):
     
         platform_ver = platform.uname()[2]
         return platform_ver
+=======
+>>>>>>> Adding preliminary version of attach and dettach volumes
 
     def update_available_resource(self, context, host):
         """Updates compute manager resource info on ComputeNode table.
