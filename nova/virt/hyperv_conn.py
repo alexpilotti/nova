@@ -93,6 +93,7 @@ HYPERV_POWER_STATE = {
     3: power_state.SHUTDOWN,
     2: power_state.RUNNING,
     32768: power_state.PAUSED,
+    32769: power_state.SUSPENDED    
 }
 
 
@@ -407,7 +408,7 @@ class HyperVConnection(driver.ComputeDriver):
                     wmi_obj.Properties_.Item(prop).Value
         return newinst
 
-    def reboot(self, instance, network_info):
+    def reboot(self, instance, network_info, reboot_type):
         """Reboot the specified instance."""
         vm = self._lookup(instance.name)
         if vm is None:
@@ -451,12 +452,12 @@ class HyperVConnection(driver.ComputeDriver):
                 LOG.debug(_("Del: disk %(vhdfile)s vm %(instance_name)s")
                         % locals())
 
-    def get_info(self, instance_id):
+    def get_info(self, instance):
         """Get information about the VM"""
-        vm = self._lookup(instance_id)
+        vm = self._lookup(instance.name)
         if vm is None:
-            raise exception.InstanceNotFound(instance_id=instance_id)
-        vm = self._conn.Msvm_ComputerSystem(ElementName=instance_id)[0]
+            raise exception.InstanceNotFound(instance=instance.name)
+        vm = self._conn.Msvm_ComputerSystem(ElementName=instance.name)[0]
         vs_man_svc = self._conn.Msvm_VirtualSystemManagementService()[0]
         vmsettings = vm.associators(
                        wmi_result_class='Msvm_VirtualSystemSettingData')
@@ -465,16 +466,17 @@ class HyperVConnection(driver.ComputeDriver):
         summary_info = vs_man_svc.GetSummaryInformation(
                                        [4, 100, 103, 105], settings_paths)[1]
         info = summary_info[0]
+               
         state = str(HYPERV_POWER_STATE[info.EnabledState])
         memusage = str(info.MemoryUsage)
         numprocs = str(info.NumberOfProcessors)
         uptime = str(info.UpTime)
 
-        LOG.debug(_("Got Info for vm %(instance_id)s: state=%(state)s,"
-                " mem=%(memusage)s, num_cpu=%(numprocs)s,"
-                " cpu_time=%(uptime)s") % locals())
+        LOG.debug(_("Got Info for vm %s: state=%s,"
+                " mem=%s, num_cpu=%s,"
+                " cpu_time=%s"), instance.name, state, memusage, numprocs, uptime)
 
-        return {'state': HYPERV_POWER_STATE[info.EnabledState],
+        return {'state': state,
                 'max_mem': info.MemoryUsage,
                 'mem': info.MemoryUsage,
                 'num_cpu': info.NumberOfProcessors,
@@ -631,3 +633,28 @@ class HyperVConnection(driver.ComputeDriver):
     def _fetch_image(target, context, image_id, user, project, *args, **kwargs):
         """Grab image and optionally attempt to resize it"""
         images.fetch(context, image_id, target, user, project)
+        
+        
+    def snapshot(self, context, instance, name):
+        """Create snapshot from a running VM instance."""
+        LOG.debug("Snapshot: context=%s, instance=%s, name=%s", context, instance, name)
+        
+    def pause(self, instance):
+        """Pause VM instance."""
+        LOG.debug("Pause instance=%s", instance)
+        self._set_vm_state(instance.name, 'Paused')
+
+    def unpause(self, instance):
+        """Unpause paused VM instance."""
+        LOG.debug("Unpause instance=%s", instance)
+        self._set_vm_state(instance.name, 'Enabled')
+ 
+    def suspend(self, instance):
+        """Suspend the specified instance."""
+        LOG.debug("Suspend instance=%s", instance)
+        self._set_vm_state(instance.name, 'Suspended')        
+
+    def resume(self, instance):
+        """Resume the suspended VM instance."""
+        LOG.debug("Resume instance=%s", instance)        
+        self._set_vm_state(instance.name, 'Enabled')        
