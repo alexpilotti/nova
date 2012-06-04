@@ -195,6 +195,9 @@ class HyperVConnection(driver.ComputeDriver):
         try:
             self._create_vm(instance)
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Adding boot from volume functionality.
 
             if not ebs_root :
                 self._create_disk(instance['name'], vhdfile)
@@ -203,11 +206,14 @@ class HyperVConnection(driver.ComputeDriver):
                                              instance.name)
             
             #A SCSI controller for volumes connection is created 
+<<<<<<< HEAD
 =======
           
             self._create_disk(instance['name'], vhdfile)
                      
 >>>>>>> Adding preliminary version of attach and dettach volumes
+=======
+>>>>>>> Adding boot from volume functionality.
             self._create_scsi_controller(instance['name'])
           
             for (network, mapping) in network_info:
@@ -349,12 +355,17 @@ class HyperVConnection(driver.ComputeDriver):
         #Use Msvm_SyntheticEthernetPortSettingData for Windows or Linux with
         #Linux Integration Components installed.
 <<<<<<< HEAD
+<<<<<<< HEAD
         syntheticnics_data = self._conn.Msvm_SyntheticEthernetPortSettingData()
         default_nic_data = [n for n in syntheticnics_data
 =======
         emulatednics_data = self._conn.Msvm_SyntheticEthernetPortSettingData()
         default_nic_data = [n for n in emulatednics_data
 >>>>>>> Added synthetic ethernet port compatibility
+=======
+        syntheticnics_data = self._conn.Msvm_SyntheticEthernetPortSettingData()
+        default_nic_data = [n for n in syntheticnics_data
+>>>>>>> Adding boot from volume functionality.
                             if n.InstanceID.rfind('Default') > 0]
         new_nic_data = self._clone_wmi_obj(
                 'Msvm_SyntheticEthernetPortSettingData',
