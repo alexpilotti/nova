@@ -156,31 +156,41 @@ class HyperVConnection(driver.ComputeDriver):
         vm = self._lookup(instance.name)
         if vm is not None:
             raise exception.InstanceExists(name=instance.name)
-
-        #Fetch the file, assume it is a VHD file.
-        base_vhd_folder = os.path.join(FLAGS.instances_path, instance.name)
-        if not os.path.exists(base_vhd_folder):
-                LOG.debug(_('Creating folder %s '), base_vhd_folder)
-                os.mkdir(base_vhd_folder)
-        vhdfile = os.path.join(base_vhd_folder, instance.name + ".vhd")
-        try:
-            self._cache_image(self, fn=self._fetch_image,
-              context=context,
-              target=vhdfile,
-              fname=instance['image_ref'],
-              image_id=instance['image_ref'],
-              user=instance['user_id'],
-              project=instance['project_id'],
-              cow=FLAGS.use_cow_images)
-        except Exception as exn:
-            LOG.exception(_('cache image failed: %s'), exn)
-            self.destroy(instance)
+        
+        ebs_root = self._volumeops._volume_in_mapping(self._volumeops.get_default_root_device(),
+                               block_device_info)
+        
+        #If is not a boot from volume spawn 
+        if not (ebs_root):
+            #Fetch the file, assume it is a VHD file.
+            base_vhd_folder = os.path.join(FLAGS.instances_path, instance.name)
+            if not os.path.exists(base_vhd_folder):
+                    LOG.debug(_('Creating folder %s '), base_vhd_folder)
+                    os.mkdir(base_vhd_folder)
+            vhdfile = os.path.join(base_vhd_folder, instance.name + ".vhd")
+            try:
+                self._cache_image(self, fn=self._fetch_image,
+                  context=context,
+                  target=vhdfile,
+                  fname=instance['image_ref'],
+                  image_id=instance['image_ref'],
+                  user=instance['user_id'],
+                  project=instance['project_id'],
+                  cow=FLAGS.use_cow_images)
+            except Exception as exn:
+                LOG.exception(_('cache image failed: %s'), exn)
+                self.destroy(instance)
         
         try:
             self._create_vm(instance)
-          
-            self._create_disk(instance['name'], vhdfile)
-                     
+
+            if not ebs_root :
+                self._create_disk(instance['name'], vhdfile)
+            else:
+                self._volumeops.attach_boot_volume(block_device_info,
+                                             instance.name)
+            
+            #A SCSI controller for volumes connection is created 
             self._create_scsi_controller(instance['name'])
           
             for (network, mapping) in network_info:
@@ -311,7 +321,7 @@ class HyperVConnection(driver.ComputeDriver):
         LOG.info(_('Created disk for %s'), vm_name)
 
     def _create_nic(self, vm_name, mac):
-        """Create a (emulated) nic and attach it to the vm"""
+        """Create a (synthetic) nic and attach it to the vm"""
         LOG.debug(_('Creating nic for %s '), vm_name)
         #Find the vswitch that is connected to the physical nic.
         vms = self._conn.Msvm_ComputerSystem(ElementName=vm_name)
@@ -321,8 +331,8 @@ class HyperVConnection(driver.ComputeDriver):
         #Find the default nic and clone it to create a new nic for the vm.
         #Use Msvm_SyntheticEthernetPortSettingData for Windows or Linux with
         #Linux Integration Components installed.
-        emulatednics_data = self._conn.Msvm_SyntheticEthernetPortSettingData()
-        default_nic_data = [n for n in emulatednics_data
+        syntheticnics_data = self._conn.Msvm_SyntheticEthernetPortSettingData()
+        default_nic_data = [n for n in syntheticnics_data
                             if n.InstanceID.rfind('Default') > 0]
         new_nic_data = self._clone_wmi_obj(
                 'Msvm_SyntheticEthernetPortSettingData',
