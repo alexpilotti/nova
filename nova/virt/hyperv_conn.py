@@ -73,6 +73,7 @@ from nova.virt import images
 from nova import utils
 from nova import db
 from nova.openstack.common import cfg
+from nova.virt.hyperv import volumeops
 
 wmi = None
 
@@ -124,10 +125,12 @@ class HyperVConnection(driver.ComputeDriver):
         super(HyperVConnection, self).__init__()
         self._conn = wmi.WMI(moniker='//./root/virtualization')
         self._cim_conn = wmi.WMI(moniker='//./root/cimv2')
+        self._wmi_conn = wmi.WMI(moniker='//./root/wmi')
+        self._volumeops = volumeops.VolumeOps(wmi)
 
     def init_host(self, host):
         #FIXME(chiradeep): implement this
-         pass
+        self._host = host
 
     def list_instances(self):
         """ Return the names of all the instances known to Hyper-V. """
@@ -154,31 +157,43 @@ class HyperVConnection(driver.ComputeDriver):
         vm = self._lookup(instance.name)
         if vm is not None:
             raise exception.InstanceExists(name=instance.name)
-
-        #Fetch the file, assume it is a VHD file.
-        base_vhd_folder = os.path.join(FLAGS.instances_path, instance.name)
-        if not os.path.exists(base_vhd_folder):
-                LOG.debug(_('Creating folder %s '), base_vhd_folder)
-                os.mkdir(base_vhd_folder)
-        vhdfile = os.path.join(base_vhd_folder, instance.name + ".vhd")
-        try:
-            self._cache_image(self, fn=self._fetch_image,
-              context=context,
-              target=vhdfile,
-              fname=instance['image_ref'],
-              image_id=instance['image_ref'],
-              user=instance['user_id'],
-              project=instance['project_id'],
-              cow=FLAGS.use_cow_images)
-        except Exception as exn:
-            LOG.exception(_('cache image failed: %s'), exn)
-            self.destroy(instance)
+        
+        ebs_root = self._volumeops._volume_in_mapping(self._volumeops.get_default_root_device(),
+                               block_device_info)
+        
+        #If is not a boot from volume spawn 
+        if not (ebs_root):
+            #Fetch the file, assume it is a VHD file.
+            base_vhd_folder = os.path.join(FLAGS.instances_path, instance.name)
+            if not os.path.exists(base_vhd_folder):
+                    LOG.debug(_('Creating folder %s '), base_vhd_folder)
+                    os.mkdir(base_vhd_folder)
+            vhdfile = os.path.join(base_vhd_folder, instance.name + ".vhd")
+            try:
+                self._cache_image(self, fn=self._fetch_image,
+                  context=context,
+                  target=vhdfile,
+                  fname=instance['image_ref'],
+                  image_id=instance['image_ref'],
+                  user=instance['user_id'],
+                  project=instance['project_id'],
+                  cow=FLAGS.use_cow_images)
+            except Exception as exn:
+                LOG.exception(_('cache image failed: %s'), exn)
+                self.destroy(instance)
         
         try:
             self._create_vm(instance)
 
-            self._create_disk(instance['name'], vhdfile)
+            if not ebs_root :
+                self._create_disk(instance['name'], vhdfile)
+            else:
+                self._volumeops.attach_boot_volume(block_device_info,
+                                             instance.name)
             
+            #A SCSI controller for volumes connection is created 
+            self._create_scsi_controller(instance['name'])
+          
             for (network, mapping) in network_info:
                 mac_address = mapping['mac'].replace(':', '')
                 
@@ -235,7 +250,26 @@ class HyperVConnection(driver.ComputeDriver):
         (job, ret_val) = vs_man_svc.ModifyVirtualSystemResources(
                 vm.path_(), [procsetting.GetText_(1)])
         LOG.debug(_('Set vcpus for vm %s...'), instance.name)
-
+        
+    def _create_scsi_controller (self,vm_name):
+        """ Create an iscsi controller ready to mount volumes """
+        LOG.debug(_('Creating a scsi controller for %(vm_name)s for volume '\
+                'attaching') % locals())
+        vms = self._conn.MSVM_ComputerSystem(ElementName=vm_name)
+        vm = vms[0]
+        scsicontrldefault = self._conn.query(
+                "SELECT * FROM Msvm_ResourceAllocationSettingData \
+                WHERE ResourceSubType = 'Microsoft Synthetic SCSI Controller'\
+                AND InstanceID LIKE '%Default%'")[0]
+        if scsicontrldefault is None:
+            raise Exception(_('Controller not found'))
+        scsicontrl = self._clone_wmi_obj(
+                'Msvm_ResourceAllocationSettingData', scsicontrldefault)
+        scsicontrl.VirtualSystemIdentifiers = ['{' + str(uuid.uuid4()) + '}']
+        scsiresource = self._add_virt_resource(scsicontrl, vm)
+        if scsiresource is None:
+            raise Exception(_('Failed to add scsi controller to VM %s'),vm_name)      
+        
     def _create_disk(self, vm_name, vhdfile):
         """Create a disk and attach it to the vm"""
         LOG.debug(_('Creating disk for %(vm_name)s by attaching'
@@ -288,7 +322,7 @@ class HyperVConnection(driver.ComputeDriver):
         LOG.info(_('Created disk for %s'), vm_name)
 
     def _create_nic(self, vm_name, mac):
-        """Create a (emulated) nic and attach it to the vm"""
+        """Create a (synthetic) nic and attach it to the vm"""
         LOG.debug(_('Creating nic for %s '), vm_name)
         #Find the vswitch that is connected to the physical nic.
         vms = self._conn.Msvm_ComputerSystem(ElementName=vm_name)
@@ -298,11 +332,11 @@ class HyperVConnection(driver.ComputeDriver):
         #Find the default nic and clone it to create a new nic for the vm.
         #Use Msvm_SyntheticEthernetPortSettingData for Windows or Linux with
         #Linux Integration Components installed.
-        emulatednics_data = self._conn.Msvm_EmulatedEthernetPortSettingData()
-        default_nic_data = [n for n in emulatednics_data
+        syntheticnics_data = self._conn.Msvm_SyntheticEthernetPortSettingData()
+        default_nic_data = [n for n in syntheticnics_data
                             if n.InstanceID.rfind('Default') > 0]
         new_nic_data = self._clone_wmi_obj(
-                'Msvm_EmulatedEthernetPortSettingData',
+                'Msvm_SyntheticEthernetPortSettingData',
                 default_nic_data[0])
         #Create a port on the vswitch.
         (new_port, ret_val) = switch_svc.CreateSwitchPort(vm_name, vm_name,
@@ -319,6 +353,7 @@ class HyperVConnection(driver.ComputeDriver):
         new_nic_data.ElementName = vm_name + ' nic'
         new_nic_data.Address = mac
         new_nic_data.StaticMacAddress = 'True'
+        new_nic_data.VirtualSystemIdentifiers = ['{' + str(uuid.uuid4()) + '}']
         #Add the new nic to the vm.
         new_resources = self._add_virt_resource(new_nic_data, vm)
         if new_resources is None:
@@ -341,7 +376,7 @@ class HyperVConnection(driver.ComputeDriver):
             return new_resources
         else:
             return None
-
+   
     #TODO: use the reactor to poll instead of sleep
     def _check_job_status(self, jobpath):
     	"""Poll WMI job state for completion"""
@@ -432,6 +467,15 @@ class HyperVConnection(driver.ComputeDriver):
         disks = [r for r in rasds \
                     if r.ResourceSubType == 'Microsoft Virtual Hard Disk']
         diskfiles = []
+        volumes = [r for r in rasds \
+                    if r.ResourceSubType == 'Microsoft Physical Disk Drive']
+        volumes_drives_list = []
+        #collect the volumes information before destroying the VM.
+        for volume in volumes:
+            hostResources = volume.HostResource
+            drive_path = hostResources[0]
+            #Appending the Msvm_Disk path
+            volumes_drives_list.append(drive_path)
         #Collect disk file information before destroying the VM.
         for disk in disks:
             diskfiles.extend([c for c in disk.Connection])
@@ -443,6 +487,9 @@ class HyperVConnection(driver.ComputeDriver):
             success = True
         if not success:
             raise Exception(_('Failed to destroy vm %s') % instance.name)
+        #Disconnect volumes
+        for volume_drive in volumes_drives_list:
+            self._volumeops.disconnect_volume(volume_drive)
         #Delete associated vhd disk files.
         for disk in diskfiles:
             vhdfile = self._cim_conn.CIM_DataFile(Name=disk)
@@ -515,17 +562,22 @@ class HyperVConnection(driver.ComputeDriver):
                     " to %(req_state)s") % locals()
             LOG.error(msg)
             raise Exception(msg)
-
-    def attach_volume(self, instance_name, device_path, mountpoint):
-        vm = self._lookup(instance_name)
-        if vm is None:
-            raise exception.InstanceNotFound(instance_id=instance_name)
-
-    def detach_volume(self, instance_name, mountpoint):
-        vm = self._lookup(instance_name)
-        if vm is None:
-            raise exception.InstanceNotFound(instance_id=instance_name)
-
+        
+    def attach_volume(self, connection_info, instance_name, mountpoint):
+        """Attach volume storage to VM instance"""
+        return self._volumeops.attach_volume(connection_info,
+                                             instance_name,
+                                             mountpoint)
+        
+    def detach_volume(self, connection_info, instance_name, mountpoint):
+        """Detach volume storage to VM instance"""
+        return self._volumeops.detach_volume(connection_info,
+                                             instance_name,
+                                             mountpoint)
+    
+    def get_volume_connector(self, instance):
+        return self._volumeops.get_volume_connector(instance)
+    
     def poll_rescued_instances(self, timeout):
         pass
 
