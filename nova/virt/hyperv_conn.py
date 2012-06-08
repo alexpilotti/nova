@@ -64,6 +64,7 @@ import os
 import time
 import uuid
 import shutil
+import platform
 
 from nova import exception
 from nova import flags
@@ -585,6 +586,104 @@ class HyperVConnection(driver.ComputeDriver):
     def poll_rescued_instances(self, timeout):
         pass
 
+    @staticmethod
+    def get_vcpu_total():
+        """Get vcpu number of physical computer.
+
+        :returns: the number of cpu core.
+
+        """
+
+        # On certain platforms, this will raise a NotImplementedError.
+        try:
+            return multiprocessing.cpu_count()
+        except NotImplementedError:
+            LOG.warn(_("Cannot get the number of cpu, because this "
+                       "function is not implemented for this platform. "
+                       "This error can be safely ignored for now."))
+            return 0
+
+    @staticmethod
+    def get_memory_mb_total():
+        """Get the total memory size(MB) of physical computer.
+
+        :returns: the total amount of memory(MB).
+
+        """
+	total_kb = self._cim_conn.query("SELECT TotalVisibleMemorySize FROM win32_operatingsystem")[0].TotalVisibleMemorySize
+	total_mb = long(total_kb) / 1024
+        return total_mb
+
+    @staticmethod
+    def get_local_gb_total():
+        """Get the total hdd size(GB) of physical computer.
+
+        :returns:
+            The total amount of HDD(GB).
+            Note that this value shows a partition where
+            NOVA-INST-DIR/instances mounts.
+
+        """
+	#TODO: This binds to C only right now, need to bind to instance dir
+	total_kb = self._cim_conn.query("SELECT Size FROM win32_logicaldisk")[0].Size
+        total_gb = long(total_kb / (1024 ** 3)
+        return total_gb
+
+    def get_vcpu_used(self):
+        """ Get vcpu usage number of physical computer.
+
+        :returns: The total number of vcpu that currently used.
+
+        """
+
+	#TODO figure out a way to count assigned VCPUs
+	total_vcpu = 0
+        return total_vcpu
+
+    def get_memory_mb_used(self):
+        """Get the free memory size(MB) of physical computer.
+
+        :returns: the total usage of memory(MB).
+
+        """
+
+        if sys.platform.upper() not in ['LINUX2', 'LINUX3']:
+            return 0
+
+	total_kb = self._cim_conn.query("SELECT FreePhysicalMemory FROM win32_operatingsystem")[0].FreePhysicalMemory
+	total_mb = long(total_kb) / 1024
+        
+        return  total_mb
+
+    def get_local_gb_used(self):
+        """Get the free hdd size(GB) of physical computer.
+
+        :returns:
+           The total usage of HDD(GB).
+           Note that this value shows a partition where
+           NOVA-INST-DIR/instances mounts.
+
+        """
+
+	#TODO: This binds to C only right now, need to bind to instance dir
+	total_kb = self._cim_conn.query("SELECT FreeSpace FROM win32_logicaldisk")[0].FreeSpace
+        total_gb = long(total_kb / (1024 ** 3)
+        return total_gb
+
+    def get_hypervisor_version(self):
+        """Get hypervisor version.
+
+        :returns: hypervisor version (ex. 12003)
+ 
+        """
+ 
+        # NOTE(justinsb): getVersion moved between libvirt versions
+        # Trying to do be compatible with older versions is a lost cause
+        # But ... we can at least give the user a nice message
+    
+        platform_ver = platform.uname()[2]
+    return platform_ver
+
     def update_available_resource(self, context, host):
         """Updates compute manager resource info on ComputeNode table.
 
@@ -602,17 +701,18 @@ class HyperVConnection(driver.ComputeDriver):
             raise exception.ComputeServiceUnavailable(host=host)
 
         # Updating host information
-        dic = {'vcpus': 128,
-               'memory_mb': 131072,
-               'local_gb': 1024,
-               'vcpus_used': 1,
-               'memory_mb_used': 1,
-               'local_gb_used': 1,
+        # TODO implemented cpu_info
+        dic = {'vcpus': self.get_vcpu_total(),
+               'memory_mb': self.get_memory_mb_total(),
+               'local_gb': self.get_local_gb_total(),
+               'vcpus_used': self.get_vcpu_used(),
+               'memory_mb_used': self.get_memory_mb_used(),
+               'local_gb_used': self.get_local_gb_used(),
                'hypervisor_type': "hyperv",
-               'hypervisor_version': 2008,
-               'cpu_info': "temp",
+               'hypervisor_version': self.get_hypervisor_version,
+               'cpu_info': "unknown",
                'service_id': service_ref['id'],
-               'disk_available_least': 1}
+               'disk_available_least': 1}        
 
         compute_node_ref = service_ref['compute_node']
         if not compute_node_ref:

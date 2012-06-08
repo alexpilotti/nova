@@ -20,7 +20,12 @@
 """Starter script for Nova Compute."""
 
 import eventlet
-eventlet.monkey_patch(os=None)
+if os.name == 'nt':
+    eventlet.monkey_patch(os=None)
+    import win32service
+    import win32serviceutil
+else:
+    eventlet.monkey_path()
 
 import os
 import sys
@@ -39,11 +44,53 @@ from nova import log as logging
 from nova import service
 from nova import utils
 
+class compute_win32_service(win32serviceutil.ServiceFramework):
+    _svc_name_ = "openstack-compute"
+    _svc_display_name_ = "OpenStack Compute Service"
+    _svc_description_ = "OpenStack Compute Service Node"
+
+    def __init__(self,args):
+        win32serviceutil.ServiceFramework.__init__(self,args)
+        # moved the addition of the default flags location and init
+        # of the flags to inside the class so the service wrapper
+        # doesnt conflict with the command line variables
+        utils.default_flagfile()
+        flags.FLAGS(sys.argv)
+        logging.setup()
+        self.isAlive = True
+    
+    def SvcDoRun(self):
+        import servicemanager
+
+        servicemanager.LogInfoMsg("OpenStack Compute: Starting")
+
+        server = service.Service.create(binary='nova-compute')
+    	service.serve(server)
+
+        while self.isAlive :
+            # instead of calling service.wait here we just sleep 
+            # giving us an active loop to exit out of on a stop command
+            time.sleep(5)
+    
+        servicemanager.LogInfoMsg("OpenStack Compute: Stopped")
+    
+    def SvcStop(self):
+        import servicemanager
+    
+        servicemanager.LogInfoMsg("OpenStack Compute: Recieved stop signal")
+        self.ReportServiceStatus(win32service.SERVICE_STOP_PENDING)
+        self.isAlive = False
+
+
 if __name__ == '__main__':
-    utils.default_flagfile()
-    flags.FLAGS(sys.argv)
-    logging.setup()
-    utils.monkey_patch()
-    server = service.Service.create(binary='nova-compute')
-    service.serve(server)
-    service.wait()
+    #Comment out to run as non-service/debug
+    if os.name == "nt":
+        win32serviceutil.HandleCommandLine(compute_win32_service)
+    else:
+        utils.default_flagfile()
+        flags.FLAGS(sys.argv)
+        logging.setup()
+        utils.monkey_patch()
+        server = service.Service.create(binary='nova-compute')
+        service.serve(server)
+        service.wait()
