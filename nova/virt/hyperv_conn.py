@@ -65,6 +65,7 @@ import time
 import uuid
 import shutil
 import platform
+import shutil
 
 from nova import exception
 from nova import flags
@@ -78,6 +79,8 @@ from nova.openstack.common import cfg
 from nova.image import glance
 from xml.etree import ElementTree
 from nova.virt.hyperv import volumeops
+from nova.image import glance
+from xml.etree import ElementTree
 
 wmi = None
 
