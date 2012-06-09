@@ -63,7 +63,10 @@ Using the Python WMI library:
 import os
 import time
 import uuid
+<<<<<<< HEAD
 import platform
+=======
+>>>>>>> Hyper-V snapshot support
 import shutil
 
 from nova import exception
@@ -75,7 +78,10 @@ from nova.virt import images
 from nova import utils
 from nova import db
 from nova.openstack.common import cfg
+<<<<<<< HEAD
 from nova.virt.hyperv import volumeops
+=======
+>>>>>>> Hyper-V snapshot support
 from nova.image import glance
 from xml.etree import ElementTree
 
