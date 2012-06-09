@@ -69,6 +69,7 @@ import platform
 >>>>>>> Hyper-V snapshot support
 import shutil
 import platform
+import shutil
 
 from nova import exception
 from nova import flags
@@ -86,6 +87,8 @@ from nova.virt.hyperv import volumeops
 from nova.image import glance
 from xml.etree import ElementTree
 from nova.virt.hyperv import volumeops
+from nova.image import glance
+from xml.etree import ElementTree
 
 wmi = None
 
