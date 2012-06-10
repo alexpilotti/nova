@@ -592,7 +592,6 @@ class HyperVConnection(driver.ComputeDriver):
     def poll_rescued_instances(self, timeout):
         pass
 
-    @staticmethod
     def get_vcpu_total():
         """Get vcpu number of physical computer.
 
@@ -609,7 +608,6 @@ class HyperVConnection(driver.ComputeDriver):
                        "This error can be safely ignored for now."))
             return 0
 
-    @staticmethod
     def get_memory_mb_total():
         """Get the total memory size(MB) of physical computer.
 
@@ -620,7 +618,6 @@ class HyperVConnection(driver.ComputeDriver):
 	total_mb = long(total_kb) / 1024
         return total_mb
 
-    @staticmethod
     def get_local_gb_total():
         """Get the total hdd size(GB) of physical computer.
 
