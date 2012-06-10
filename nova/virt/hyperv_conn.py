@@ -65,6 +65,8 @@ import time
 import uuid
 import platform
 import shutil
+import multiprocessing
+import sys
 
 from nova import exception
 from nova import flags
@@ -78,6 +80,7 @@ from nova.openstack.common import cfg
 from nova.virt.hyperv import volumeops
 from nova.image import glance
 from xml.etree import ElementTree
+
 
 wmi = None
 
@@ -586,7 +589,7 @@ class HyperVConnection(driver.ComputeDriver):
     def poll_rescued_instances(self, timeout):
         pass
 
-    def get_vcpu_total():
+    def get_vcpu_total(self):
         """Get vcpu number of physical computer.
 
         :returns: the number of cpu core.
@@ -602,7 +605,7 @@ class HyperVConnection(driver.ComputeDriver):
                        "This error can be safely ignored for now."))
             return 0
 
-    def get_memory_mb_total():
+    def get_memory_mb_total(self):
         """Get the total memory size(MB) of physical computer.
 
         :returns: the total amount of memory(MB).
@@ -612,7 +615,7 @@ class HyperVConnection(driver.ComputeDriver):
 	total_mb = long(total_kb) / 1024
         return total_mb
 
-    def get_local_gb_total():
+    def get_local_gb_total(self):
         """Get the total hdd size(GB) of physical computer.
 
         :returns:
