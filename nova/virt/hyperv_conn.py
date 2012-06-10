@@ -64,6 +64,9 @@ import os
 import time
 import uuid
 import platform
+import shutil
+import multiprocessing
+import sys
 
 from nova import exception
 from nova import flags
@@ -75,6 +78,9 @@ from nova import utils
 from nova import db
 from nova.openstack.common import cfg
 from nova.virt.hyperv import volumeops
+from nova.image import glance
+from xml.etree import ElementTree
+
 
 wmi = None
 
@@ -112,7 +118,6 @@ REQ_POWER_STATE = {
 WMI_JOB_STATUS_STARTED = 4096
 WMI_JOB_STATE_RUNNING = 4
 WMI_JOB_STATE_COMPLETED = 7
-
 
 def get_connection(read_only):
     global wmi
@@ -508,6 +513,7 @@ class HyperVConnection(driver.ComputeDriver):
         vm = self._conn.Msvm_ComputerSystem(ElementName=instance.name)[0]
         vs_man_svc = self._conn.Msvm_VirtualSystemManagementService()[0]
         vmsettings = vm.associators(
+                       wmi_association_class='Msvm_SettingsDefineState',
                        wmi_result_class='Msvm_VirtualSystemSettingData')
         settings_paths = [v.path_() for v in vmsettings]
         #See http://msdn.microsoft.com/en-us/library/cc160706%28VS.85%29.aspx
@@ -515,6 +521,7 @@ class HyperVConnection(driver.ComputeDriver):
                                        [4, 100, 103, 105], settings_paths)[1]
         info = summary_info[0]
                
+        LOG.debug(_("hyperv vm state: %s"), info.EnabledState)       
         state = str(HYPERV_POWER_STATE[info.EnabledState])
         memusage = str(info.MemoryUsage)
         numprocs = str(info.NumberOfProcessors)
@@ -582,7 +589,7 @@ class HyperVConnection(driver.ComputeDriver):
     def poll_rescued_instances(self, timeout):
         pass
 
-    def get_vcpu_total():
+    def get_vcpu_total(self):
         """Get vcpu number of physical computer.
 
         :returns: the number of cpu core.
@@ -598,7 +605,7 @@ class HyperVConnection(driver.ComputeDriver):
                        "This error can be safely ignored for now."))
             return 0
 
-    def get_memory_mb_total():
+    def get_memory_mb_total(self):
         """Get the total memory size(MB) of physical computer.
 
         :returns: the total amount of memory(MB).
@@ -608,7 +615,7 @@ class HyperVConnection(driver.ComputeDriver):
 	total_mb = long(total_kb) / 1024
         return total_mb
 
-    def get_local_gb_total():
+    def get_local_gb_total(self):
         """Get the total hdd size(GB) of physical computer.
 
         :returns:
@@ -783,10 +790,122 @@ class HyperVConnection(driver.ComputeDriver):
         """Grab image and optionally attempt to resize it"""
         images.fetch(context, image_id, target, user, project)
         
-        
     def snapshot(self, context, instance, name):
         """Create snapshot from a running VM instance."""
-        LOG.debug("Snapshot: context=%s, instance=%s, name=%s", context, instance, name)
+        vm = self._lookup(instance.name)
+        if vm is None:
+            raise exception.InstanceNotFound(instance=instance.name)
+        vm = self._conn.Msvm_ComputerSystem(ElementName=instance.name)[0]                        
+        vs_man_svc = self._conn.Msvm_VirtualSystemManagementService()[0]
+        
+        LOG.debug(_("Creating snapshot for instance %s"), instance.name)
+        (job_path, ret_val, snap_setting_data) = vs_man_svc.CreateVirtualSystemSnapshot(vm.path_())
+        if ret_val == WMI_JOB_STATUS_STARTED:
+            success = self._check_job_status(job_path)
+            if success:
+                job_wmi_path = job_path.replace('\\','/')
+                job = wmi.WMI(moniker=job_wmi_path)
+                snap_setting_data = job.associators(wmi_result_class='Msvm_VirtualSystemSettingData')[0]                
+        else:
+            success = (ret_val == 0)            
+        if not success:
+            raise Exception(_('Failed to create snapshot for VM %s'), instance.name)
+        
+        export_folder = None
+        f = None
+        
+        try:
+            src_vhd_path = os.path.join(FLAGS.instances_path, instance.name, instance.name + ".vhd")            			
+
+            image_man_svc = self._conn.Msvm_ImageManagementService()[0]
+            
+            LOG.debug(_("Getting info for VHD %s"), src_vhd_path)            
+            (src_vhd_info, job_path, ret_val) = image_man_svc.GetVirtualHardDiskInfo(src_vhd_path)
+            if ret_val == WMI_JOB_STATUS_STARTED:
+                success = self._check_job_status(job_path)
+            else:
+                success = (ret_val == 0)            
+            if not success:
+                raise Exception(_("Failed to reconnect base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)
+            
+            src_base_disk_path = None
+            et = ElementTree.fromstring(src_vhd_info)
+            for item in et.findall("PROPERTY"):
+                if item.attrib["NAME"] == "ParentPath":
+                    src_base_disk_path = item.find("VALUE").text
+                    break
+                                
+            if not src_base_disk_path:
+                raise Exception(_("Cannot find base disk for diff disk %s"), dest_vhd_path)
+                                
+            export_folder = os.path.join(FLAGS.instances_path, "export", instance.name)
+            LOG.debug(_('Creating folder %s '), export_folder)
+            if os.path.isdir(export_folder):
+                shutil.rmtree(export_folder)
+            os.mkdir(export_folder)
+
+            dest_base_disk_path = os.path.join(export_folder, os.path.basename(src_base_disk_path))	
+            LOG.debug(_('Copying base disk %s to %s'), src_base_disk_path, dest_base_disk_path)
+            shutil.copyfile(src_base_disk_path, dest_base_disk_path)
+
+            dest_vhd_path = os.path.join(export_folder, os.path.basename(src_vhd_path))	
+
+            LOG.debug(_('Copying diff VHD %s to %s'), src_vhd_path, dest_vhd_path)
+            shutil.copyfile(src_vhd_path, dest_vhd_path)
+
+            LOG.debug(_("Reconnecting copied base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
+            (job_path, ret_val) = image_man_svc.ReconnectParentVirtualHardDisk(ChildPath = dest_vhd_path, ParentPath = dest_base_disk_path)
+            if ret_val == WMI_JOB_STATUS_STARTED:
+                success = self._check_job_status(job_path)
+            else:
+                success = (ret_val == 0)            
+            if not success:
+                raise Exception(_("Failed to reconnect base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
+                
+            LOG.debug(_("Merging base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
+            (job_path, ret_val) = image_man_svc.MergeVirtualHardDisk(SourcePath = dest_vhd_path, DestinationPath = dest_base_disk_path)
+            if ret_val == WMI_JOB_STATUS_STARTED:
+                success = self._check_job_status(job_path)
+            else:
+                success = (ret_val == 0)            
+            if not success:
+                raise Exception(_("Failed to merge base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)			
+			
+            (glance_client, image_id) = glance.get_glance_client(context, name)            
+            image_metadata = {"is_public": False,
+                      "disk_format": "vhd",
+                      "container_format": "bare",
+                      "properties": {}}     
+            f = open(dest_base_disk_path, 'r')
+            LOG.debug(_("Updating Glance image %s with content from merged disk %s"), image_id, dest_base_disk_path)                      
+            glance_client.update_image(image_id, image_meta=image_metadata, image_data=f) 
+                        
+            status = None
+            while True: 
+                status = glance_client.get_image_meta(image_id).get("status")
+                if status not in ["queued", "saving"]:
+                    break;         
+                time.sleep(2)                     
+            if status != "active":
+                raise Exception(_('Snapshot image update failed for VM %s'), instance.name)
+                
+            LOG.debug(_("Snapshot image %s updated for VM %s"), image_id, instance.name)   
+        finally:            
+            LOG.debug(_("Removing snapshot %s"), name)            
+            (job_path, ret_val) = vs_man_svc.RemoveVirtualSystemSnapshot(snap_setting_data.path_())
+            if ret_val == WMI_JOB_STATUS_STARTED:
+                success = self._check_job_status(job_path)
+            else:
+                success = (ret_val == 0)            
+            if not success:
+                raise Exception(_('Failed to remove snapshot for VM %s'), instance.name)
+            
+            if f:
+                f.close()
+            
+            if export_folder:
+                LOG.debug(_('Removing folder %s '), export_folder)
+                shutil.rmtree(export_folder)            
         
     def pause(self, instance):
         """Pause VM instance."""
