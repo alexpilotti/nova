@@ -622,7 +622,7 @@ class HyperVConnection(driver.ComputeDriver):
         """
 	#TODO: This binds to C only right now, need to bind to instance dir
 	total_kb = self._cim_conn.query("SELECT Size FROM win32_logicaldisk")[0].Size
-        total_gb = long(total_kb / (1024 ** 3)
+        total_gb = long(total_kb) / (1024 ** 3)
         return total_gb
 
     def get_vcpu_used(self):
@@ -663,7 +663,7 @@ class HyperVConnection(driver.ComputeDriver):
 
 	#TODO: This binds to C only right now, need to bind to instance dir
 	total_kb = self._cim_conn.query("SELECT FreeSpace FROM win32_logicaldisk")[0].FreeSpace
-        total_gb = long(total_kb / (1024 ** 3)
+        total_gb = long(total_kb) / (1024 ** 3)
         return total_gb
 
     def get_hypervisor_version(self):
@@ -678,7 +678,7 @@ class HyperVConnection(driver.ComputeDriver):
         # But ... we can at least give the user a nice message
     
         platform_ver = platform.uname()[2]
-    return platform_ver
+        return platform_ver
 
     def update_available_resource(self, context, host):
         """Updates compute manager resource info on ComputeNode table.
