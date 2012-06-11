@@ -47,7 +47,8 @@
     <CustomAction Id="Installwebob" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c c:\python27\scripts\easy_install webob" Return="ignore" Execute="deferred" />
     <CustomAction Id="Installglance" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c c:\python27\scripts\pip.exe install glance" Return="ignore" Execute="deferred" />
     <CustomAction Id="Installglance2" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c c:\python27\scripts\pip.exe install glance" Return="ignore" Execute="deferred" />
-    <CustomAction Id="InstallNovaService" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c c:\python27\python.exe &quot;[INSTALLDIR]nova\bin\nova-compute&quot; install" Return="ignore" Execute="deferred" />
+    <CustomAction Id="InstallNovaService" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c c:\python27\python.exe &quot;[INSTALLDIR]nova\bin\nova-compute.py&quot; install" Return="ignore" Execute="deferred" />
+    <CustomAction Id="RenameCompute" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c rename &quot;[INSTALLDIR]nova\bin\nova-compute&quot; nova-compute.py" Return="ignore" Execute="deferred" />
     <CustomAction Id="InstallPyWin321" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c xcopy /Y /E &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\pywin32-217.win32-py2.7\PLATLIB&quot; c:\python27\lib\site-packages" Return="ignore" Execute="deferred" />
     <CustomAction Id="InstallPyWin322" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c xcopy /Y /E &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\pywin32-217.win32-py2.7\SCRIPTS&quot; c:\python27\lib\site-packages" Return="ignore" Execute="deferred" />
     <CustomAction Id="InstallPyWin323" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c cd c:\python27\lib\site-packages &amp;&amp; c:\python27\python.exe pywin32_postinstall.py -install" Return="ignore" Execute="deferred" />
@@ -86,8 +87,8 @@
         <Custom Action="InstallPyWin321" After='InstallEZSetup'>NOT Installed</Custom>
         <Custom Action="InstallPyWin322" After='InstallPyWin321'>NOT Installed</Custom>
         <Custom Action="InstallPyWin323" After='InstallPyWin322'>NOT Installed</Custom>
-        <Custom Action="InstallNovaService" After='InstallPyWin323'>NOT Installed</Custom>
-        
+        <Custom Action="RenameCompute" After='InstallPyWin323'>NOT Installed</Custom>
+        <Custom Action="InstallNovaService" After='RenameCompute'>NOT Installed</Custom>
     
     </InstallExecuteSequence>
     
