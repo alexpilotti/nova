@@ -18,6 +18,8 @@
 #    under the License.
 
 """Starter script for Nova Compute."""
+import os
+import sys
 
 import eventlet
 if os.name == 'nt':
@@ -27,8 +29,6 @@ if os.name == 'nt':
 else:
     eventlet.monkey_path()
 
-import os
-import sys
 
 # If ../nova/__init__.py exists, add ../ to Python search path, so that
 # it will override what happens to be installed in /usr/(local/)lib/python...
