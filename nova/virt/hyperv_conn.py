@@ -709,7 +709,7 @@ class HyperVConnection(driver.ComputeDriver):
                'memory_mb_used': self.get_memory_mb_used(),
                'local_gb_used': self.get_local_gb_used(),
                'hypervisor_type': "hyperv",
-               'hypervisor_version': self.get_hypervisor_version,
+               'hypervisor_version': self.get_hypervisor_version(),
                'cpu_info': "unknown",
                'service_id': service_ref['id'],
                'disk_available_least': 1}        
