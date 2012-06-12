@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='windows-1252'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
-  <Product Name='OpenStack Compute Essex' Id='859910A4-8211-4672-B3F0-6445A0D70298' UpgradeCode='1EB0BDA1-3BCB-4E93-B67A-488C6A3678E5'
+  <Product Name='OpenStack Compute Essex' Id='{859910A4-8211-4672-B3F0-6445A0D70298}' UpgradeCode='{1EB0BDA1-3BCB-4E93-B67A-488C6A3678E5}'
     Language='1033' Codepage='1252' Version='5.0.0' Manufacturer='OpenStack.org'>
 
     <Package Id='*' Keywords='Installer' Description="OpenStack Essex Installer"
@@ -10,10 +10,23 @@
         <Directory Id='TARGETDIR' Name='SourceDir'>
           <Directory Id='ProgramFilesFolder' Name='PFiles'>
             <Directory Id='INSTALLDIR' Name='OpenStack'>
+              
+              <Component Id="SetPath" Guid="{1781A625-8ACB-45E7-2351-219D81760B2E}">
+		<CreateFolder />
+                   <Environment Id="SetSystemPath"
+                         Action="set"
+                         Part="last"
+                         Name="PATH"
+                         Permanent="yes"
+                         System="yes"
+                         Value=';C:\Python27;c:\python27\scripts;[INSTALLDIR]nova;' />
+               </Component> 
             </Directory>
           </Directory>
         </Directory>
-    
+   
+
+
     <Icon Id="openstack_icon.ico" SourceFile="openstack_icon.ico" />
     <Property Id="ARPPRODUCTICON" Value="openstack_icon.ico" />
     
@@ -46,8 +59,7 @@
     <CustomAction Id="Installpythonnovaclient" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c c:\python27\scripts\easy_install python-novaclient" Return="ignore" Execute="deferred" />
     <CustomAction Id="Installwebob" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c c:\python27\scripts\easy_install webob" Return="ignore" Execute="deferred" />
     <CustomAction Id="Installglance" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c c:\python27\scripts\pip.exe install glance" Return="ignore" Execute="deferred" />
-    <CustomAction Id="Installglance2" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c c:\python27\scripts\pip.exe install glance" Return="ignore" Execute="deferred" />
-    <CustomAction Id="InstallNovaService" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c c:\python27\python.exe &quot;[INSTALLDIR]nova\bin\nova-compute.py&quot; install" Return="ignore" Execute="deferred" />
+    <CustomAction Id="InstallNovaService" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c SET PATH=%PATH%;[INSTALLDIR]nova; &amp;&amp; c:\python27\python.exe &quot;[INSTALLDIR]nova\bin\nova-compute.py&quot; install" Return="ignore" Execute="deferred" />
     <CustomAction Id="RenameCompute" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c rename &quot;[INSTALLDIR]nova\bin\nova-compute&quot; nova-compute.py" Return="ignore" Execute="deferred" />
     <CustomAction Id="InstallPyWin321" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c xcopy /Y /E &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\pywin32-217.win32-py2.7\PLATLIB&quot; c:\python27\lib\site-packages" Return="ignore" Execute="deferred" />
     <CustomAction Id="InstallPyWin322" Directory='INSTALLDIR' ExeCommand="[SystemFolder]cmd.exe /c xcopy /Y /E &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\pywin32-217.win32-py2.7\SCRIPTS&quot; c:\python27\lib\site-packages" Return="ignore" Execute="deferred" />
@@ -57,34 +69,33 @@
     <InstallExecuteSequence>
         <Custom Action="InstallEZSetup" After='InstallFiles'>NOT Installed</Custom>
         <Custom Action="Installpip" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installpep8" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installeventlet" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installroutes" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installgreenlet" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installargparse" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installwsgiref" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installpastedeploy" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installiso8601" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installmox" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installpaste" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installmigrate" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installnetaddr" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installcheetah" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installcarrot" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installtempita" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installsuds" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installlockfile" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installboto" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installkombu" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installfeedparser" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installpylint" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installsqlalchemy" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installwmi" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installpythonnovaclient" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installwebob" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installglance" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="Installglance2" After='InstallEZSetup'>NOT Installed</Custom>
-        <Custom Action="InstallPyWin321" After='InstallEZSetup'>NOT Installed</Custom>
+        <Custom Action="Installpep8" After='Installpip'>NOT Installed</Custom>
+        <Custom Action="Installeventlet" After='Installpep8'>NOT Installed</Custom>
+        <Custom Action="Installroutes" After='Installeventlet'>NOT Installed</Custom>
+        <Custom Action="Installgreenlet" After='Installroutes'>NOT Installed</Custom>
+        <Custom Action="Installargparse" After='Installgreenlet'>NOT Installed</Custom>
+        <Custom Action="Installwsgiref" After='Installargparse'>NOT Installed</Custom>
+        <Custom Action="Installpastedeploy" After='Installwsgiref'>NOT Installed</Custom>
+        <Custom Action="Installiso8601" After='Installpastedeploy'>NOT Installed</Custom>
+        <Custom Action="Installmox" After='Installiso8601'>NOT Installed</Custom>
+        <Custom Action="Installpaste" After='Installmox'>NOT Installed</Custom>
+        <Custom Action="Installmigrate" After='Installpaste'>NOT Installed</Custom>
+        <Custom Action="Installnetaddr" After='Installmigrate'>NOT Installed</Custom>
+        <Custom Action="Installcheetah" After='Installnetaddr'>NOT Installed</Custom>
+        <Custom Action="Installcarrot" After='Installcheetah'>NOT Installed</Custom>
+        <Custom Action="Installtempita" After='Installcarrot'>NOT Installed</Custom>
+        <Custom Action="Installsuds" After='Installtempita'>NOT Installed</Custom>
+        <Custom Action="Installlockfile" After='Installsuds'>NOT Installed</Custom>
+        <Custom Action="Installboto" After='Installlockfile'>NOT Installed</Custom>
+        <Custom Action="Installkombu" After='Installboto'>NOT Installed</Custom>
+        <Custom Action="Installfeedparser" After='Installkombu'>NOT Installed</Custom>
+        <Custom Action="Installpylint" After='Installfeedparser'>NOT Installed</Custom>
+        <Custom Action="Installsqlalchemy" After='Installpylint'>NOT Installed</Custom>
+        <Custom Action="Installwmi" After='Installsqlalchemy'>NOT Installed</Custom>
+        <Custom Action="Installpythonnovaclient" After='Installwmi'>NOT Installed</Custom>
+        <Custom Action="Installwebob" After='Installpythonnovaclient'>NOT Installed</Custom>
+        <Custom Action="Installglance" After='Installwebob'>NOT Installed</Custom>
+        <Custom Action="InstallPyWin321" After='Installglance'>NOT Installed</Custom>
         <Custom Action="InstallPyWin322" After='InstallPyWin321'>NOT Installed</Custom>
         <Custom Action="InstallPyWin323" After='InstallPyWin322'>NOT Installed</Custom>
         <Custom Action="RenameCompute" After='InstallPyWin323'>NOT Installed</Custom>
@@ -93,6 +104,7 @@
     </InstallExecuteSequence>
     
     <Feature Id='Complete' Level='1'>
+	<ComponentRef Id="SetPath" />
         <ComponentGroupRef Id="OpenStackFiles" />
     </Feature>
 
