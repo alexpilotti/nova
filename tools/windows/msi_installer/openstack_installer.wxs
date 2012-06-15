@@ -64,6 +64,7 @@
     <SetProperty Id="InstallPyWin322" Value="&quot;[SystemFolder]cmd.exe&quot; /c xcopy /Y /E &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\pywin32-217.win32-py2.7\SCRIPTS&quot; c:\python27\lib\site-packages" After="CostFinalize" />
     <SetProperty Id="InstallPyWin323" Value="&quot;[SystemFolder]cmd.exe&quot; /c cd c:\python27\lib\site-packages &amp;&amp; c:\python27\python.exe pywin32_postinstall.py -install" After="CostFinalize" />
     <SetProperty Id="InstallFiles" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\python.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\ez_setup.py&quot;" After="CostFinalize" />    
+    <SetProperty Id="InstallPyMySQL" Value="&quot;[SystemFolder]cmd.exe&quot; /c xcopy /Y /E &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\MySQL-python-1.2.3.win32-py2.7\PLATLIB&quot; c:\python27\lib\site-packages" After="CostFinalize" />
     
     <CustomAction Id="InstallEZSetup" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
     <CustomAction Id="Installpip" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
@@ -98,7 +99,7 @@
     <CustomAction Id="InstallPyWin321" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
     <CustomAction Id="InstallPyWin322" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
     <CustomAction Id="InstallPyWin323" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
-    
+    <CustomAction Id="InstallPyMySQL" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
    
     <InstallExecuteSequence>
         <Custom Action="InstallEZSetup" After='InstallFiles'>NOT Installed</Custom>
@@ -132,6 +133,7 @@
         <Custom Action="InstallPyWin321" After='Installglance'>NOT Installed</Custom>
         <Custom Action="InstallPyWin322" After='InstallPyWin321'>NOT Installed</Custom>
         <Custom Action="InstallPyWin323" After='InstallPyWin322'>NOT Installed</Custom>
+	<Custom Action="InstallPyMySQL" After='InstallPyWin322'>NOT Installed</Custom>
         <Custom Action="RenameCompute" After='InstallPyWin323'>NOT Installed</Custom>
         <Custom Action="InstallNovaService" After='RenameCompute'>NOT Installed</Custom>
     

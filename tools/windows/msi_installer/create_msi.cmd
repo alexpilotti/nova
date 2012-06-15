@@ -1,7 +1,7 @@
 heat dir ..\..\..\ -gg -dr INSTALLDIR -cg OpenStackFiles -out openstack_files.wxs
 candle openstack_files.wxs
 candle openstack_installer.wxs
-light -b ..\..\..\ openstack_files.wixobj openstack_installer.wixobj -o openstack_installer.msi
+light -b ..\..\..\ -ext WixUtilExtension -o openstack_installer.msi openstack_files.wixobj openstack_installer.wixobj 
 del openstack_files.wixobj
 del openstack_files.wxs
 del openstack_installer.wixobj

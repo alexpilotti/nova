@@ -26,6 +26,7 @@ if os.name == 'nt':
     eventlet.monkey_patch(os=None)
     import win32service
     import win32serviceutil
+    import time
     # using the service launcher messes up the dir tree so do this
     NOVAPATH = sys.path[0]
     NOVAPATH = NOVAPATH[:-3]
