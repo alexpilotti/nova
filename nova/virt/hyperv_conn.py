@@ -132,7 +132,17 @@ class HyperVConnection(driver.ComputeDriver):
         self._conn = wmi.WMI(moniker='//./root/virtualization')
         self._cim_conn = wmi.WMI(moniker='//./root/cimv2')
         self._wmi_conn = wmi.WMI(moniker='//./root/wmi')
+
+        version = self._get_windows_version()
+        if version[0] >= 6 and version[1] >= 2:
+            self._conn_v2 = wmi.WMI(moniker='//./root/virtualization/v2')
+        else:
+            self._conn_v2 = None
+
         self._volumeops = volumeops.VolumeOps(wmi)
+
+    def _get_windows_version(self):
+		return self._cim_conn.Win32_OperatingSystem()[0].Version.split('.')		
 
     def init_host(self, host):
         #FIXME(chiradeep): implement this
@@ -252,6 +262,9 @@ class HyperVConnection(driver.ComputeDriver):
         procsetting.VirtualQuantity = vcpus
         procsetting.Reservation = vcpus
         procsetting.Limit = 100000  # static assignment to 100%
+
+        if FLAGS.limit_cpu_features:
+            procsetting.LimitProcessorFeatures = True
 
         (job, ret_val) = vs_man_svc.ModifyVirtualSystemResources(
                 vm.path_(), [procsetting.GetText_(1)])
@@ -507,6 +520,7 @@ class HyperVConnection(driver.ComputeDriver):
 
     def get_info(self, instance):
         """Get information about the VM"""
+        LOG.debug(_("get_info called for instance: %s"), instance.name)
         vm = self._lookup(instance.name)
         if vm is None:
             raise exception.InstanceNotFound(instance=instance.name)
@@ -625,7 +639,7 @@ class HyperVConnection(driver.ComputeDriver):
 
         """
 	#TODO: This binds to C only right now, need to bind to instance dir
-	total_kb = self._cim_conn.query("SELECT Size FROM win32_logicaldisk")[0].Size
+	total_kb = self._cim_conn.query("SELECT Size FROM win32_logicaldisk WHERE DriveType=3")[0].Size
         total_gb = long(total_kb) / (1024 ** 3)
         return total_gb
 
@@ -666,7 +680,7 @@ class HyperVConnection(driver.ComputeDriver):
         """
 
 	#TODO: This binds to C only right now, need to bind to instance dir
-	total_kb = self._cim_conn.query("SELECT FreeSpace FROM win32_logicaldisk")[0].FreeSpace
+	total_kb = self._cim_conn.query("SELECT FreeSpace FROM win32_logicaldisk WHERE DriveType=3")[0].FreeSpace
         total_gb = long(total_kb) / (1024 ** 3)
         return total_gb
 
@@ -738,6 +752,12 @@ class HyperVConnection(driver.ComputeDriver):
         """Sets the specified host's ability to accept new instances."""
         pass
     
+    def _get_base_vhd_path(self, image_name):
+        base_dir = os.path.join(FLAGS.instances_path, '_base')
+        if not os.path.exists(base_dir):
+            os.mkdir(base_dir)
+        return os.path.join(base_dir, image_name + ".vhd")
+
     @staticmethod
     def _cache_image(self, fn, target, fname, cow=False, Size=None, *args, **kwargs):
         """Wrapper for a method that creates an image that caches the image.
@@ -759,10 +779,7 @@ class HyperVConnection(driver.ComputeDriver):
                     fn(target=base, *args, **kwargs)
         
         if not os.path.exists(target):
-            base_dir = os.path.join(FLAGS.instances_path, '_base')
-            if not os.path.exists(base_dir):
-                os.mkdir(base_dir)
-            base = os.path.join(base_dir, fname + ".vhd")
+            base = self._get_base_vhd_path(fname)
             
             if not os.path.exists(base):
                 call_if_not_exists(base, fn, *args, **kwargs)
@@ -926,3 +943,108 @@ class HyperVConnection(driver.ComputeDriver):
         """Resume the suspended VM instance."""
         LOG.debug("Resume instance=%s", instance)        
         self._set_vm_state(instance.name, 'Enabled')        
+
+    def _check_live_migration_config(self):
+        if not self._conn_v2:
+            raise Exception(_('Live migration is not supported by this version of Hyper-V')) 
+
+        migration_svc =  self._conn_v2.Msvm_VirtualSystemMigrationService()[0]
+        vsmssd = migration_svc.associators(wmi_association_class='Msvm_ElementSettingData', wmi_result_class='Msvm_VirtualSystemMigrationServiceSettingData')[0]
+        if not vsmssd.EnableVirtualSystemMigration:
+            raise Exception(_('Live migration is not enabled on this host'))
+        if not migration_svc.MigrationServiceListenerIPAddressList:
+            raise Exception(_('Live migration networks are not configured on this host')) 
+
+    def live_migration(self, context, instance_ref, dest, post_method, recover_method, block_migration=False):
+        LOG.debug("live_migration called: %s", instance_ref)
+
+        try:
+            self._check_live_migration_config()
+
+            vm_name = self._lookup(instance_ref.name)
+            if vm_name is None:
+                raise exception.InstanceNotFound(instance=instance.name)
+            vm = self._conn_v2.Msvm_ComputerSystem(ElementName=instance_ref.name)[0]			
+            vm_settings = vm.associators(wmi_association_class='Msvm_SettingsDefineState', wmi_result_class='Msvm_VirtualSystemSettingData')[0]
+
+            new_resource_setting_data = [];
+            sasds	= vm_settings.associators(wmi_association_class='Msvm_VirtualSystemSettingDataComponent', wmi_result_class='Msvm_StorageAllocationSettingData')		
+            for sasd in sasds:
+                if sasd.ResourceType == 31 and sasd.ResourceSubType == "Microsoft:Hyper-V:Virtual Hard Disk":
+                    #sasd.PoolId = ""
+                    new_resource_setting_data.append(sasd.GetText_(1))
+
+            LOG.debug("Getting live migration networks for remote host: %s", dest) 		
+            _conn_v2_remote = wmi.WMI(moniker='//' + dest + '/root/virtualization/v2')		
+            migration_svc_remote =  _conn_v2_remote.Msvm_VirtualSystemMigrationService()[0];	
+            remote_ip_address_list = migration_svc_remote.MigrationServiceListenerIPAddressList
+
+            # VirtualSystemAndStorage
+            vsmsd = self._conn_v2.query('select * from Msvm_VirtualSystemMigrationSettingData where MigrationType = 32771')[0]
+            vsmsd.DestinationIPAddressList = remote_ip_address_list
+            migration_setting_data = vsmsd.GetText_(1)
+
+            migration_svc =  self._conn_v2.Msvm_VirtualSystemMigrationService()[0];			
+
+            LOG.debug("Starting live migration for instance: %s", instance_ref.name) 				
+            (job_path, ret_val) = migration_svc.MigrateVirtualSystemToHost(ComputerSystem = vm.path_(), DestinationHost = dest, MigrationSettingData = migration_setting_data, NewResourceSettingData = new_resource_setting_data)
+            if ret_val == WMI_JOB_STATUS_STARTED:
+                success = self._check_job_status(job_path)
+            else:
+                success = (ret_val == 0)
+            if not success:
+                raise Exception(_('Failed to live migrate VM %s'), instance_ref.name)                
+        except:
+            with utils.save_and_reraise_exception():
+                LOG.debug("Calling live migration recover_method for instance: %s", instance_ref.name) 
+                recover_method(context, instance_ref, dest, block_migration)
+
+        LOG.debug("Calling live migration post_method for instance: %s", instance_ref.name)
+        post_method(context, instance_ref, dest, block_migration)
+
+    def compare_cpu(self, cpu_info):
+        LOG.debug("compare_cpu called: %s", cpu_info)
+        return True;
+
+    def pre_live_migration(self, context, instance, block_device_info):
+        LOG.debug("pre_live_migration called: %s", instance.name)
+        self._check_live_migration_config()
+
+        if FLAGS.use_cow_images:
+            ebs_root = self._volumeops._volume_in_mapping(self._volumeops.get_default_root_device(), block_device_info)
+            if not ebs_root:
+                base_vhd_path = self._get_base_vhd_path(instance.image_ref)
+                if not os.path.exists(base_vhd_path):
+                    self._fetch_image(base_vhd_path, context, instance.image_ref, instance.user_id, instance.project_id)
+
+    def post_live_migration_at_destination(self, ctxt, instance_ref, network_info, block_migration):
+        LOG.debug("post_live_migration_at_destination called: %s", instance_ref.name)
+
+    def plug_vifs(self, instance, network_info):
+        LOG.debug("plug_vifs called: %s", instance.name)
+
+    def unplug_vifs(self, instance, network_info):
+        LOG.debug("plug_vifs called: %s", instance.name)
+
+    def ensure_filtering_rules_for_instance(self, instance_ref, network_info):
+        LOG.debug("ensure_filtering_rules_for_instance called: %s", instance_ref.name)
+
+    def unfilter_instance(self, instance, network_info):
+        """Stop filtering instance"""
+        LOG.debug("unfilter_instance called: %s", instance.name)
+
+    def confirm_migration(self, migration, instance, network_info):
+		"""Confirms a resize, destroying the source VM"""
+		LOG.debug("confirm_migration called: %s", instance)
+
+    def finish_revert_migration(self, instance, network_info):
+		"""Finish reverting a resize, powering back on the instance"""
+		LOG.debug("finish_revert_migration called: %s", instance)
+
+    def finish_migration(self, context, migration, instance, disk_info, network_info, image_meta, resize_instance=False):
+		"""Completes a resize, turning on the migrated instance"""
+		LOG.debug("finish_migration called: %s", instance)
+
+    def get_console_output(self, instance):
+        LOG.debug("get_console_output called: %s", instance.name)
+        return ''

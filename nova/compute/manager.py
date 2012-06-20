@@ -72,6 +72,12 @@ compute_opts = [
     cfg.StrOpt('instances_path',
                default='$state_path/instances',
                help='where instances are stored on disk'),
+    cfg.BoolOpt('instances_shared_storage',
+               default=True,
+               help='wether instances storage is shared among hosts or not'),
+    cfg.BoolOpt('limit_cpu_features',
+               default=False,
+               help='required for live migration among hosts with different CPU features'),               
     cfg.StrOpt('compute_driver',
                default='nova.virt.connection.get_connection',
                help='Driver to use for controlling virtualization'),
@@ -1835,7 +1841,7 @@ class ComputeManager(manager.SchedulerDependentManager):
 
         """
         tmp_file = os.path.join(FLAGS.instances_path, filename)
-        if not os.path.exists(tmp_file):
+        if FLAGS.instances_shared_storage and not os.path.exists(tmp_file):
             return False
         else:
             return True
@@ -1883,7 +1889,7 @@ class ComputeManager(manager.SchedulerDependentManager):
         if not block_device_info['block_device_mapping']:
             LOG.info(_('Instance has no volume.'), instance=instance_ref)
 
-        self.driver.pre_live_migration(block_device_info)
+        self.driver.pre_live_migration(context, instance_ref, block_device_info)
 
         # NOTE(tr3buchet): setup networks on destination host
         self.network_api.setup_networks_on_host(context, instance_ref,
