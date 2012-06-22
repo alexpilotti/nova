@@ -781,8 +781,7 @@ class HyperVConnection(driver.ComputeDriver):
         if not os.path.exists(target):
             base = self._get_base_vhd_path(fname)
             
-            if not os.path.exists(base):
-                call_if_not_exists(base, fn, *args, **kwargs)
+            call_if_not_exists(base, fn, *args, **kwargs)
             
             LOG.debug("use_cow_image:%s", cow)
             if cow:
@@ -871,7 +870,7 @@ class HyperVConnection(driver.ComputeDriver):
             shutil.copyfile(src_vhd_path, dest_vhd_path)
 
             LOG.debug(_("Reconnecting copied base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
-            (job_path, ret_val) = image_man_svc.ReconnectParentVirtualHardDisk(ChildPath = dest_vhd_path, ParentPath = dest_base_disk_path)
+            (job_path, ret_val) = image_man_svc.ReconnectParentVirtualHardDisk(ChildPath = dest_vhd_path, ParentPath = dest_base_disk_path, Force = True)
             if ret_val == WMI_JOB_STATUS_STARTED:
                 success = self._check_job_status(job_path)
             else:
