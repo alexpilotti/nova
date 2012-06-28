@@ -134,6 +134,7 @@ class HyperVConnection(driver.ComputeDriver):
         self._wmi_conn = wmi.WMI(moniker='//./root/wmi')
 
         version = self._get_windows_version()
+        LOG.debug(_('Windows version: %s'),version)
         if version[0] >= 6 and version[1] >= 2:
             self._conn_v2 = wmi.WMI(moniker='//./root/virtualization/v2')
         else:
@@ -142,7 +143,7 @@ class HyperVConnection(driver.ComputeDriver):
         self._volumeops = volumeops.VolumeOps(wmi)
 
     def _get_windows_version(self):
-		return self._cim_conn.Win32_OperatingSystem()[0].Version.split('.')		
+		return map(int, self._cim_conn.Win32_OperatingSystem()[0].Version.split('.'))
 
     def init_host(self, host):
         #FIXME(chiradeep): implement this
