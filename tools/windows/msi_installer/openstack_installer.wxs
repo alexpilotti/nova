@@ -32,32 +32,32 @@
 
     <SetProperty Id="InstallEZSetup" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\python.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\ez_setup.py&quot;" After="CostFinalize" />
     <SetProperty Id="Installpip" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe pip" After="CostFinalize" />
-    <SetProperty Id="Installpep8" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe pep8" After="CostFinalize" />
-    <SetProperty Id="Installeventlet" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe eventlet" After="CostFinalize" />
-    <SetProperty Id="Installroutes" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe routes" After="CostFinalize" />
-    <SetProperty Id="Installgreenlet" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe greenlet" After="CostFinalize" />
-    <SetProperty Id="Installargparse" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe argparse" After="CostFinalize" />
-    <SetProperty Id="Installwsgiref" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe wsgiref" After="CostFinalize" />
-    <SetProperty Id="Installpastedeploy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe pastedeploy" After="CostFinalize" />
-    <SetProperty Id="Installiso8601" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe iso8601" After="CostFinalize" />
+    <SetProperty Id="Installpep8" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe pep8==1.3" After="CostFinalize" />
+    <SetProperty Id="Installeventlet" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe eventlet==0.9.16" After="CostFinalize" />
+    <SetProperty Id="Installroutes" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe routes==1.13" After="CostFinalize" />
+    <SetProperty Id="Installgreenlet" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe greenlet==0.3.4" After="CostFinalize" />
+    <SetProperty Id="Installargparse" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe argparse==1.2.1" After="CostFinalize" />
+    <SetProperty Id="Installwsgiref" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe wsgiref==0.1.2" After="CostFinalize" />
+    <SetProperty Id="Installpastedeploy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe pastedeploy==1.5.0" After="CostFinalize" />
+    <SetProperty Id="Installiso8601" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe iso8601==0.1.4" After="CostFinalize" />
     <SetProperty Id="Installmox" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe mox" After="CostFinalize" />
-    <SetProperty Id="Installpaste" Value="[SystemFolder]cmd /c c:\python27\scripts\easy_install.exe paste" After="CostFinalize" />
-    <SetProperty Id="Installmigrate" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe migrate" After="CostFinalize" />
-    <SetProperty Id="Installnetaddr" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe netaddr" After="CostFinalize" />
-    <SetProperty Id="Installcheetah" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe cheetah" After="CostFinalize" />
-    <SetProperty Id="Installcarrot" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe carrot" After="CostFinalize" />
-    <SetProperty Id="Installtempita" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe tempita" After="CostFinalize" />
-    <SetProperty Id="Installsuds" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe suds" After="CostFinalize" />
-    <SetProperty Id="Installlockfile" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe lockfile" After="CostFinalize" />
-    <SetProperty Id="Installboto" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe boto" After="CostFinalize" />
-    <SetProperty Id="Installkombu" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe kombu" After="CostFinalize" />
-    <SetProperty Id="Installfeedparser" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe feedparser" After="CostFinalize" />
-    <SetProperty Id="Installpylint" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe pylint" After="CostFinalize" />
-    <SetProperty Id="Installsqlalchemy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe sqlalchemy" After="CostFinalize" />
+    <SetProperty Id="Installpaste" Value="[SystemFolder]cmd /c c:\python27\scripts\easy_install.exe paste==0.5.3" After="CostFinalize" />
+    <SetProperty Id="Installmigrate" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe migrate==0.2.2" After="CostFinalize" />
+    <SetProperty Id="Installnetaddr" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe netaddr==0.7.7" After="CostFinalize" />
+    <SetProperty Id="Installcheetah" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe cheetah==2.4.4" After="CostFinalize" />
+    <SetProperty Id="Installcarrot" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe carrot==0.10.7" After="CostFinalize" />
+    <SetProperty Id="Installtempita" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe tempita==0.5.1" After="CostFinalize" />
+    <SetProperty Id="Installsuds" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe suds==0.4" After="CostFinalize" />
+    <SetProperty Id="Installlockfile" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe lockfile==0.9.1" After="CostFinalize" />
+    <SetProperty Id="Installboto" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe boto==2.1.1" After="CostFinalize" />
+    <SetProperty Id="Installkombu" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe kombu==2.2.0" After="CostFinalize" />
+    <SetProperty Id="Installfeedparser" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe feedparser==5.1.2" After="CostFinalize" />
+    <SetProperty Id="Installpylint" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe pylint==0.25.1" After="CostFinalize" />
+    <SetProperty Id="Installsqlalchemy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe sqlalchemy==0.7.2" After="CostFinalize" />
     <SetProperty Id="Installwmi" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe wmi" After="CostFinalize" />
-    <SetProperty Id="Installpythonnovaclient" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe python-novaclient" After="CostFinalize" />
-    <SetProperty Id="Installwebob" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe webob" After="CostFinalize" />
-    <SetProperty Id="Installglance" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\pip.exe install glance" After="CostFinalize" />
+    <SetProperty Id="Installpythonnovaclient" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe python-novaclient==2012.1" After="CostFinalize" />
+    <SetProperty Id="Installwebob" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe webob==1.0.8" After="CostFinalize" />
+    <SetProperty Id="Installglance" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\pip.exe install glance==2012.1.1" After="CostFinalize" />
     <SetProperty Id="InstallNovaService" Value="&quot;[SystemFolder]cmd.exe&quot; /c SET PATH=%PATH%;[INSTALLDIR]nova; &amp;&amp; c:\python27\python.exe &quot;[INSTALLDIR]nova\bin\nova-compute.py&quot; install" After="CostFinalize" />
     <SetProperty Id="RenameCompute" Value="&quot;[SystemFolder]cmd.exe&quot; /c rename &quot;[INSTALLDIR]nova\bin\nova-compute&quot; nova-compute.py" After="CostFinalize" />
     <SetProperty Id="InstallPyWin321" Value="&quot;[SystemFolder]cmd.exe&quot; /c xcopy /Y /E &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\pywin32-217.win32-py2.7\PLATLIB&quot; c:\python27\lib\site-packages" After="CostFinalize" />
