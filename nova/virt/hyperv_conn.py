@@ -850,64 +850,56 @@ class HyperVConnection(driver.ComputeDriver):
                 if item.attrib["NAME"] == "ParentPath":
                     src_base_disk_path = item.find("VALUE").text
                     break
-                                
-            if not src_base_disk_path:
-                raise Exception(_("Cannot find base disk for diff disk %s"), dest_vhd_path)
-                                
+
             export_folder = os.path.join(FLAGS.instances_path, "export", instance.name)
             LOG.debug(_('Creating folder %s '), export_folder)
             if os.path.isdir(export_folder):
                 shutil.rmtree(export_folder)
             os.mkdir(export_folder)
 
-            dest_base_disk_path = os.path.join(export_folder, os.path.basename(src_base_disk_path))	
-            LOG.debug(_('Copying base disk %s to %s'), src_base_disk_path, dest_base_disk_path)
-            shutil.copyfile(src_base_disk_path, dest_base_disk_path)
-
             dest_vhd_path = os.path.join(export_folder, os.path.basename(src_vhd_path))	
-
-            LOG.debug(_('Copying diff VHD %s to %s'), src_vhd_path, dest_vhd_path)
+            LOG.debug(_('Copying VHD %s to %s'), src_vhd_path, dest_vhd_path)
             shutil.copyfile(src_vhd_path, dest_vhd_path)
 
-            LOG.debug(_("Reconnecting copied base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
-            (job_path, ret_val) = image_man_svc.ReconnectParentVirtualHardDisk(ChildPath = dest_vhd_path, ParentPath = dest_base_disk_path, Force = True)
-            if ret_val == WMI_JOB_STATUS_STARTED:
-                success = self._check_job_status(job_path)
+            image_vhd_path = None
+            if not src_base_disk_path:
+                image_vhd_path = dest_vhd_path
             else:
-                success = (ret_val == 0)            
-            if not success:
-                raise Exception(_("Failed to reconnect base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
-                
-            LOG.debug(_("Merging base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
-            (job_path, ret_val) = image_man_svc.MergeVirtualHardDisk(SourcePath = dest_vhd_path, DestinationPath = dest_base_disk_path)
-            if ret_val == WMI_JOB_STATUS_STARTED:
-                success = self._check_job_status(job_path)
-            else:
-                success = (ret_val == 0)            
-            if not success:
-                raise Exception(_("Failed to merge base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)			
+                dest_base_disk_path = os.path.join(export_folder, os.path.basename(src_base_disk_path))	
+                LOG.debug(_('Copying base disk %s to %s'), src_base_disk_path, dest_base_disk_path)
+                shutil.copyfile(src_base_disk_path, dest_base_disk_path)
+
+                LOG.debug(_("Reconnecting copied base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
+                (job_path, ret_val) = image_man_svc.ReconnectParentVirtualHardDisk(ChildPath = dest_vhd_path, ParentPath = dest_base_disk_path, Force = True)
+                if ret_val == WMI_JOB_STATUS_STARTED:
+                    success = self._check_job_status(job_path)
+                else:
+                    success = (ret_val == 0)
+                if not success:
+                    raise Exception(_("Failed to reconnect base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)
+
+                LOG.debug(_("Merging base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
+                (job_path, ret_val) = image_man_svc.MergeVirtualHardDisk(SourcePath = dest_vhd_path, DestinationPath = dest_base_disk_path)
+                if ret_val == WMI_JOB_STATUS_STARTED:
+                    success = self._check_job_status(job_path)
+                else:
+                    success = (ret_val == 0)
+                if not success:
+                    raise Exception(_("Failed to merge base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)			
+                image_vhd_path = dest_base_disk_path
 			
             (glance_client, image_id) = glance.get_glance_client(context, name)            
             image_metadata = {"is_public": False,
                       "disk_format": "vhd",
                       "container_format": "bare",
                       "properties": {}}     
-            f = open(dest_base_disk_path, 'r')
-            LOG.debug(_("Updating Glance image %s with content from merged disk %s"), image_id, dest_base_disk_path)                      
-            glance_client.update_image(image_id, image_meta=image_metadata, image_data=f) 
-                        
-            status = None
-            while True: 
-                status = glance_client.get_image_meta(image_id).get("status")
-                if status not in ["queued", "saving"]:
-                    break;         
-                time.sleep(2)                     
-            if status != "active":
-                raise Exception(_('Snapshot image update failed for VM %s'), instance.name)
-                
+            f = open(image_vhd_path, 'rb')
+            LOG.debug(_("Updating Glance image %s with content from merged disk %s"), image_id, image_vhd_path)                      
+            glance_client.update_image(image_id, image_meta=image_metadata, image_data=f)
+
             LOG.debug(_("Snapshot image %s updated for VM %s"), image_id, instance.name)   
         finally:            
-            LOG.debug(_("Removing snapshot %s"), name)            
+            LOG.debug(_("Removing snapshot %s"), name)
             (job_path, ret_val) = vs_man_svc.RemoveVirtualSystemSnapshot(snap_setting_data.path_())
             if ret_val == WMI_JOB_STATUS_STARTED:
                 success = self._check_job_status(job_path)
