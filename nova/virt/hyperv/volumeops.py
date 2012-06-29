@@ -1,5 +1,5 @@
 # vim: tabstop=4 shiftwidth=4 softtabstop=4
-
+#
 # Copyright 2012 Pedro Navarro Perez
 # All Rights Reserved.
 #
@@ -25,6 +25,7 @@ from nova import block_device
 from nova import flags
 from nova import log as logging
 from nova import utils
+from nova.openstack.common import cfg
 from _winreg import (HKEY_LOCAL_MACHINE, KEY_ALL_ACCESS,
                      OpenKey, CloseKey, QueryValueEx)
 from nova.virt import driver
@@ -39,6 +40,19 @@ WMI_JOB_STATUS_STARTED = 4096
 WMI_JOB_STATE_RUNNING = 4
 WMI_JOB_STATE_COMPLETED = 7
 
+hyper_volumeops_opts = [
+    cfg.StrOpt('hyperv_attaching_volume_retry_count',
+               default=10,
+               help='The number of times we retry on attaching volume '),
+    cfg.StrOpt('hyperv_wait_between_attach_retry',
+               default=5,
+               help='The seconds to wait between an volume attachment attempt'),
+    ]
+
+FLAGS = flags.FLAGS
+FLAGS.register_opts(hyper_volumeops_opts)
+
+
 class VolumeOps(object):
     """
     Management class for Volume-related tasks
@@ -51,6 +65,8 @@ class VolumeOps(object):
         self._wmi_conn = wmi.WMI(moniker='//./root/wmi')
         self._conn = wmi.WMI(moniker='//./root/virtualization')
         self.default_root_device = 'vda'
+        self.attaching_volume_retry_count = FLAGS.hyperv_attaching_volume_retry_count
+        self.wait_between_attach_retry = FLAGS.hyperv_wait_between_attach_retry
         
     def attach_boot_volume(self, block_device_info, vm_name):
         """Attach the boot volume to the IDE controller"""
@@ -62,21 +78,27 @@ class VolumeOps(object):
         target_iqn = data['target_iqn']
         target_portal = data['target_portal']
         self._login_storage_target(target_lun, target_iqn, target_portal)
-        #Getting the mounted disk
-        mounted_disk = self._get_mounted_disk_from_lun(target_iqn, target_lun)
-        #Attach to IDE controller
-        #Find the IDE controller for the vm.
-        vms = self._conn.MSVM_ComputerSystem(ElementName=vm_name)
-        vm = vms[0]
-        vmsettings = vm.associators(
-                wmi_result_class='Msvm_VirtualSystemSettingData')
-        rasds = vmsettings[0].associators(
-                wmi_result_class='MSVM_ResourceAllocationSettingData')
-        ctrller = [r for r in rasds
-                   if r.ResourceSubType == 'Microsoft Emulated IDE Controller'\
-                   and r.Address == "0"]
-        #Attaching to the same slot as the VHD disk file
-        self._attach_volume_to_controller(ctrller, 0, mounted_disk, vm)
+        try:
+            #Getting the mounted disk
+            mounted_disk = self._get_mounted_disk_from_lun(target_iqn, target_lun)
+            #Attach to IDE controller
+            #Find the IDE controller for the vm.
+            vms = self._conn.MSVM_ComputerSystem(ElementName=vm_name)
+            vm = vms[0]
+            vmsettings = vm.associators(
+                    wmi_result_class='Msvm_VirtualSystemSettingData')
+            rasds = vmsettings[0].associators(
+                    wmi_result_class='MSVM_ResourceAllocationSettingData')
+            ctrller = [r for r in rasds
+                       if r.ResourceSubType == 'Microsoft Emulated IDE Controller'\
+                       and r.Address == "0"]
+            #Attaching to the same slot as the VHD disk file
+            self._attach_volume_to_controller(ctrller, 0, mounted_disk, vm)
+        except Exception as exn:
+            LOG.exception(_('Attach boot from volume failed: %s'), exn)
+            self._logout_storage_target(target_iqn)
+            raise Exception(_('Unable to attach boot volume to instance %s')
+                % vm_name)
 
     @staticmethod
     def _volume_in_mapping(mount_device, block_device_info):
@@ -105,19 +127,27 @@ class VolumeOps(object):
         target_iqn = data['target_iqn']
         target_portal = data['target_portal']
         self._login_storage_target(target_lun, target_iqn, target_portal)
-        #Getting the mounted disk
-        mounted_disk = self._get_mounted_disk_from_lun(target_iqn, target_lun)
-        #Find the SCSI controller for the vm
-        vms = self._conn.MSVM_ComputerSystem(ElementName=instance_name)
-        vm = vms[0]
-        vmsettings = vm.associators(
-                wmi_result_class='Msvm_VirtualSystemSettingData')
-        rasds = vmsettings[0].associators(
-                wmi_result_class='MSVM_ResourceAllocationSettingData')
-        ctrller = [r for r in rasds
-                   if r.ResourceSubType == 'Microsoft Synthetic SCSI Controller']
-        self._attach_volume_to_controller(ctrller, self._get_free_controller_slot(ctrller[0]), 
-                                          mounted_disk, vm)
+        try:
+            #Getting the mounted disk
+            mounted_disk = self._get_mounted_disk_from_lun(target_iqn, target_lun)
+            #Find the SCSI controller for the vm
+            vms = self._conn.MSVM_ComputerSystem(ElementName=instance_name)
+            vm = vms[0]
+            vmsettings = vm.associators(
+                    wmi_result_class='Msvm_VirtualSystemSettingData')
+            rasds = vmsettings[0].associators(
+                    wmi_result_class='MSVM_ResourceAllocationSettingData')
+            ctrller = [r for r in rasds
+                       if r.ResourceSubType == 'Microsoft Synthetic SCSI Controller']
+            self._attach_volume_to_controller(ctrller, self._get_free_controller_slot(ctrller[0]), 
+                                              mounted_disk, vm)
+        except Exception as exn:
+            LOG.exception(_('Attach volume failed: %s'), exn)
+            self._logout_storage_target(target_iqn)
+            raise Exception(_('Unable to attach volume to instance %s')
+                % instance_name)
+
+            
 
     def _attach_volume_to_controller(self, controller, address, mounted_disk, instance):
         """Attach a volume to a controller """
@@ -149,7 +179,7 @@ class VolumeOps(object):
         #Sending login
         utils.execute('iscsicli.exe', 'qlogintarget', target_iqn, close_fds=False)
         #Waiting the disk to be mounted. Research this
-        time.sleep(2)	
+        time.sleep(self.wait_between_attach_retry)
         
     def _get_free_controller_slot (self, scsi_controller):
         #Getting volumes mounted in the SCSI controller
@@ -195,7 +225,15 @@ class VolumeOps(object):
                 WHERE TargetName='" + target_iqn + "'")[0]
         session_id = initiator_session.SessionId
         utils.execute('iscsicli.exe', 'logouttarget', session_id, close_fds=False)
-    
+        
+    def _logout_storage_target(self, target_iqn):
+        #logout ISCSI session
+        initiator_session = self._wmi_conn.query(
+                "SELECT * FROM MSiSCSIInitiator_SessionClass \
+                WHERE TargetName='" + target_iqn + "'")[0]
+        session_id = initiator_session.SessionId
+        utils.execute('iscsicli.exe', 'logouttarget', session_id, close_fds=False)
+        
     def get_volume_connector(self, instance):
         if not self._initiator:
             self._initiator = self._get_iscsi_initiator()
@@ -250,12 +288,23 @@ class VolumeOps(object):
                 device_number = device.DeviceNumber
         if device_number == None:
             raise Exception(_('Unable to find a mounted disk for'
-                  ' instance %(instance_name)s') % locals())
+                  ' target_iqn: %s'), target_iqn)
         LOG.debug(_("Device number : %s"), device_number)
         LOG.debug(_("Target lun : %s"), target_lun)
         #Finding Mounted disk drive
+        for i in range(1,self.attaching_volume_retry_count):
+            mounted_disk = self._conn.query(
+                "SELECT * FROM Msvm_DiskDrive WHERE DriveNumber=" + str(device_number) + "")
+            LOG.debug(_("Mounted disk is: %s"), mounted_disk)
+            if len(mounted_disk) > 0:
+                break
+            time.sleep(self.wait_between_attach_retry)
         mounted_disk = self._conn.query(
-                "SELECT * FROM Msvm_DiskDrive WHERE DriveNumber='" + str(device_number) + "'")
+                "SELECT * FROM Msvm_DiskDrive WHERE DriveNumber=" + str(device_number) + "")
+        LOG.debug(_("Mounted disk is: %s"), mounted_disk)
+        if len(mounted_disk) == 0:            
+            raise Exception(_('Unable to find a mounted disk for'
+                  ' target_iqn: %s'), target_iqn)
         return mounted_disk
     
     def disconnect_volume(self, physical_drive_path):
