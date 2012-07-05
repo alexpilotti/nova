@@ -30,8 +30,7 @@
     <Icon Id="openstack_icon.ico" SourceFile="openstack_icon.ico" />
     <Property Id="ARPPRODUCTICON" Value="openstack_icon.ico" />
 
-
-    <SetProperty Id="InstallEZSetup" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\python.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\ez_setup.py&quot;" After="CostFinalize" />
+    <SetProperty Id="InstallEZSetup" Value="&quot;[SystemFolder]cmd.exe&quot; /c cd &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\&quot;  &amp;&amp;  c:\python27\python.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\ez_setup.py&quot; setuptools-0.6c11-py2.7.egg" After="CostFinalize" />
 	<SetProperty Id="Installsqlalchemy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\SQLAlchemy-0.7.6.tar.gz&quot;" After="CostFinalize" /> 
 	<SetProperty Id="Installpy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\py-1.4.9.zip&quot;" After="CostFinalize" /> 
         <SetProperty Id="Installmigrate" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\migrate-0.2.2.tar.gz&quot;" After="CostFinalize" /> 
