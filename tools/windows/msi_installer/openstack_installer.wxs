@@ -32,9 +32,9 @@
 
 
     <SetProperty Id="InstallEZSetup" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\python.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\ez_setup.py&quot;" After="CostFinalize" />
-
 	<SetProperty Id="Installsqlalchemy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\SQLAlchemy-0.7.6.tar.gz&quot;" After="CostFinalize" /> 
-	<SetProperty Id="Installmigrate" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\migrate-0.2.2.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installpy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\py-1.4.9.zip&quot;" After="CostFinalize" /> 
+        <SetProperty Id="Installmigrate" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\migrate-0.2.2.tar.gz&quot;" After="CostFinalize" /> 
 	<SetProperty Id="Installampqlib" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\amqplib-1.0.2.tgz&quot;" After="CostFinalize" /> 
 	<SetProperty Id="Installanyjson" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\anyjson-0.3.1.tar.gz&quot;" After="CostFinalize" /> 
 	<SetProperty Id="Installargparse" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\argparse-1.2.1.tar.gz&quot;" After="CostFinalize" /> 
@@ -85,6 +85,7 @@
     <CustomAction Id="InstallPyMySQL" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
     
     <CustomAction Id="Installsqlalchemy" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installpy" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
     <CustomAction Id="Installmigrate" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
     <CustomAction Id="Installampqlib" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
     <CustomAction Id="Installanyjson" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
@@ -125,7 +126,8 @@
         <Custom Action="InstallEZSetup" After='InstallFiles'>NOT Installed</Custom>
 
 	<Custom Action="Installsqlalchemy" After='InstallFiles'>NOT Installed</Custom>
-	<Custom Action="Installmigrate" After='Installsqlalchemy'>NOT Installed</Custom>
+	<Custom Action="Installpy" After='Installsqlalchemy'>NOT Installed</Custom>
+	<Custom Action="Installmigrate" After='Installpy'>NOT Installed</Custom>
 	<Custom Action="Installampqlib" After='Installmigrate'>NOT Installed</Custom>
 	<Custom Action="Installanyjson" After='Installampqlib'>NOT Installed</Custom>
 	<Custom Action="Installargparse" After='Installanyjson'>NOT Installed</Custom>
