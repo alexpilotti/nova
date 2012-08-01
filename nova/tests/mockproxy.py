@@ -19,6 +19,19 @@ class Mock(object):
         self._access_count[name] = c
         return self._values[name][c]
 
+    def _get_next_ret_value(self, name, params):
+        d = self._access_count.get(name)
+        if d is None:
+            d = {}
+            self._access_count[name] = d
+        c = d.get(params)
+        if c is None:
+            c = 0
+        else:
+            c = c + 1
+        d[params] = c
+        return self._values[name][params][c]        
+        
     def __init__(self, values):
         self._values = values
         self._access_count = {}
@@ -29,18 +42,8 @@ class Mock(object):
         else:
             if isinstance(self._values[name],  dict):
                 def newfunc(*args, **kwargs):
-                    param = str(args) + str(kwargs)
-                    d = self._access_count.get(name)
-                    if d is None:
-                        d = {}
-                        self._access_count[name] = d
-                    c = d.get(param)
-                    if c is None:
-                        c = 0
-                    else:
-                        c = c + 1
-                    d[param] = c
-                    return self._values[name][param][c]
+                    params = str(args) + str(kwargs)
+                    return self._get_next_ret_value(name, params)
                 return newfunc
             else:
                 return self._get_next_value(name)
@@ -52,7 +55,7 @@ class Mock(object):
         return  getattr(self._get_next_value( '__iter__'), '__iter__')()
 
     def __getitem__(self,key):
-        return self._get_next_value( '__getitem__')
+        return self._get_next_ret_value( '__getitem__', str(key))
         
         
 class MockProxy(object):
@@ -76,17 +79,17 @@ class MockProxy(object):
                 def newfunc(*args, **kwargs):
                     result = attr(*args, **kwargs)
                     p = self._get_proxy_object(result)                    
-                    self._add_recorder_method_ret_value(name,  str(args) + str(kwargs), p)
+                    self._add_recorded_ret_value(name,  str(args) + str(kwargs), p)
                     return p
                 return newfunc
             elif hasattr(attr, '__dict__'):
                 p = MockProxy(attr)
             else:
                 p = attr
-            self._add_recorder_value(name, p)
+            self._add_recorded_value(name, p)
             return p
 
-    def _add_recorder_method_ret_value(self, name, params, val):
+    def _add_recorded_ret_value(self, name, params, val):
         d = self._recorded_values.get(name)
         if d is None:
             d = {}
@@ -97,7 +100,7 @@ class MockProxy(object):
             d[params] = l
         l.append(val)
                         
-    def _add_recorder_value(self, name, val):
+    def _add_recorded_value(self, name, val):
         if not self._recorded_values.has_key(name):
             self._recorded_values[name] = []
         self._recorded_values[name].append(val)
@@ -144,17 +147,17 @@ class MockProxy(object):
 
     def __str__(self):
         s = str(self._wrapped)
-        self._add_recorder_value('__str__', s)        
+        self._add_recorded_value('__str__', s)        
         return s
 
     def __iter__(self):
         it = []
         for i in self._wrapped:
             it.append(self._get_proxy_object(i))
-        self._add_recorder_value('__iter__', it)    
+        self._add_recorded_value('__iter__', it)    
         return iter(it) 
 
     def __getitem__(self,key):
-        obj = self._wrapped[key]
-        self._add_recorder_value('__getitem__', obj) 
-        return self._get_proxy_object(obj)
+        p = self._get_proxy_object(self._wrapped[key])
+        self._add_recorded_ret_value('__getitem__', str(key), p) 
+        return p
