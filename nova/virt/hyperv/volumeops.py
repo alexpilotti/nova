@@ -71,8 +71,7 @@ class VolumeOps(baseops.BaseOps):
         #Attaching to the same slot as the VHD disk file
         self._attach_volume_to_controller(ctrller, 0, mounted_disk, vm)
 
-    @staticmethod
-    def _volume_in_mapping(mount_device, block_device_info):
+    def _volume_in_mapping(self, mount_device, block_device_info):
         block_device_list = [self._block_device.strip_dev(vol['mount_device'])
                              for vol in
                              driver.block_device_info_get_mapping(
