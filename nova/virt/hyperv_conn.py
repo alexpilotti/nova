@@ -61,19 +61,19 @@ Using the Python WMI library:
 """
 
 import os
-import time
 import uuid
+<<<<<<< HEAD
 <<<<<<< HEAD
 import platform
 =======
 >>>>>>> Hyper-V snapshot support
 import shutil
 import platform
+=======
+>>>>>>> Refactoring
 import shutil
 import multiprocessing
-import sys
-
-from nova import exception
+import time
 from nova import flags
 from nova import log as logging
 from nova.compute import power_state
@@ -81,6 +81,7 @@ from nova.virt import driver
 from nova.virt import images
 from nova import utils
 from nova import db
+<<<<<<< HEAD
 from nova.openstack.common import cfg
 <<<<<<< HEAD
 from nova.virt.hyperv import volumeops
@@ -88,47 +89,20 @@ from nova.virt.hyperv import volumeops
 >>>>>>> Hyper-V snapshot support
 from nova.image import glance
 from xml.etree import ElementTree
+=======
+>>>>>>> Refactoring
 from nova.virt.hyperv import volumeops
+from nova.virt.hyperv import vmops
+from nova.virt.hyperv import snapshotops
+from nova.virt.hyperv import livemigrationops
+from nova.virt.hyperv import vmutils
 from nova.image import glance
-from xml.etree import ElementTree
-
-
-wmi = None
-
-hyperv_opts = [
-    cfg.StrOpt('vswitch_name',
-                default=None,
-                help='Default vSwitch Name, if none provided first external is used'),
-    ]
-
-FLAGS = flags.FLAGS
-FLAGS.register_opts(hyperv_opts)
+import pythoncom
 
 
 LOG = logging.getLogger(__name__)
 
-
-HYPERV_POWER_STATE = {
-    3: power_state.SHUTDOWN,
-    2: power_state.RUNNING,
-    32768: power_state.PAUSED,
-    32769: power_state.SUSPENDED    
-}
-
-
-REQ_POWER_STATE = {
-    'Enabled': 2,
-    'Disabled': 3,
-    'Reboot': 10,
-    'Reset': 11,
-    'Paused': 32768,
-    'Suspended': 32769,
-}
-
-
-WMI_JOB_STATUS_STARTED = 4096
-WMI_JOB_STATE_RUNNING = 4
-WMI_JOB_STATE_COMPLETED = 7
+wmi = None
 
 def get_connection(read_only):
     global wmi
@@ -140,40 +114,25 @@ def get_connection(read_only):
 class HyperVConnection(driver.ComputeDriver):
     def __init__(self, read_only):
         super(HyperVConnection, self).__init__()
-        self._conn = wmi.WMI(moniker='//./root/virtualization')
-        self._cim_conn = wmi.WMI(moniker='//./root/cimv2')
-        self._wmi_conn = wmi.WMI(moniker='//./root/wmi')
 
-        version = self._get_windows_version()
-        LOG.debug(_('Windows version: %s'),version)
-        if version[0] >= 6 and version[1] >= 2:
-            self._conn_v2 = wmi.WMI(moniker='//./root/virtualization/v2')
-        else:
-            self._conn_v2 = None
-
-        self._volumeops = volumeops.VolumeOps(wmi)
-
-    def _get_windows_version(self):
-		return map(int, self._cim_conn.Win32_OperatingSystem()[0].Version.split('.'))
-
+        vmutls = vmutils.VMUtils(wmi, os, uuid, time)
+        
+        self._volumeops = volumeops.VolumeOps(wmi, vmutils, time)        
+        self._vmops = vmops.VMOps(wmi, vmutls, self._volumeops, images, db, os, multiprocessing, uuid)
+        self._snapshotops = snapshotops.SnapshotOps(wmi, vmutls, glance, os, shutil)
+        self._livemigrationops = livemigrationops.LiveMigrationOps(wmi, vmutls, self._volumeops, os)
+        
     def init_host(self, host):
         #FIXME(chiradeep): implement this
         self._host = host
 
     def list_instances(self):
-        """ Return the names of all the instances known to Hyper-V. """
-        vms = [v.ElementName \
-                for v in self._conn.Msvm_ComputerSystem(['ElementName'], Caption="Virtual Machine")]
-        return vms
+        return self._vmops.list_instances()
 
     def list_instances_detail(self):
-        # TODO(justinsb): This is a terrible implementation (1+N)
-        instance_infos = []
-        for instance_name in self.list_instances():
-            info = self.get_info(instance_name)
+        return self._vmops.list_instances_detail()
 
-            state = info['state']
-
+<<<<<<< HEAD
             instance_info = driver.InstanceInfo(instance_name, state)
             instance_infos.append(instance_info)
 
@@ -496,128 +455,19 @@ class HyperVConnection(driver.ComputeDriver):
                     wmi_obj.Properties_.Item(prop).Value
         return newinst
 
+=======
+    def spawn(self, context, instance, image_meta, network_info, block_device_info=None):
+        self._vmops.spawn(context, instance, image_meta, network_info, block_device_info)
+            
+>>>>>>> Refactoring
     def reboot(self, instance, network_info, reboot_type):
-        """Reboot the specified instance."""
-        vm = self._lookup(instance.name)
-        if vm is None:
-            raise exception.InstanceNotFound(instance_id=instance.id)
-        self._set_vm_state(instance.name, 'Reboot')
-
+        self._vmops.reboot(instance, network_info, reboot_type)
+    
     def destroy(self, instance, network_info=None, cleanup=True):
-        """Destroy the VM. Also destroy the associated VHD disk files"""
-        LOG.debug(_("Got request to destroy vm %s"), instance.name)
-        vm = self._lookup(instance.name)
-        if vm is None:
-            return
-        vm = self._conn.Msvm_ComputerSystem(ElementName=instance.name)[0]
-        vs_man_svc = self._conn.Msvm_VirtualSystemManagementService()[0]
-        #Stop the VM first.
-        self._set_vm_state(instance.name, 'Disabled')
-        vmsettings = vm.associators(
-                         wmi_result_class='Msvm_VirtualSystemSettingData')
-        rasds = vmsettings[0].associators(
-                         wmi_result_class='MSVM_ResourceAllocationSettingData')
-        disks = [r for r in rasds \
-                    if r.ResourceSubType == 'Microsoft Virtual Hard Disk']
-        diskfiles = []
-        volumes = [r for r in rasds \
-                    if r.ResourceSubType == 'Microsoft Physical Disk Drive']
-        volumes_drives_list = []
-        #collect the volumes information before destroying the VM.
-        for volume in volumes:
-            hostResources = volume.HostResource
-            drive_path = hostResources[0]
-            #Appending the Msvm_Disk path
-            volumes_drives_list.append(drive_path)
-        #Collect disk file information before destroying the VM.
-        for disk in disks:
-            diskfiles.extend([c for c in disk.Connection])
-        #Nuke the VM. Does not destroy disks.
-        (job, ret_val) = vs_man_svc.DestroyVirtualSystem(vm.path_())
-        if ret_val == WMI_JOB_STATUS_STARTED:
-            success = self._check_job_status(job)
-        elif ret_val == 0:
-            success = True
-        if not success:
-            raise Exception(_('Failed to destroy vm %s') % instance.name)
-        #Disconnect volumes
-        for volume_drive in volumes_drives_list:
-            self._volumeops.disconnect_volume(volume_drive)
-        #Delete associated vhd disk files.
-        for disk in diskfiles:
-            vhdfile = self._cim_conn.CIM_DataFile(Name=disk)
-            for vf in vhdfile:
-                vf.Delete()
-                instance_name = instance.name
-                LOG.debug(_("Del: disk %(vhdfile)s vm %(instance_name)s")
-                        % locals())
+        self._vmops.destroy(instance, network_info, cleanup)
 
     def get_info(self, instance):
-        """Get information about the VM"""
-        LOG.debug(_("get_info called for instance: %s"), instance.name)
-        vm = self._lookup(instance.name)
-        if vm is None:
-            raise exception.InstanceNotFound(instance=instance.name)
-        vm = self._conn.Msvm_ComputerSystem(ElementName=instance.name)[0]
-        vs_man_svc = self._conn.Msvm_VirtualSystemManagementService()[0]
-        vmsettings = vm.associators(
-                       wmi_association_class='Msvm_SettingsDefineState',
-                       wmi_result_class='Msvm_VirtualSystemSettingData')
-        settings_paths = [v.path_() for v in vmsettings]
-        #See http://msdn.microsoft.com/en-us/library/cc160706%28VS.85%29.aspx
-        summary_info = vs_man_svc.GetSummaryInformation(
-                                       [4, 100, 103, 105], settings_paths)[1]
-        info = summary_info[0]
-               
-        LOG.debug(_("hyperv vm state: %s"), info.EnabledState)       
-        state = str(HYPERV_POWER_STATE[info.EnabledState])
-        memusage = str(info.MemoryUsage)
-        numprocs = str(info.NumberOfProcessors)
-        uptime = str(info.UpTime)
-
-        LOG.debug(_("Got Info for vm %s: state=%s,"
-                " mem=%s, num_cpu=%s,"
-                " cpu_time=%s"), instance.name, state, memusage, numprocs, uptime)
-
-        return {'state': state,
-                'max_mem': info.MemoryUsage,
-                'mem': info.MemoryUsage,
-                'num_cpu': info.NumberOfProcessors,
-                'cpu_time': info.UpTime}
-
-    def _lookup(self, i):
-        vms = self._conn.Msvm_ComputerSystem(ElementName=i)
-        n = len(vms)
-        if n == 0:
-            return None
-        elif n > 1:
-            raise Exception(_('duplicate name found: %s') % i)
-        else:
-            return vms[0].ElementName
-
-    def _set_vm_state(self, vm_name, req_state):
-        """Set the desired state of the VM"""
-        vms = self._conn.Msvm_ComputerSystem(ElementName=vm_name)
-        if len(vms) == 0:
-            return False
-        (job, ret_val) = vms[0].RequestStateChange(REQ_POWER_STATE[req_state])
-        success = False
-        if ret_val == WMI_JOB_STATUS_STARTED:
-            success = self._check_job_status(job)
-        elif ret_val == 0:
-            success = True
-        elif ret_val == 32775:
-            #Invalid state for current operation. Typically means it is
-            #already in the state requested
-            success = True
-        if success:
-            LOG.info(_("Successfully changed vm state of %(vm_name)s"
-                    " to %(req_state)s") % locals())
-        else:
-            msg = _("Failed to change vm state of %(vm_name)s"
-                    " to %(req_state)s") % locals()
-            LOG.error(msg)
-            raise Exception(msg)
+        return self._vmops.get_info(instance)
         
     def attach_volume(self, connection_info, instance_name, mountpoint):
         """Attach volume storage to VM instance"""
@@ -638,6 +488,7 @@ class HyperVConnection(driver.ComputeDriver):
         pass
 <<<<<<< HEAD
 
+<<<<<<< HEAD
     def get_vcpu_total(self):
         """Get vcpu number of physical computer.
 
@@ -833,43 +684,10 @@ class HyperVConnection(driver.ComputeDriver):
         platform_ver = platform.uname()[2]
     return platform_ver
 
+=======
+>>>>>>> Refactoring
     def update_available_resource(self, context, host):
-        """Updates compute manager resource info on ComputeNode table.
-
-        This method is called as an periodic tasks and is used only
-        in live migration currently.
-
-        :param ctxt: security context
-        :param host: hostname that compute manager is currently running
-
-        """
-
-        try:
-            service_ref = db.service_get_all_compute_by_host(context, host)[0]
-        except exception.NotFound:
-            raise exception.ComputeServiceUnavailable(host=host)
-
-        # Updating host information
-        # TODO implemented cpu_info
-        dic = {'vcpus': self.get_vcpu_total(),
-               'memory_mb': self.get_memory_mb_total(),
-               'local_gb': self.get_local_gb_total(),
-               'vcpus_used': self.get_vcpu_used(),
-               'memory_mb_used': self.get_memory_mb_used(),
-               'local_gb_used': self.get_local_gb_used(),
-               'hypervisor_type': "hyperv",
-               'hypervisor_version': self.get_hypervisor_version(),
-               'cpu_info': "unknown",
-               'service_id': service_ref['id'],
-               'disk_available_least': 1}        
-
-        compute_node_ref = service_ref['compute_node']
-        if not compute_node_ref:
-            LOG.info(_('Compute_service record created for %s ') % host)
-            db.compute_node_create(context, dic)
-        else:
-            LOG.info(_('Compute_service record updated for %s ') % host)
-            db.compute_node_update(context, compute_node_ref[0]['id'], dic)
+        self._vmops.update_available_resource(context, host)
 
     def update_host_status(self):
         """See xenapi_conn.py implementation."""
@@ -886,265 +704,33 @@ class HyperVConnection(driver.ComputeDriver):
     def set_host_enabled(self, host, enabled):
         """Sets the specified host's ability to accept new instances."""
         pass
-    
-    def _get_base_vhd_path(self, image_name):
-        base_dir = os.path.join(FLAGS.instances_path, '_base')
-        if not os.path.exists(base_dir):
-            os.mkdir(base_dir)
-        return os.path.join(base_dir, image_name + ".vhd")
-
-    @staticmethod
-    def _cache_image(self, fn, target, fname, cow=False, Size=None, *args, **kwargs):
-        """Wrapper for a method that creates an image that caches the image.
-
-        This wrapper will save the image into a common store and create a
-        copy for use by the hypervisor.
-
-        The underlying method should specify a kwarg of target representing
-        where the image will be saved.
-
-        fname is used as the filename of the base image.  The filename needs
-        to be unique to a given image.
-
-        If cow is True, it will make a CoW image instead of a copy.
-        """
-        @utils.synchronized(fname)
-        def call_if_not_exists(base, fn, *args, **kwargs):
-                if not os.path.exists(base):
-                    fn(target=base, *args, **kwargs)
-        
-        if not os.path.exists(target):
-            base = self._get_base_vhd_path(fname)
             
-            call_if_not_exists(base, fn, *args, **kwargs)
-            
-            LOG.debug("use_cow_image:%s", cow)
-            if cow:
-                
-                image_service = self._conn.query("Select * from Msvm_ImageManagementService")[0]
-                (job, ret_val) = image_service.CreateDifferencingVirtualHardDisk(Path=target, ParentPath=base)
-                LOG.debug("Creating difference disk: JobID=%s, Source=%s, Target=%s", job, base, target)
-                if ret_val == WMI_JOB_STATUS_STARTED:
-                    success = self._check_job_status(job)
-                else:
-                    success = (ret_val == 0)
-
-                if not success:
-                    raise Exception(_('Failed to create Difference Disk from %s to %s'), base, target)
-
-            else:
-                call_if_not_exists(target, fn, *args, **kwargs)
-                
-    #Trying to use code directly from vish/libvirt for portability
-    @staticmethod
-    def _fetch_image(target, context, image_id, user, project, *args, **kwargs):
-        """Grab image and optionally attempt to resize it"""
-        images.fetch(context, image_id, target, user, project)
-        
     def snapshot(self, context, instance, name):
-        """Create snapshot from a running VM instance."""
-        vm = self._lookup(instance.name)
-        if vm is None:
-            raise exception.InstanceNotFound(instance=instance.name)
-        vm = self._conn.Msvm_ComputerSystem(ElementName=instance.name)[0]                        
-        vs_man_svc = self._conn.Msvm_VirtualSystemManagementService()[0]
-        
-        LOG.debug(_("Creating snapshot for instance %s"), instance.name)
-        (job_path, ret_val, snap_setting_data) = vs_man_svc.CreateVirtualSystemSnapshot(vm.path_())
-        if ret_val == WMI_JOB_STATUS_STARTED:
-            success = self._check_job_status(job_path)
-            if success:
-                job_wmi_path = job_path.replace('\\','/')
-                job = wmi.WMI(moniker=job_wmi_path)
-                snap_setting_data = job.associators(wmi_result_class='Msvm_VirtualSystemSettingData')[0]                
-        else:
-            success = (ret_val == 0)            
-        if not success:
-            raise Exception(_('Failed to create snapshot for VM %s'), instance.name)
-        
-        export_folder = None
-        f = None
-        
-        try:
-            src_vhd_path = os.path.join(FLAGS.instances_path, instance.name, instance.name + ".vhd")            			
-
-            image_man_svc = self._conn.Msvm_ImageManagementService()[0]
-            
-            LOG.debug(_("Getting info for VHD %s"), src_vhd_path)            
-            (src_vhd_info, job_path, ret_val) = image_man_svc.GetVirtualHardDiskInfo(src_vhd_path)
-            if ret_val == WMI_JOB_STATUS_STARTED:
-                success = self._check_job_status(job_path)
-            else:
-                success = (ret_val == 0)            
-            if not success:
-                raise Exception(_("Failed to reconnect base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)
-            
-            src_base_disk_path = None
-            et = ElementTree.fromstring(src_vhd_info)
-            for item in et.findall("PROPERTY"):
-                if item.attrib["NAME"] == "ParentPath":
-                    src_base_disk_path = item.find("VALUE").text
-                    break
-
-            export_folder = os.path.join(FLAGS.instances_path, "export", instance.name)
-            LOG.debug(_('Creating folder %s '), export_folder)
-            if os.path.isdir(export_folder):
-                shutil.rmtree(export_folder)
-            os.mkdir(export_folder)
-
-            dest_vhd_path = os.path.join(export_folder, os.path.basename(src_vhd_path))	
-            LOG.debug(_('Copying VHD %s to %s'), src_vhd_path, dest_vhd_path)
-            shutil.copyfile(src_vhd_path, dest_vhd_path)
-
-            image_vhd_path = None
-            if not src_base_disk_path:
-                image_vhd_path = dest_vhd_path
-            else:
-                dest_base_disk_path = os.path.join(export_folder, os.path.basename(src_base_disk_path))	
-                LOG.debug(_('Copying base disk %s to %s'), src_base_disk_path, dest_base_disk_path)
-                shutil.copyfile(src_base_disk_path, dest_base_disk_path)
-
-                LOG.debug(_("Reconnecting copied base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
-                (job_path, ret_val) = image_man_svc.ReconnectParentVirtualHardDisk(ChildPath = dest_vhd_path, ParentPath = dest_base_disk_path, Force = True)
-                if ret_val == WMI_JOB_STATUS_STARTED:
-                    success = self._check_job_status(job_path)
-                else:
-                    success = (ret_val == 0)
-                if not success:
-                    raise Exception(_("Failed to reconnect base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)
-
-                LOG.debug(_("Merging base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)            
-                (job_path, ret_val) = image_man_svc.MergeVirtualHardDisk(SourcePath = dest_vhd_path, DestinationPath = dest_base_disk_path)
-                if ret_val == WMI_JOB_STATUS_STARTED:
-                    success = self._check_job_status(job_path)
-                else:
-                    success = (ret_val == 0)
-                if not success:
-                    raise Exception(_("Failed to merge base disk %s and diff disk %s"), dest_base_disk_path, dest_vhd_path)			
-                image_vhd_path = dest_base_disk_path
-			
-            (glance_client, image_id) = glance.get_glance_client(context, name)            
-            image_metadata = {"is_public": False,
-                      "disk_format": "vhd",
-                      "container_format": "bare",
-                      "properties": {}}     
-            f = open(image_vhd_path, 'rb')
-            LOG.debug(_("Updating Glance image %s with content from merged disk %s"), image_id, image_vhd_path)                      
-            glance_client.update_image(image_id, image_meta=image_metadata, image_data=f)
-
-            LOG.debug(_("Snapshot image %s updated for VM %s"), image_id, instance.name)   
-        finally:            
-            LOG.debug(_("Removing snapshot %s"), name)
-            (job_path, ret_val) = vs_man_svc.RemoveVirtualSystemSnapshot(snap_setting_data.path_())
-            if ret_val == WMI_JOB_STATUS_STARTED:
-                success = self._check_job_status(job_path)
-            else:
-                success = (ret_val == 0)            
-            if not success:
-                raise Exception(_('Failed to remove snapshot for VM %s'), instance.name)
-            
-            if f:
-                f.close()
-            
-            if export_folder:
-                LOG.debug(_('Removing folder %s '), export_folder)
-                shutil.rmtree(export_folder)            
+        self._snapshotops.snapshot(context, instance, name)
         
     def pause(self, instance):
-        """Pause VM instance."""
-        LOG.debug("Pause instance=%s", instance)
-        self._set_vm_state(instance.name, 'Paused')
+        self._vmops.pause(instance)
 
     def unpause(self, instance):
-        """Unpause paused VM instance."""
-        LOG.debug("Unpause instance=%s", instance)
-        self._set_vm_state(instance.name, 'Enabled')
+        self._vmops.unpause(instance)
  
     def suspend(self, instance):
-        """Suspend the specified instance."""
-        LOG.debug("Suspend instance=%s", instance)
-        self._set_vm_state(instance.name, 'Suspended')        
+        self._vmops.suspend(instance)
 
     def resume(self, instance):
-        """Resume the suspended VM instance."""
-        LOG.debug("Resume instance=%s", instance)        
-        self._set_vm_state(instance.name, 'Enabled')        
-
-    def _check_live_migration_config(self):
-        if not self._conn_v2:
-            raise Exception(_('Live migration is not supported by this version of Hyper-V')) 
-
-        migration_svc =  self._conn_v2.Msvm_VirtualSystemMigrationService()[0]
-        vsmssd = migration_svc.associators(wmi_association_class='Msvm_ElementSettingData', wmi_result_class='Msvm_VirtualSystemMigrationServiceSettingData')[0]
-        if not vsmssd.EnableVirtualSystemMigration:
-            raise Exception(_('Live migration is not enabled on this host'))
-        if not migration_svc.MigrationServiceListenerIPAddressList:
-            raise Exception(_('Live migration networks are not configured on this host')) 
+        self._vmops.resume(instance)    
 
     def live_migration(self, context, instance_ref, dest, post_method, recover_method, block_migration=False):
-        LOG.debug("live_migration called: %s", instance_ref)
-
-        try:
-            self._check_live_migration_config()
-
-            vm_name = self._lookup(instance_ref.name)
-            if vm_name is None:
-                raise exception.InstanceNotFound(instance=instance.name)
-            vm = self._conn_v2.Msvm_ComputerSystem(ElementName=instance_ref.name)[0]			
-            vm_settings = vm.associators(wmi_association_class='Msvm_SettingsDefineState', wmi_result_class='Msvm_VirtualSystemSettingData')[0]
-
-            new_resource_setting_data = [];
-            sasds	= vm_settings.associators(wmi_association_class='Msvm_VirtualSystemSettingDataComponent', wmi_result_class='Msvm_StorageAllocationSettingData')		
-            for sasd in sasds:
-                if sasd.ResourceType == 31 and sasd.ResourceSubType == "Microsoft:Hyper-V:Virtual Hard Disk":
-                    #sasd.PoolId = ""
-                    new_resource_setting_data.append(sasd.GetText_(1))
-
-            LOG.debug("Getting live migration networks for remote host: %s", dest) 		
-            _conn_v2_remote = wmi.WMI(moniker='//' + dest + '/root/virtualization/v2')		
-            migration_svc_remote =  _conn_v2_remote.Msvm_VirtualSystemMigrationService()[0];	
-            remote_ip_address_list = migration_svc_remote.MigrationServiceListenerIPAddressList
-
-            # VirtualSystemAndStorage
-            vsmsd = self._conn_v2.query('select * from Msvm_VirtualSystemMigrationSettingData where MigrationType = 32771')[0]
-            vsmsd.DestinationIPAddressList = remote_ip_address_list
-            migration_setting_data = vsmsd.GetText_(1)
-
-            migration_svc =  self._conn_v2.Msvm_VirtualSystemMigrationService()[0];			
-
-            LOG.debug("Starting live migration for instance: %s", instance_ref.name) 				
-            (job_path, ret_val) = migration_svc.MigrateVirtualSystemToHost(ComputerSystem = vm.path_(), DestinationHost = dest, MigrationSettingData = migration_setting_data, NewResourceSettingData = new_resource_setting_data)
-            if ret_val == WMI_JOB_STATUS_STARTED:
-                success = self._check_job_status(job_path)
-            else:
-                success = (ret_val == 0)
-            if not success:
-                raise Exception(_('Failed to live migrate VM %s'), instance_ref.name)                
-        except:
-            with utils.save_and_reraise_exception():
-                LOG.debug("Calling live migration recover_method for instance: %s", instance_ref.name) 
-                recover_method(context, instance_ref, dest, block_migration)
-
-        LOG.debug("Calling live migration post_method for instance: %s", instance_ref.name)
-        post_method(context, instance_ref, dest, block_migration)
+        self._livemigrationops.live_migration(context, instance_ref, dest, post_method, recover_method, block_migration)
 
     def compare_cpu(self, cpu_info):
-        LOG.debug("compare_cpu called: %s", cpu_info)
-        return True;
+        return self._livemigrationops.compare_cpu(cpu_info)
 
     def pre_live_migration(self, context, instance, block_device_info):
-        LOG.debug("pre_live_migration called: %s", instance.name)
-        self._check_live_migration_config()
-
-        if FLAGS.use_cow_images:
-            ebs_root = self._volumeops._volume_in_mapping(self._volumeops.get_default_root_device(), block_device_info)
-            if not ebs_root:
-                base_vhd_path = self._get_base_vhd_path(instance.image_ref)
-                if not os.path.exists(base_vhd_path):
-                    self._fetch_image(base_vhd_path, context, instance.image_ref, instance.user_id, instance.project_id)
+        self._livemigrationops.pre_live_migration(context, instance, block_device_info)
 
     def post_live_migration_at_destination(self, ctxt, instance_ref, network_info, block_migration):
-        LOG.debug("post_live_migration_at_destination called: %s", instance_ref.name)
+        self._livemigrationops.post_live_migration_at_destination(ctxt, instance_ref, network_info, block_migration)
 
     def plug_vifs(self, instance, network_info):
         LOG.debug("plug_vifs called: %s", instance.name)
