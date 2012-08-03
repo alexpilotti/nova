@@ -18,9 +18,6 @@
 """
 Management class for Storage-related functions (attach, detach, etc).
 """
-import uuid
-import time
-
 from nova import block_device
 from nova import flags
 from nova import log as logging
@@ -28,29 +25,25 @@ from nova import utils
 from _winreg import (HKEY_LOCAL_MACHINE, KEY_ALL_ACCESS,
                      OpenKey, CloseKey, QueryValueEx)
 from nova.virt import driver
+from nova.virt.hyperv import baseops
+import constants
 
 LOG = logging.getLogger(__name__)
-
 FLAGS = flags.FLAGS
 
-WMI_JOB_STATUS_STARTED = 4096
-
-WMI_JOB_STATUS_STARTED = 4096
-WMI_JOB_STATE_RUNNING = 4
-WMI_JOB_STATE_COMPLETED = 7
-
-class VolumeOps(object):
+class VolumeOps(baseops.BaseOps):
     """
     Management class for Volume-related tasks
     """
 
-    def __init__(self, wmi):
+    def __init__(self, wmi, vmutils, time):
+        super(VolumeOps, self).__init__(wmi)
+        
+        self._vmutils = vmutils
+        self._time = time
         self._initiator = None
-        self._wmi = wmi
-        self._cim_conn = wmi.WMI(moniker='//./root/cimv2')
-        self._wmi_conn = wmi.WMI(moniker='//./root/wmi')
-        self._conn = wmi.WMI(moniker='//./root/virtualization')
-        self.default_root_device = 'vda'
+        self._conn_wmi = wmi.WMI(moniker='//./root/wmi')
+        self._default_root_device = 'vda'
         
     def attach_boot_volume(self, block_device_info, vm_name):
         """Attach the boot volume to the IDE controller"""
@@ -126,12 +119,12 @@ class VolumeOps(object):
                 "SELECT * FROM Msvm_ResourceAllocationSettingData \
                 WHERE ResourceSubType LIKE 'Microsoft Physical Disk Drive'\
                 AND InstanceID LIKE '%Default%'")[0]
-        diskdrive = self._clone_wmi_obj(
+        diskdrive = self._vmutils.clone_wmi_obj(self._conn,
                 'Msvm_ResourceAllocationSettingData', diskdflt)
         diskdrive.Address = address
         diskdrive.Parent = controller[0].path_()
         diskdrive.HostResource = [mounted_disk[0].path_()]
-        new_resources = self._add_virt_resource(diskdrive, instance)
+        new_resources = self._vmutils.add_virt_resource(self._conn, diskdrive, instance)
         if new_resources is None:
             raise Exception(_('Failed to add volume to VM %s'),
                                              instance)
@@ -149,7 +142,7 @@ class VolumeOps(object):
         #Sending login
         utils.execute('iscsicli.exe', 'qlogintarget', target_iqn, close_fds=False)
         #Waiting the disk to be mounted. Research this
-        time.sleep(2)	
+        self._time.sleep(2)	
         
     def _get_free_controller_slot (self, scsi_controller):
         #Getting volumes mounted in the SCSI controller
@@ -186,11 +179,11 @@ class VolumeOps(object):
         LOG.debug(_("Physical disk detached is: %s"), physical_disk)           
         vms = self._conn.MSVM_ComputerSystem(ElementName=instance_name)
         vm = vms[0]
-        remove_result = self._remove_virt_resource(physical_disk, vm)
+        remove_result = self._vmutils.remove_virt_resource(self._conn, physical_disk, vm)
         if remove_result is False:
             raise Exception(_('Failed to remove volume from VM %s'), instance_name)
         #Sending logout
-        initiator_session = self._wmi_conn.query(
+        initiator_session = self._conn_wmi.query(
                 "SELECT * FROM MSiSCSIInitiator_SessionClass \
                 WHERE TargetName='" + target_iqn + "'")[0]
         session_id = initiator_session.SessionId
@@ -208,7 +201,7 @@ class VolumeOps(object):
         }
     
     def _get_iscsi_initiator(self):
-        computer_system = self._cim_conn.Win32_ComputerSystem()[0]
+        computer_system = self._conn_cimv2.Win32_ComputerSystem()[0]
         hostname = computer_system.name
         keypath = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\iSCSI\Discovery"
         try:
@@ -218,7 +211,7 @@ class VolumeOps(object):
             CloseKey(key) 
         except:
             LOG.info(_("The ISCSI initiator name can't be found. Choosing the default one"))
-            computer_system = self._cim_conn.Win32_ComputerSystem()[0]
+            computer_system = self._conn_cimv2.Win32_ComputerSystem()[0]
             initiator_name = "iqn.1991-05.com.microsoft:" + hostname.lower()
         return {
             'ip': FLAGS.my_ip,
@@ -226,7 +219,7 @@ class VolumeOps(object):
         }
     
     def _get_mounted_disk_from_lun(self, target_iqn, target_lun):
-        initiator_session = self._wmi_conn.query(
+        initiator_session = self._conn_wmi.query(
                 "SELECT * FROM MSiSCSIInitiator_SessionClass \
                 WHERE TargetName='" + target_iqn + "'")[0]
         session_id = initiator_session.SessionId
@@ -267,7 +260,7 @@ class VolumeOps(object):
     def _get_session_id_from_mounted_disk(self, physical_drive_path):
         drive_number = self._get_drive_number_from_disk_path(physical_drive_path)
         LOG.debug(_("Drive number to disconnect is: %s"), drive_number)
-        initiator_sessions = self._wmi_conn.query(
+        initiator_sessions = self._conn_wmi.query(
                 "SELECT * FROM MSiSCSIInitiator_SessionClass")
         for initiator_session in initiator_sessions:
             devices = initiator_session.Devices
@@ -285,78 +278,8 @@ class VolumeOps(object):
         LOG.debug(_("end_device_id: %s"), end_device_id)
         deviceID = disk_path[start_device_id + 1:end_device_id]
         return deviceID[deviceID.find("\\") + 2:]
-                
-    def _clone_wmi_obj(self, wmi_class, wmi_obj):
-        """Clone a WMI object"""
-        cl = self._conn.__getattr__(wmi_class)  # get the class
-        newinst = cl.new()
-        #Copy the properties from the original.
-        for prop in wmi_obj._properties:
-            if prop == "VirtualSystemIdentifiers":
-                strguid = []
-                strguid.append(str(uuid.uuid4()))
-                newinst.Properties_.Item(prop).Value = strguid
-            else:
-                newinst.Properties_.Item(prop).Value = \
-                    wmi_obj.Properties_.Item(prop).Value
-        return newinst
-    
-    #Move to utils class
-    def _add_virt_resource(self, res_setting_data, target_vm):
-        """Add a new resource (disk/nic) to the VM"""
-        vs_man_svc = self._conn.Msvm_VirtualSystemManagementService()[0]
-        (job, new_resources, ret_val) = vs_man_svc.\
-                    AddVirtualSystemResources([res_setting_data.GetText_(1)],
-                                                target_vm.path_())
-        success = True
-        if ret_val == WMI_JOB_STATUS_STARTED:
-            success = self._check_job_status(job)
-        else:
-            success = (ret_val == 0)
-        if success:
-            return new_resources
-        else:
-            return None
-    
-    def _remove_virt_resource(self, res_setting_data, target_vm):
-        """Add a new resource (disk/nic) to the VM"""
-        vs_man_svc = self._conn.Msvm_VirtualSystemManagementService()[0]
-        (job, ret_val) = vs_man_svc.\
-                    RemoveVirtualSystemResources([res_setting_data.path_()],
-                                                target_vm.path_())
-        success = True
-        if ret_val == WMI_JOB_STATUS_STARTED:
-            success = self._check_job_status(job)
-        else:
-            success = (ret_val == 0)
-        return success
-    
-    def _check_job_status(self, jobpath):
-        """Poll WMI job state for completion"""
-        #Jobs have a path of the form:
-        #\\WIN-P5IG7367DAG\root\virtualization:Msvm_ConcreteJob.InstanceID=
-        #"8A496B9C-AF4D-4E98-BD3C-1128CD85320D"
-        ##inst_id = jobpath.split('=')[1].strip('"')
-        ##jobs = self._conn.Msvm_ConcreteJob(InstanceID=inst_id)
-        ##if len(jobs) == 0:
-        ##    return False
-        ##job = jobs[0]
-        job_wmi_path = jobpath.replace('\\', '/')
-        job = self._wmi.WMI(moniker=job_wmi_path)
-            
-        while job.JobState == WMI_JOB_STATE_RUNNING:
-            time.sleep(0.1)
-            job = self._wmi.WMI(moniker=job_wmi_path)
-        if job.JobState != WMI_JOB_STATE_COMPLETED:
-            LOG.debug(_("WMI job failed: %s - %s - %s"), job.ErrorSummaryDescription, job.ErrorDescription, job.ErrorCode)
-            return False
-        desc = job.Description
-        elap = job.ElapsedTime
-        LOG.debug(_("WMI job succeeded: %(desc)s, Elapsed=%(elap)s ")
-                % locals())
-        return True
-    
+                                
     def get_default_root_device(self):
-        return self.default_root_device
+        return self._default_root_device
                     
         
