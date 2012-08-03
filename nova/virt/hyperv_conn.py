@@ -108,7 +108,11 @@ from nova.virt.hyperv import snapshotops
 from nova.virt.hyperv import livemigrationops
 from nova.virt.hyperv import vmutils
 from nova.image import glance
+<<<<<<< HEAD
 >>>>>>> Refactoring
+=======
+from nova import block_device
+>>>>>>> Added block_device to DI constructor parameters
 import pythoncom
 
 
@@ -129,7 +133,7 @@ class HyperVConnection(driver.ComputeDriver):
 
         vmutls = vmutils.VMUtils(wmi, os, uuid, time)
         
-        self._volumeops = volumeops.VolumeOps(wmi, vmutils, time)        
+        self._volumeops = volumeops.VolumeOps(wmi, vmutils, block_device, time)        
         self._vmops = vmops.VMOps(wmi, vmutls, self._volumeops, images, db, os, multiprocessing, uuid)
         self._snapshotops = snapshotops.SnapshotOps(wmi, vmutls, glance, os, shutil)
         self._livemigrationops = livemigrationops.LiveMigrationOps(wmi, vmutls, self._volumeops, os)
