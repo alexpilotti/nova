@@ -19,11 +19,14 @@
 """
 Management class for Storage-related functions (attach, detach, etc).
 """
+<<<<<<< HEAD
 import uuid
 import time
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+=======
+>>>>>>> Refactoring
 from nova import block_device
 =======
 >>>>>>> Adding preliminary version of attach and dettach volumes
@@ -42,23 +45,22 @@ from nova.virt import driver
 >>>>>>> Adding preliminary version of attach and dettach volumes
 =======
 from nova.virt import driver
+<<<<<<< HEAD
 >>>>>>> Adding boot from volume functionality.
+=======
+from nova.virt.hyperv import baseops
+import constants
+>>>>>>> Refactoring
 
 LOG = logging.getLogger(__name__)
-
 FLAGS = flags.FLAGS
 
-WMI_JOB_STATUS_STARTED = 4096
-
-WMI_JOB_STATUS_STARTED = 4096
-WMI_JOB_STATE_RUNNING = 4
-WMI_JOB_STATE_COMPLETED = 7
-
-class VolumeOps(object):
+class VolumeOps(baseops.BaseOps):
     """
     Management class for Volume-related tasks
     """
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     def __init__(self, wmi):
@@ -78,6 +80,16 @@ class VolumeOps(object):
 =======
 >>>>>>> Adding boot from volume functionality.
         self.default_root_device = 'vda'
+=======
+    def __init__(self, wmi, vmutils, time):
+        super(VolumeOps, self).__init__(wmi)
+        
+        self._vmutils = vmutils
+        self._time = time
+        self._initiator = None
+        self._conn_wmi = wmi.WMI(moniker='//./root/wmi')
+        self._default_root_device = 'vda'
+>>>>>>> Refactoring
         
     def attach_boot_volume(self, block_device_info, vm_name):
         """Attach the boot volume to the IDE controller"""
@@ -192,14 +204,14 @@ class VolumeOps(object):
                 "SELECT * FROM Msvm_ResourceAllocationSettingData \
                 WHERE ResourceSubType LIKE 'Microsoft Physical Disk Drive'\
                 AND InstanceID LIKE '%Default%'")[0]
-        diskdrive = self._clone_wmi_obj(
+        diskdrive = self._vmutils.clone_wmi_obj(self._conn,
                 'Msvm_ResourceAllocationSettingData', diskdflt)
 <<<<<<< HEAD
 <<<<<<< HEAD
         diskdrive.Address = address
         diskdrive.Parent = controller[0].path_()
         diskdrive.HostResource = [mounted_disk[0].path_()]
-        new_resources = self._add_virt_resource(diskdrive, instance)
+        new_resources = self._vmutils.add_virt_resource(self._conn, diskdrive, instance)
         if new_resources is None:
             raise Exception(_('Failed to add volume to VM %s'),
                                              instance)
@@ -217,7 +229,7 @@ class VolumeOps(object):
         #Sending login
         utils.execute('iscsicli.exe', 'qlogintarget', target_iqn, close_fds=False)
         #Waiting the disk to be mounted. Research this
-        time.sleep(2)	
+        self._time.sleep(2)	
         
 =======
         diskdrive.Address = self._get_free_controller_slot(ctrller[0])
@@ -318,7 +330,7 @@ class VolumeOps(object):
 >>>>>>> Adding boot from volume functionality.
         vms = self._conn.MSVM_ComputerSystem(ElementName=instance_name)
         vm = vms[0]
-        remove_result = self._remove_virt_resource(physical_disk, vm)
+        remove_result = self._vmutils.remove_virt_resource(self._conn, physical_disk, vm)
         if remove_result is False:
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -330,7 +342,7 @@ class VolumeOps(object):
             raise Exception(_('Failed to remove volume from VM %s'), instance_name)
 >>>>>>> Adding boot from volume functionality.
         #Sending logout
-        initiator_session = self._wmi_conn.query(
+        initiator_session = self._conn_wmi.query(
                 "SELECT * FROM MSiSCSIInitiator_SessionClass \
                 WHERE TargetName='" + target_iqn + "'")[0]
         session_id = initiator_session.SessionId
@@ -356,7 +368,7 @@ class VolumeOps(object):
         }
     
     def _get_iscsi_initiator(self):
-        computer_system = self._cim_conn.Win32_ComputerSystem()[0]
+        computer_system = self._conn_cimv2.Win32_ComputerSystem()[0]
         hostname = computer_system.name
         keypath = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\iSCSI\Discovery"
         try:
@@ -366,7 +378,7 @@ class VolumeOps(object):
             CloseKey(key) 
         except:
             LOG.info(_("The ISCSI initiator name can't be found. Choosing the default one"))
-            computer_system = self._cim_conn.Win32_ComputerSystem()[0]
+            computer_system = self._conn_cimv2.Win32_ComputerSystem()[0]
             initiator_name = "iqn.1991-05.com.microsoft:" + hostname.lower()
         return {
             'ip': FLAGS.my_ip,
@@ -381,8 +393,12 @@ class VolumeOps(object):
 >>>>>>> Adding preliminary version of attach and dettach volumes
 =======
     def _get_mounted_disk_from_lun(self, target_iqn, target_lun):
+<<<<<<< HEAD
 >>>>>>> Adding boot from volume functionality.
         initiator_session = self._wmi_conn.query(
+=======
+        initiator_session = self._conn_wmi.query(
+>>>>>>> Refactoring
                 "SELECT * FROM MSiSCSIInitiator_SessionClass \
                 WHERE TargetName='" + target_iqn + "'")[0]
         session_id = initiator_session.SessionId
@@ -469,8 +485,12 @@ class VolumeOps(object):
     def _get_session_id_from_mounted_disk(self, physical_drive_path):
         drive_number = self._get_drive_number_from_disk_path(physical_drive_path)
         LOG.debug(_("Drive number to disconnect is: %s"), drive_number)
+<<<<<<< HEAD
 >>>>>>> Adding boot from volume functionality.
         initiator_sessions = self._wmi_conn.query(
+=======
+        initiator_sessions = self._conn_wmi.query(
+>>>>>>> Refactoring
                 "SELECT * FROM MSiSCSIInitiator_SessionClass")
         for initiator_session in initiator_sessions:
             devices = initiator_session.Devices
@@ -490,6 +510,7 @@ class VolumeOps(object):
         LOG.debug(_("end_device_id: %s"), end_device_id)
         deviceID = disk_path[start_device_id + 1:end_device_id]
         return deviceID[deviceID.find("\\") + 2:]
+<<<<<<< HEAD
 =======
                 LOG.debug(_("DeviceNumber : %s"),deviceNumber) 
                 if deviceNumber ==  drive_number:
@@ -614,6 +635,11 @@ class VolumeOps(object):
     def get_default_root_device(self):
         return self.default_root_device
 >>>>>>> Adding boot from volume functionality.
+=======
+                                
+    def get_default_root_device(self):
+        return self._default_root_device
+>>>>>>> Refactoring
                     
         
 =======

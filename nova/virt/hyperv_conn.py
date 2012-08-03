@@ -64,11 +64,14 @@ import os
 import uuid
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import platform
 =======
 >>>>>>> Hyper-V snapshot support
 import shutil
 import platform
+=======
+>>>>>>> Refactoring
 =======
 >>>>>>> Refactoring
 import shutil
@@ -81,6 +84,7 @@ from nova.virt import driver
 from nova.virt import images
 from nova import utils
 from nova import db
+<<<<<<< HEAD
 <<<<<<< HEAD
 from nova.openstack.common import cfg
 <<<<<<< HEAD
@@ -97,6 +101,14 @@ from nova.virt.hyperv import snapshotops
 from nova.virt.hyperv import livemigrationops
 from nova.virt.hyperv import vmutils
 from nova.image import glance
+=======
+from nova.virt.hyperv import volumeops
+from nova.virt.hyperv import vmops
+from nova.virt.hyperv import snapshotops
+from nova.virt.hyperv import livemigrationops
+from nova.virt.hyperv import vmutils
+from nova.image import glance
+>>>>>>> Refactoring
 import pythoncom
 
 
@@ -132,6 +144,7 @@ class HyperVConnection(driver.ComputeDriver):
     def list_instances_detail(self):
         return self._vmops.list_instances_detail()
 
+<<<<<<< HEAD
 <<<<<<< HEAD
             instance_info = driver.InstanceInfo(instance_name, state)
             instance_infos.append(instance_info)
@@ -460,6 +473,11 @@ class HyperVConnection(driver.ComputeDriver):
         self._vmops.spawn(context, instance, image_meta, network_info, block_device_info)
             
 >>>>>>> Refactoring
+=======
+    def spawn(self, context, instance, image_meta, network_info, block_device_info=None):
+        self._vmops.spawn(context, instance, image_meta, network_info, block_device_info)
+            
+>>>>>>> Refactoring
     def reboot(self, instance, network_info, reboot_type):
         self._vmops.reboot(instance, network_info, reboot_type)
     
@@ -488,6 +506,7 @@ class HyperVConnection(driver.ComputeDriver):
         pass
 <<<<<<< HEAD
 
+<<<<<<< HEAD
 <<<<<<< HEAD
     def get_vcpu_total(self):
         """Get vcpu number of physical computer.
@@ -684,6 +703,8 @@ class HyperVConnection(driver.ComputeDriver):
         platform_ver = platform.uname()[2]
     return platform_ver
 
+=======
+>>>>>>> Refactoring
 =======
 >>>>>>> Refactoring
     def update_available_resource(self, context, host):
