@@ -1,0 +1,178 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"> 
+  <Product Name='OpenStack Compute Essex' Id='{5ABDD367-DD40-4974-BF3E-A51257EC62E5}' UpgradeCode='{614BE682-855A-4CB0-A70C-F21322E2F64B}'
+    Language='1033' Codepage='1252' Version='5.0.0' Manufacturer='OpenStack.org'>
+
+    <Package Id='*' Keywords='Installer' Description="OpenStack Essex Installer"
+      Comments='OpenStack Essex Installer' Manufacturer='OpenStack.org'
+      InstallerVersion='100' Languages='1033' Compressed='yes' SummaryCodepage='1252' />
+    <Media Id='1' Cabinet='essex.cab' EmbedCab='yes' />
+        <Directory Id='TARGETDIR' Name='SourceDir'>
+          <Directory Id='ProgramFilesFolder' Name='PFiles'>
+            <Directory Id='INSTALLDIR' Name='OpenStack'>
+              
+              <Component Id="SetPath" Guid="{1781A625-8ACB-45E7-2351-219D81760B2E}">
+		<CreateFolder />
+                   <Environment Id="SetSystemPath"
+                         Action="set"
+                         Part="last"
+                         Name="PATH"
+                         Permanent="yes"
+                         System="yes"
+                         Value=';C:\Python27;c:\python27\scripts;[INSTALLDIR]nova;' />
+               </Component> 
+            </Directory>
+          </Directory>
+        </Directory>
+   
+
+
+    <Icon Id="openstack_icon.ico" SourceFile="openstack_icon.ico" />
+    <Property Id="ARPPRODUCTICON" Value="openstack_icon.ico" />
+
+    <SetProperty Id="InstallEZSetup" Value="&quot;[SystemFolder]cmd.exe&quot; /c cd &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\&quot;  &amp;&amp;  c:\python27\python.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\ez_setup.py&quot; setuptools-0.6c11-py2.7.egg" After="CostFinalize" />
+	<SetProperty Id="Installsqlalchemy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\SQLAlchemy-0.7.6.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installpy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\py-1.4.9.zip&quot;" After="CostFinalize" /> 
+        <SetProperty Id="Installmigrate" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\migrate-0.2.2.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installampqlib" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\amqplib-1.0.2.tgz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installanyjson" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\anyjson-0.3.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installargparse" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\argparse-1.2.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installboto" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\boto-2.3.0.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installcarrot" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\carrot-0.10.7.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installmarkdown" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\Markdown-2.1.1.zip&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installcheetah" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\Cheetah-2.4.4.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installgreenlet" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\greenlet-0.3.4-py2.7-win32.egg&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installeventlet" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\eventlet-0.9.16.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installfeedparser" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\feedparser-5.1.1.zip&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installglance" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\glance-2012.1.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installhttplib2" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\httplib2-0.7.4.zip&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installiso8601" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\iso8601-0.1.4.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installkombu" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\kombu-2.1.2.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installlockfile" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\lockfile-0.9.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installlogilabc" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\logilab-common-0.57.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installlogilaba" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\logilab-astng-0.23.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installmox" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\mox-0.5.3.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installnetaddr" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\netaddr-0.7.6-py2.7.egg&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installpaste" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\Paste-1.7.5.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installpastedeploy" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\PasteDeploy-1.5.0.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installpep8" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\pep8-0.6.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installprettytable" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\prettytable-0.5.zip&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installpylint" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\pylint-0.25.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installpythonnovaclient" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\python-novaclient-2012.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installrepoze" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\repoze.lru-0.4.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installroutes" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\Routes-1.13.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installsuds" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\suds-0.4.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installtempita" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\Tempita-0.5.1.tar.gz&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installwebob" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\WebOb-1.2b3.zip&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installwmi" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\WMI-1.4.9.zip&quot;" After="CostFinalize" /> 
+	<SetProperty Id="Installwsgiref" Value="&quot;[SystemFolder]cmd.exe&quot; /c c:\python27\scripts\easy_install.exe &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\wsgiref-0.1.2.zip&quot;" After="CostFinalize" /> 
+
+    <SetProperty Id="InstallNovaService" Value="&quot;[SystemFolder]cmd.exe&quot; /c SET PATH=%PATH%;[INSTALLDIR]nova; &amp;&amp; c:\python27\python.exe &quot;[INSTALLDIR]nova\bin\nova-compute.py&quot; install" After="CostFinalize" />
+    <SetProperty Id="RenameCompute" Value="&quot;[SystemFolder]cmd.exe&quot; /c rename &quot;[INSTALLDIR]nova\bin\nova-compute&quot; nova-compute.py" After="CostFinalize" />
+    <SetProperty Id="InstallPyWin321" Value="&quot;[SystemFolder]cmd.exe&quot; /c xcopy /Y /E &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\pywin32-217.win32-py2.7\PLATLIB&quot; c:\python27\lib\site-packages" After="CostFinalize" />
+    <SetProperty Id="InstallPyWin322" Value="&quot;[SystemFolder]cmd.exe&quot; /c xcopy /Y /E &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\pywin32-217.win32-py2.7\SCRIPTS&quot; c:\python27\lib\site-packages" After="CostFinalize" />
+    <SetProperty Id="InstallPyWin323" Value="&quot;[SystemFolder]cmd.exe&quot; /c cd c:\python27\lib\site-packages &amp;&amp; c:\python27\python.exe pywin32_postinstall.py -install" After="CostFinalize" />
+    <SetProperty Id="InstallPyMySQL" Value="&quot;[SystemFolder]cmd.exe&quot; /c xcopy /Y /E &quot;[INSTALLDIR]nova\tools\windows\msi_installer\files\MySQL-python-1.2.3.win32-py2.7\PLATLIB&quot; c:\python27\lib\site-packages" After="CostFinalize" />
+
+    
+    <CustomAction Id="InstallEZSetup" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="InstallNovaService" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="RenameCompute" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="InstallPyWin321" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="InstallPyWin322" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="InstallPyWin323" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="InstallPyMySQL" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    
+    <CustomAction Id="Installsqlalchemy" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installpy" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installmigrate" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installampqlib" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installanyjson" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installargparse" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installboto" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installcarrot" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installmarkdown" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installcheetah" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installgreenlet" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installeventlet" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installfeedparser" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installglance" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installhttplib2" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installiso8601" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installkombu" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installlockfile" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installlogilabc" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installlogilaba" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installmox" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installnetaddr" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installpaste" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installpastedeploy" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installpep8" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installprettytable" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installpylint" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installpythonnovaclient" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installrepoze" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installroutes" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installsuds" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installtempita" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installwebob" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installwmi" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+    <CustomAction Id="Installwsgiref" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore" />
+
+
+   
+    <InstallExecuteSequence>
+        <Custom Action="InstallEZSetup" After='InstallFiles'>NOT Installed</Custom>
+
+	<Custom Action="Installsqlalchemy" After='InstallFiles'>NOT Installed</Custom>
+	<Custom Action="Installpy" After='Installsqlalchemy'>NOT Installed</Custom>
+	<Custom Action="Installmigrate" After='Installpy'>NOT Installed</Custom>
+	<Custom Action="Installampqlib" After='Installmigrate'>NOT Installed</Custom>
+	<Custom Action="Installanyjson" After='Installampqlib'>NOT Installed</Custom>
+	<Custom Action="Installargparse" After='Installanyjson'>NOT Installed</Custom>
+	<Custom Action="Installboto" After='Installargparse'>NOT Installed</Custom>
+	<Custom Action="Installcarrot" After='Installboto'>NOT Installed</Custom>
+	<Custom Action="Installmarkdown" After='Installcarrot'>NOT Installed</Custom>
+	<Custom Action="Installcheetah" After='Installmarkdown'>NOT Installed</Custom>
+	<Custom Action="Installgreenlet" After='Installcheetah'>NOT Installed</Custom>
+	<Custom Action="Installeventlet" After='Installgreenlet'>NOT Installed</Custom>
+	<Custom Action="Installfeedparser" After='Installeventlet'>NOT Installed</Custom>
+	<Custom Action="Installhttplib2" After='Installfeedparser'>NOT Installed</Custom>
+	<Custom Action="Installiso8601" After='Installhttplib2'>NOT Installed</Custom>
+	<Custom Action="Installkombu" After='Installiso8601'>NOT Installed</Custom>
+	<Custom Action="Installlockfile" After='Installkombu'>NOT Installed</Custom>
+	<Custom Action="Installlogilabc" After='Installlockfile'>NOT Installed</Custom>
+	<Custom Action="Installlogilaba" After='Installlogilabc'>NOT Installed</Custom>
+	<Custom Action="Installmox" After='Installlogilaba'>NOT Installed</Custom>
+	<Custom Action="Installnetaddr" After='Installmox'>NOT Installed</Custom>
+	<Custom Action="Installpaste" After='Installnetaddr'>NOT Installed</Custom>
+	<Custom Action="Installpastedeploy" After='Installpaste'>NOT Installed</Custom>
+	<Custom Action="Installpep8" After='Installpastedeploy'>NOT Installed</Custom>
+	<Custom Action="Installprettytable" After='Installpep8'>NOT Installed</Custom>
+	<Custom Action="Installpylint" After='Installprettytable'>NOT Installed</Custom>
+	<Custom Action="Installpythonnovaclient" After='Installpylint'>NOT Installed</Custom>
+	<Custom Action="Installrepoze" After='Installpythonnovaclient'>NOT Installed</Custom>
+	<Custom Action="Installroutes" After='Installrepoze'>NOT Installed</Custom>
+	<Custom Action="Installsuds" After='Installroutes'>NOT Installed</Custom>
+	<Custom Action="Installtempita" After='Installsuds'>NOT Installed</Custom>
+	<Custom Action="Installwebob" After='Installtempita'>NOT Installed</Custom>
+	<Custom Action="Installwmi" After='Installwebob'>NOT Installed</Custom>
+	<Custom Action="Installwsgiref" After='Installwmi'>NOT Installed</Custom>
+	<Custom Action="Installglance" After='Installwsgiref'>NOT Installed</Custom>
+
+        <Custom Action="InstallPyWin321" After='Installglance'>NOT Installed</Custom>
+        <Custom Action="InstallPyWin322" After='InstallPyWin321'>NOT Installed</Custom>
+        <Custom Action="InstallPyWin323" After='InstallPyWin322'>NOT Installed</Custom>
+	<Custom Action="InstallPyMySQL" After='InstallPyWin322'>NOT Installed</Custom>
+        <Custom Action="RenameCompute" After='InstallPyWin323'>NOT Installed</Custom>
+        <Custom Action="InstallNovaService" After='RenameCompute'>NOT Installed</Custom>
+        
+    </InstallExecuteSequence>
+    
+    <Feature Id='Complete' Level='1'>
+	<ComponentRef Id="SetPath" />
+        <ComponentGroupRef Id="OpenStackFiles" />
+    </Feature>
+
+  </Product>
+</Wix>

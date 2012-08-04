@@ -24,10 +24,12 @@ Utility methods to resize, repartition, and modify disk images.
 Includes injection of SSH PGP keys into authorized_keys file.
 
 """
-
-import crypt
-import json
 import os
+
+if os.name != 'nt':
+    import crypt
+
+import json
 import random
 import re
 import tempfile
@@ -406,6 +408,10 @@ def _set_passwd(username, admin_passwd, passwd_file, shadow_file):
     :raises: exception.Error(), IOError()
 
     """
+    if os.name != 'nt':
+        #Raise note implemented
+	pass
+    
     salt_set = ('abcdefghijklmnopqrstuvwxyz'
                 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
                 '0123456789./')
