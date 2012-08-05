@@ -101,7 +101,7 @@ class VolumeOps(baseops.BaseOps):
         target_lun = data['target_lun']
         target_iqn = data['target_iqn']
         target_portal = data['target_portal']
-        self.volutiils._login_storage_target(target_lun, target_iqn, target_portal)
+        self.volutils._login_storage_target(target_lun, target_iqn, target_portal)
         try:
             #Getting the mounted disk
             mounted_disk = self._get_mounted_disk_from_lun(target_iqn, target_lun)
