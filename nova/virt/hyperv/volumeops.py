@@ -20,12 +20,9 @@ Management class for Storage-related functions (attach, detach, etc).
 """
 from nova import flags
 from nova import log as logging
-from nova import utils
-from _winreg import (HKEY_LOCAL_MACHINE, KEY_ALL_ACCESS,
-                     OpenKey, CloseKey, QueryValueEx)
 from nova.openstack.common import cfg
 from nova.virt.hyperv import baseops
-import constants
+from nova.virt.hyperv import volumeutils
 
 LOG = logging.getLogger(__name__)
 
@@ -59,17 +56,18 @@ class VolumeOps(baseops.BaseOps):
         self._default_root_device = 'vda'
         self._attaching_volume_retry_count = FLAGS.hyperv_attaching_volume_retry_count
         self._wait_between_attach_retry = FLAGS.hyperv_wait_between_attach_retry
+        self._volutils = volumeutils.VolumeUtils(time, driver, block_device)
                 
     def attach_boot_volume(self, block_device_info, vm_name):
         """Attach the boot volume to the IDE controller"""
         LOG.debug(_("block device info: %s"),block_device_info)
-        ebs_root = driver.block_device_info_get_mapping(block_device_info)[0]
+        ebs_root = self._driver.block_device_info_get_mapping(block_device_info)[0]
         connection_info = ebs_root['connection_info']
         data = connection_info['data']
         target_lun = data['target_lun']
         target_iqn = data['target_iqn']
         target_portal = data['target_portal']
-        self._login_storage_target(target_lun, target_iqn, target_portal)
+        self.volutils._login_storage_target(target_lun, target_iqn, target_portal)
         try:
             #Getting the mounted disk
             mounted_disk = self._get_mounted_disk_from_lun(target_iqn, target_lun)
@@ -88,26 +86,12 @@ class VolumeOps(baseops.BaseOps):
             self._attach_volume_to_controller(ctrller, 0, mounted_disk, vm)
         except Exception as exn:
             LOG.exception(_('Attach boot from volume failed: %s'), exn)
-            self._logout_storage_target(target_iqn)
+            self.volutils._logout_storage_target(target_iqn)
             raise Exception(_('Unable to attach boot volume to instance %s')
                 % vm_name)
 
     def _volume_in_mapping(self, mount_device, block_device_info):
-        block_device_list = [self._block_device.strip_dev(vol['mount_device'])
-                             for vol in
-                             driver.block_device_info_get_mapping(
-                                 block_device_info)]
-        swap = driver.block_device_info_get_swap(block_device_info)
-        if driver.swap_is_usable(swap):
-            block_device_list.append(
-                self._block_device.strip_dev(swap['device_name']))
-        block_device_list += [self._block_device.strip_dev(ephemeral['device_name'])
-                              for ephemeral in
-                              driver.block_device_info_get_ephemerals(
-                                  block_device_info)]
-
-        LOG.debug(_("block_device_list %s"), block_device_list)
-        return self._block_device.strip_dev(mount_device) in block_device_list
+        return self.volutils.volume_in_mapping(mount_device, block_device_info)
     
     def attach_volume(self, connection_info, instance_name, mountpoint):
         """Attach a volume to the SCSI controller"""
@@ -117,7 +101,7 @@ class VolumeOps(baseops.BaseOps):
         target_lun = data['target_lun']
         target_iqn = data['target_iqn']
         target_portal = data['target_portal']
-        self._login_storage_target(target_lun, target_iqn, target_portal)
+        self.volutils._login_storage_target(target_lun, target_iqn, target_portal)
         try:
             #Getting the mounted disk
             mounted_disk = self._get_mounted_disk_from_lun(target_iqn, target_lun)
@@ -134,7 +118,7 @@ class VolumeOps(baseops.BaseOps):
                                               mounted_disk, vm)
         except Exception as exn:
             LOG.exception(_('Attach volume failed: %s'), exn)
-            self._logout_storage_target(target_iqn)
+            self.volutils._logout_storage_target(target_iqn)
             raise Exception(_('Unable to attach volume to instance %s')
                 % instance_name)
            
@@ -155,21 +139,6 @@ class VolumeOps(baseops.BaseOps):
             raise Exception(_('Failed to add volume to VM %s'),
                                              instance)
     
-    def _login_storage_target (self, target_lun, target_iqn, target_portal):
-        """Add target portal, list targets and logins to the target"""
-        separator = target_portal.find(':')
-        target_address = target_portal[:separator]
-        target_port = target_portal[separator + 1:]
-        #Adding target portal to iscsi initiator. Sending targets
-        utils.execute('iscsicli.exe', 'AddTargetPortal', target_address, target_port, '*',
-					  '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', '*', close_fds=False)
-        #Listing targets
-        utils.execute('iscsicli.exe', 'LisTargets', close_fds=False)
-        #Sending login
-        utils.execute('iscsicli.exe', 'qlogintarget', target_iqn, close_fds=False)
-        #Waiting the disk to be mounted. Research this
-        self._time.sleep(self._wait_between_attach_retry)
-        
     def _get_free_controller_slot (self, scsi_controller):
         #Getting volumes mounted in the SCSI controller
         volumes = self._conn.query(
@@ -205,23 +174,11 @@ class VolumeOps(baseops.BaseOps):
         LOG.debug(_("Physical disk detached is: %s"), physical_disk)           
         vms = self._conn.MSVM_ComputerSystem(ElementName=instance_name)
         vm = vms[0]
-        remove_result = self._vmutils.remove_virt_resource(self._conn, physical_disk, vm)
+        remove_result = self._vm_utils._remove_virt_resource(physical_disk, vm)
         if remove_result is False:
             raise Exception(_('Failed to remove volume from VM %s'), instance_name)
         #Sending logout
-        initiator_session = self._wmi_conn.query(
-                "SELECT * FROM MSiSCSIInitiator_SessionClass \
-                WHERE TargetName='" + target_iqn + "'")[0]
-        session_id = initiator_session.SessionId
-        utils.execute('iscsicli.exe', 'logouttarget', session_id, close_fds=False)
-        
-    def _logout_storage_target(self, target_iqn):
-        #logout ISCSI session
-        initiator_session = self._wmi_conn.query(
-                "SELECT * FROM MSiSCSIInitiator_SessionClass \
-                WHERE TargetName='" + target_iqn + "'")[0]
-        session_id = initiator_session.SessionId
-        utils.execute('iscsicli.exe', 'logouttarget', session_id, close_fds=False)
+        self.volutils._logout_storage_target(target_iqn)
         
     def get_volume_connector(self, instance):
         if not self._initiator:
@@ -235,28 +192,12 @@ class VolumeOps(baseops.BaseOps):
         }
     
     def _get_iscsi_initiator(self):
-        computer_system = self._cim_conn.Win32_ComputerSystem()[0]
-        hostname = computer_system.name
-        keypath = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\iSCSI\Discovery"
-        try:
-            key = OpenKey(HKEY_LOCAL_MACHINE, keypath, 0, KEY_ALL_ACCESS)
-            temp = QueryValueEx(key, 'DefaultInitiatorName')
-            initiator_name = str(temp[0])
-            CloseKey(key) 
-        except:
-            LOG.info(_("The ISCSI initiator name can't be found. Choosing the default one"))
-            computer_system = self._cim_conn.Win32_ComputerSystem()[0]
-            initiator_name = "iqn.1991-05.com.microsoft:" + hostname.lower()
-        return {
-            'ip': FLAGS.my_ip,
-            'initiator': initiator_name,
-        }
+        return self.volutils._get_iscsi_initiator(self._cim_conn)
     
     def _get_mounted_disk_from_lun(self, target_iqn, target_lun):
         initiator_session = self._wmi_conn.query(
                 "SELECT * FROM MSiSCSIInitiator_SessionClass \
                 WHERE TargetName='" + target_iqn + "'")[0]
-        session_id = initiator_session.SessionId
         devices = initiator_session.Devices
         device_number = None
         for device in devices:
@@ -281,13 +222,13 @@ class VolumeOps(baseops.BaseOps):
         LOG.debug(_("Device number : %s"), device_number)
         LOG.debug(_("Target lun : %s"), target_lun)
         #Finding Mounted disk drive
-        for i in range(1,self._attaching_volume_retry_count):
+        for i in range(1,self.attaching_volume_retry_count):
             mounted_disk = self._conn.query(
                 "SELECT * FROM Msvm_DiskDrive WHERE DriveNumber=" + str(device_number) + "")
             LOG.debug(_("Mounted disk is: %s"), mounted_disk)
             if len(mounted_disk) > 0:
                 break
-            time.sleep(self._wait_between_attach_retry)
+            self._time.sleep(self.wait_between_attach_retry)
         mounted_disk = self._conn.query(
                 "SELECT * FROM Msvm_DiskDrive WHERE DriveNumber=" + str(device_number) + "")
         LOG.debug(_("Mounted disk is: %s"), mounted_disk)
@@ -300,7 +241,7 @@ class VolumeOps(baseops.BaseOps):
         #Get the session_id of the ISCSI connection
         session_id = self._get_session_id_from_mounted_disk(physical_drive_path)
         #Logging out the target
-        utils.execute('iscsicli.exe', 'logouttarget', session_id, close_fds=False)
+        self._volutils._execute_log_out(session_id)
 
     def _get_session_id_from_mounted_disk(self, physical_drive_path):
         drive_number = self._get_drive_number_from_disk_path(physical_drive_path)
@@ -323,6 +264,6 @@ class VolumeOps(baseops.BaseOps):
         LOG.debug(_("end_device_id: %s"), end_device_id)
         deviceID = disk_path[start_device_id + 1:end_device_id]
         return deviceID[deviceID.find("\\") + 2:]
-                
+                                
     def get_default_root_device(self):
         return self._default_root_device
