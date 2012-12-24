@@ -26,8 +26,8 @@ from eventlet.green import subprocess
 
 from nova.openstack.common import cfg
 from nova.openstack.common import log as logging
-from nova.virt.hyperv import basevolumeutils
 from nova.virt.hyperv import vmutils
+from nova.virt.hyperv import basevolumeutils
 
 LOG = logging.getLogger(__name__)
 CONF = cfg.CONF
@@ -39,12 +39,11 @@ class VolumeUtils(basevolumeutils.BaseVolumeUtils):
             self._conn_wmi = conn_wmi
 
         def execute(self, *args, **kwargs):
-            _PIPE = subprocess.PIPE  # pylint: disable=E1101
             proc = subprocess.Popen(
                 [args],
-                stdin=_PIPE,
-                stdout=_PIPE,
-                stderr=_PIPE,
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
             )
             stdout_value, stderr_value = proc.communicate()
             if stdout_value.find('The operation completed successfully') == -1:
@@ -64,7 +63,7 @@ class VolumeUtils(basevolumeutils.BaseVolumeUtils):
             self.execute('iscsicli.exe ' + 'LisTargets')
             #Sending login
             self.execute('iscsicli.exe ' + 'qlogintarget ' + target_iqn)
-            #Waiting the disk to be mounted. Research this to avoid sleep
+            #Waiting the disk to be mounted. Research this
             time.sleep(CONF.hyperv_wait_between_attach_retry)
 
         def logout_storage_target(self, target_iqn):

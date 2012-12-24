@@ -119,6 +119,9 @@ class HyperVDriver(driver.ComputeDriver):
     def get_volume_connector(self, instance):
         return self._volumeops.get_volume_connector(instance)
 
+    def poll_rescued_instances(self, timeout):
+        pass
+
     def get_available_resource(self, nodename):
         return self._hostops.get_available_resource()
 
@@ -127,6 +130,10 @@ class HyperVDriver(driver.ComputeDriver):
 
     def host_power_action(self, host, action):
         return self._hostops.host_power_action(host, action)
+
+    def set_host_enabled(self, host, enabled):
+        """Sets the specified host's ability to accept new instances."""
+        pass
 
     def snapshot(self, context, instance, name):
         self._snapshotops.snapshot(context, instance, name)
