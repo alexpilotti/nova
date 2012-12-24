@@ -25,7 +25,6 @@ from nova import exception
 from nova.network import model as network_model
 from nova.network import rpcapi as network_rpcapi
 from nova.openstack.common import log as logging
-from nova.openstack.common import rpc
 
 LOG = logging.getLogger(__name__)
 
@@ -81,6 +80,8 @@ def update_instance_cache_with_nw_info(api, context, instance,
 
 class API(base.Base):
     """API for interacting with the network manager."""
+
+    _sentinel = object()
 
     def __init__(self, **kwargs):
         self.network_rpcapi = network_rpcapi.NetworkAPI()
@@ -213,7 +214,7 @@ class API(base.Base):
     @refresh_cache
     def add_fixed_ip_to_instance(self, context, instance, network_id):
         """Adds a fixed ip to instance from specified network."""
-        args = {'instance_id': instance['id'],
+        args = {'instance_id': instance['uuid'],
                 'host': instance['host'],
                 'network_id': network_id}
         self.network_rpcapi.add_fixed_ip_to_instance(context, **args)
@@ -231,6 +232,16 @@ class API(base.Base):
         """Force adds another network to a project."""
         self.network_rpcapi.add_network_to_project(context, project_id,
                 network_uuid)
+
+    def associate(self, context, network_uuid, host=_sentinel,
+                  project=_sentinel):
+        """Associate or disassociate host or project to network"""
+        associations = {}
+        if host is not API._sentinel:
+            associations['host'] = host
+        if project is not API._sentinel:
+            associations['project'] = project
+        self.network_rpcapi.associate(context, network_uuid, associations)
 
     @refresh_cache
     def get_instance_nw_info(self, context, instance):

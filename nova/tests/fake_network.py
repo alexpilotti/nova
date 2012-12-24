@@ -26,7 +26,6 @@ from nova.network import model as network_model
 from nova.network import nova_ipam_lib
 from nova.network import rpcapi as network_rpcapi
 from nova.openstack.common import cfg
-from nova import utils
 from nova.virt.libvirt import config as libvirt_config
 
 
@@ -54,7 +53,7 @@ class FakeVIFDriver(object):
     def setattr(self, key, val):
         self.__setattr__(key, val)
 
-    def plug(self, instance, vif):
+    def get_config(self, instance, network, mapping):
         conf = libvirt_config.LibvirtConfigGuestInterface()
 
         for attr, val in conf.__dict__.iteritems():
@@ -62,6 +61,9 @@ class FakeVIFDriver(object):
                 setattr(conf, attr, 'fake')
 
         return conf
+
+    def plug(self, instance, vif):
+        pass
 
 
 class FakeModel(dict):

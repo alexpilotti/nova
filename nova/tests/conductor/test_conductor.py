@@ -26,7 +26,6 @@ from nova import context
 from nova import db
 from nova.db.sqlalchemy import models
 from nova import exception as exc
-from nova import notifications
 from nova.openstack.common import jsonutils
 from nova.openstack.common.rpc import common as rpc_common
 from nova.openstack.common import timeutils
@@ -155,6 +154,13 @@ class _BaseTestCase(object):
         self.assertFalse(any([host == 'bar'
                               for host in aggregate_ref['hosts']]))
 
+        db.aggregate_delete(self.context.elevated(), aggregate_ref['id'])
+
+    def test_aggregate_get(self):
+        aggregate_ref = self._setup_aggregate_with_host()
+        aggregate = self.conductor.aggregate_get(self.context,
+                                                 aggregate_ref['id'])
+        self.assertEqual(jsonutils.to_primitive(aggregate_ref), aggregate)
         db.aggregate_delete(self.context.elevated(), aggregate_ref['id'])
 
     def test_aggregate_get_by_host(self):

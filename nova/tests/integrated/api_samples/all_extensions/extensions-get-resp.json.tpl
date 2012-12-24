@@ -241,6 +241,14 @@
             "updated": "%(timestamp)s"
         },
         {
+            "alias": "os-hide-server-addresses",
+            "description": "Support hiding server addresses in certain states.",
+            "links": [],
+            "name": "HideServerAddresses",
+            "namespace": "http://docs.openstack.org/compute/ext/hide_server_addresses/api/v1.1",
+            "updated": "2012-12-11T00:00:00+00:00"
+        },
+        {
             "alias": "os-hosts",
             "description": "%(text)s",
             "links": [],
@@ -302,6 +310,14 @@
             "links": [],
             "name": "Networks",
             "namespace": "http://docs.openstack.org/compute/ext/networks/api/v1.1",
+            "updated": "%(timestamp)s"
+        },
+        {
+            "alias": "os-networks-associate",
+            "description": "%(text)s",
+            "links": [],
+            "name": "NetworkAssociationSupport",
+            "namespace": "http://docs.openstack.org/compute/ext/networks_associate/api/v2",
             "updated": "%(timestamp)s"
         },
         {

@@ -36,8 +36,8 @@ libvirt_vif_opts = [
         default='br-int',
         help='Name of Integration Bridge used by Open vSwitch'),
     cfg.BoolOpt('libvirt_use_virtio_for_bridges',
-                default=False,
-                help='Use virtio for bridge interfaces'),
+                default=True,
+                help='Use virtio for bridge interfaces with KVM/QEMU'),
 ]
 
 CONF = cfg.CONF
@@ -48,21 +48,37 @@ CONF.import_opt('use_ipv6', 'nova.config')
 LINUX_DEV_LEN = 14
 
 
-class LibvirtBridgeDriver(vif.VIFDriver):
+class LibvirtBaseVIFDriver(vif.VIFDriver):
+
+    def get_config(self, instance, network, mapping):
+        conf = vconfig.LibvirtConfigGuestInterface()
+        conf.mac_addr = mapping['mac']
+        if CONF.libvirt_type in ('kvm', 'qemu') and \
+                CONF.libvirt_use_virtio_for_bridges:
+            conf.model = "virtio"
+            # Workaround libvirt bug, where it mistakenly
+            # enables vhost mode, even for non-KVM guests
+            if CONF.libvirt_type == "qemu":
+                conf.driver_name = "qemu"
+
+        return conf
+
+
+class LibvirtBridgeDriver(LibvirtBaseVIFDriver):
     """VIF driver for Linux bridge."""
 
-    def _get_configurations(self, instance, network, mapping):
+    def get_config(self, instance, network, mapping):
         """Get VIF configurations for bridge type."""
 
         mac_id = mapping['mac'].replace(':', '')
 
-        conf = vconfig.LibvirtConfigGuestInterface()
+        conf = super(LibvirtBridgeDriver,
+                     self).get_config(instance,
+                                      network,
+                                      mapping)
         conf.net_type = "bridge"
-        conf.mac_addr = mapping['mac']
         conf.source_dev = network['bridge']
         conf.script = ""
-        if CONF.libvirt_use_virtio_for_bridges:
-            conf.model = "virtio"
 
         conf.filtername = "nova-instance-" + instance['name'] + "-" + mac_id
         conf.add_filter_param("IP", mapping['ips'][0]['ip'])
@@ -108,14 +124,12 @@ class LibvirtBridgeDriver(vif.VIFDriver):
                                         network['bridge'],
                                         iface)
 
-        return self._get_configurations(instance, network, mapping)
-
     def unplug(self, instance, vif):
         """No manual unplugging required."""
         pass
 
 
-class LibvirtOpenVswitchDriver(vif.VIFDriver):
+class LibvirtOpenVswitchDriver(LibvirtBaseVIFDriver):
     """VIF driver for Open vSwitch that uses libivrt type='ethernet'
 
     Used for libvirt versions that do not support
@@ -124,6 +138,20 @@ class LibvirtOpenVswitchDriver(vif.VIFDriver):
 
     def get_dev_name(self, iface_id):
         return ("tap" + iface_id)[:LINUX_DEV_LEN]
+
+    def get_config(self, instance, network, mapping):
+        dev = self.get_dev_name(mapping['vif_uuid'])
+
+        conf = super(LibvirtOpenVswitchDriver,
+                     self).get_config(instance,
+                                      network,
+                                      mapping)
+
+        conf.net_type = "ethernet"
+        conf.target_dev = dev
+        conf.script = ""
+
+        return conf
 
     def create_ovs_vif_port(self, dev, iface_id, mac, instance_id):
         utils.execute('ovs-vsctl', '--', '--may-exist', 'add-port',
@@ -161,17 +189,6 @@ class LibvirtOpenVswitchDriver(vif.VIFDriver):
         self.create_ovs_vif_port(dev, iface_id, mapping['mac'],
                                  instance['uuid'])
 
-        conf = vconfig.LibvirtConfigGuestInterface()
-
-        if CONF.libvirt_use_virtio_for_bridges:
-            conf.model = "virtio"
-        conf.net_type = "ethernet"
-        conf.target_dev = dev
-        conf.script = ""
-        conf.mac_addr = mapping['mac']
-
-        return conf
-
     def unplug(self, instance, vif):
         """Unplug the VIF by deleting the port from the bridge."""
         try:
@@ -198,6 +215,14 @@ class LibvirtHybridOVSBridgeDriver(LibvirtBridgeDriver,
         return (("qvb%s" % iface_id)[:LINUX_DEV_LEN],
                 ("qvo%s" % iface_id)[:LINUX_DEV_LEN])
 
+    def get_config(self, instance, network, mapping):
+        br_name = self.get_br_name(mapping['vif_uuid'])
+        network['bridge'] = br_name
+        return super(LibvirtHybridOVSBridgeDriver,
+                     self).get_config(instance,
+                                      network,
+                                      mapping)
+
     def plug(self, instance, vif):
         """Plug using hybrid strategy
 
@@ -222,9 +247,6 @@ class LibvirtHybridOVSBridgeDriver(LibvirtBridgeDriver,
             self.create_ovs_vif_port(v2_name, iface_id, mapping['mac'],
                                      instance['uuid'])
 
-        network['bridge'] = br_name
-        return self._get_configurations(instance, network, mapping)
-
     def unplug(self, instance, vif):
         """UnPlug using hybrid strategy
 
@@ -247,32 +269,33 @@ class LibvirtHybridOVSBridgeDriver(LibvirtBridgeDriver,
             LOG.exception(_("Failed while unplugging vif"), instance=instance)
 
 
-class LibvirtOpenVswitchVirtualPortDriver(vif.VIFDriver):
+class LibvirtOpenVswitchVirtualPortDriver(LibvirtBaseVIFDriver):
     """VIF driver for Open vSwitch that uses integrated libvirt
        OVS virtual port XML (introduced in libvirt 0.9.11)."""
 
-    def plug(self, instance, vif):
+    def get_config(self, instance, network, mapping):
         """ Pass data required to create OVS virtual port element"""
-        network, mapping = vif
-
-        conf = vconfig.LibvirtConfigGuestInterface()
+        conf = super(LibvirtOpenVswitchVirtualPortDriver,
+                     self).get_config(instance,
+                                      network,
+                                      mapping)
 
         conf.net_type = "bridge"
         conf.source_dev = CONF.libvirt_ovs_bridge
-        conf.mac_addr = mapping['mac']
-        if CONF.libvirt_use_virtio_for_bridges:
-            conf.model = "virtio"
         conf.vporttype = "openvswitch"
         conf.add_vport_param("interfaceid", mapping['vif_uuid'])
 
         return conf
+
+    def plug(self, instance, vif):
+        pass
 
     def unplug(self, instance, vif):
         """No action needed.  Libvirt takes care of cleanup"""
         pass
 
 
-class QuantumLinuxBridgeVIFDriver(vif.VIFDriver):
+class QuantumLinuxBridgeVIFDriver(LibvirtBaseVIFDriver):
     """VIF driver for Linux Bridge when running Quantum."""
 
     def get_bridge_name(self, network_id):
@@ -281,8 +304,7 @@ class QuantumLinuxBridgeVIFDriver(vif.VIFDriver):
     def get_dev_name(self, iface_id):
         return ("tap" + iface_id)[:LINUX_DEV_LEN]
 
-    def plug(self, instance, vif):
-        network, mapping = vif
+    def get_config(self, instance, network, mapping):
         iface_id = mapping['vif_uuid']
         dev = self.get_dev_name(iface_id)
 
@@ -290,15 +312,19 @@ class QuantumLinuxBridgeVIFDriver(vif.VIFDriver):
         linux_net.LinuxBridgeInterfaceDriver.ensure_bridge(bridge, None,
                                                            filtering=False)
 
-        conf = vconfig.LibvirtConfigGuestInterface()
+        conf = super(QuantumLinuxBridgeVIFDriver,
+                     self).get_config(instance,
+                                      network,
+                                      mapping)
+
         conf.target_dev = dev
         conf.net_type = "bridge"
-        conf.mac_addr = mapping['mac']
         conf.source_dev = bridge
-        if CONF.libvirt_use_virtio_for_bridges:
-            conf.model = "virtio"
 
         return conf
+
+    def plug(self, instance, vif):
+        pass
 
     def unplug(self, instance, vif):
         """No action needed.  Libvirt takes care of cleanup"""

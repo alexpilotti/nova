@@ -81,6 +81,9 @@ compute_opts = [
     cfg.StrOpt('security_group_handler',
                default='nova.network.sg.NullSecurityGroupHandler',
                help='The full class name of the security group handler class'),
+    cfg.StrOpt('security_group_api',
+               default='nova.compute.api.SecurityGroupAPI',
+               help='The full class name of the security API class'),
 ]
 
 
@@ -165,7 +168,9 @@ class API(base.Base):
 
         self.network_api = network_api or network.API()
         self.volume_api = volume_api or volume.API()
-        self.security_group_api = security_group_api or SecurityGroupAPI()
+        self.security_group_api = (security_group_api or
+                                   importutils.import_object(
+                                   CONF.security_group_api))
         self.sgh = importutils.import_object(CONF.security_group_handler)
         self.consoleauth_rpcapi = consoleauth_rpcapi.ConsoleAuthAPI()
         self.scheduler_rpcapi = scheduler_rpcapi.SchedulerAPI()
@@ -1491,7 +1496,8 @@ class API(base.Base):
             raise exception.InstanceInvalidState(
                 attr='task_state',
                 instance_uuid=instance['uuid'],
-                state=instance['task_state'])
+                state=instance['task_state'],
+                method='reboot')
         state = {'SOFT': task_states.REBOOTING,
                  'HARD': task_states.REBOOTING_HARD}[reboot_type]
         instance = self.update(context, instance, vm_state=vm_states.ACTIVE,
@@ -1937,7 +1943,7 @@ class API(base.Base):
     def get_vnc_console(self, context, instance, console_type):
         """Get a url to an instance Console."""
         if not instance['host']:
-            raise exception.InstanceNotReady(instance=instance)
+            raise exception.InstanceNotReady(instance_id=instance['uuid'])
 
         connect_info = self.compute_rpcapi.get_vnc_console(context,
                 instance=instance, console_type=console_type)

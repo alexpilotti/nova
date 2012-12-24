@@ -20,9 +20,6 @@ Tests for Consoleauth Code.
 
 """
 
-import fixtures
-import time
-
 from nova.consoleauth import manager
 from nova import context
 from nova.openstack.common import log as logging
@@ -30,15 +27,6 @@ from nova.openstack.common import timeutils
 from nova import test
 
 LOG = logging.getLogger(__name__)
-
-
-class TimeOverride(fixtures.Fixture):
-    """Fixture to start and remove time override."""
-
-    def setUp(self):
-        super(TimeOverride, self).setUp()
-        timeutils.set_time_override()
-        self.addCleanup(timeutils.clear_time_override)
 
 
 class ConsoleauthTestCase(test.TestCase):
@@ -51,7 +39,7 @@ class ConsoleauthTestCase(test.TestCase):
 
     def test_tokens_expire(self):
         """Test that tokens expire correctly."""
-        self.useFixture(TimeOverride())
+        self.useFixture(test.TimeOverride())
         token = 'mytok'
         self.flags(console_token_ttl=1)
         self.manager.authorize_console(self.context, token, 'novnc',

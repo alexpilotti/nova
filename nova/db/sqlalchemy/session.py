@@ -158,6 +158,67 @@ There are some things which it is best to avoid:
   However, this can not be done until the "deleted" columns are removed and
   proper UNIQUE constraints are added to the tables.
 
+
+Efficient use of soft deletes:
+
+* There are two possible ways to mark a record as deleted:
+    model.delete() and query.soft_delete().
+
+  model.delete() method works with single already fetched entry.
+  query.soft_delete() makes only one db request for all entries that correspond
+  to query.
+
+* In almost all cases you should use query.soft_delete(). Some examples:
+
+        def soft_delete_bar():
+            count = model_query(BarModel).find(some_condition).soft_delete()
+            if count == 0:
+                raise Exception("0 entries were soft deleted")
+
+        def complex_soft_delete_with_synchronization_bar(session=None):
+            if session is None:
+                session = get_session()
+            with session.begin(subtransactions=True):
+                count = model_query(BarModel).\
+                            find(some_condition).\
+                            soft_delete(synchronize_session=True)
+                            # Here synchronize_session is required, because we
+                            # don't know what is going on in outer session.
+                if count == 0:
+                    raise Exception("0 entries were soft deleted")
+
+* There is only one situation where model.delete is appropriate: when you fetch
+  a single record, work with it, and mark it as deleted in the same
+  transaction.
+
+        def soft_delete_bar_model():
+            session = get_session()
+            with session.begin():
+                bar_ref = model_query(BarModel).find(some_condition).first()
+                # Work with bar_ref
+                bar_ref.delete(session=session)
+
+  However, if you need to work with all entries that correspond to query and
+  then soft delete them you should use query.soft_delete() method:
+
+        def soft_delete_multi_models():
+            session = get_session()
+            with session.begin():
+                query = model_query(BarModel, session=session).\
+                            find(some_condition)
+                model_refs = query.all()
+                # Work with model_refs
+                query.soft_delete(synchronize_session=False)
+                # synchronize_session=False should be set if there is no outer
+                # session and these entries are not used after this.
+
+  When working with many rows, it is very important to use query.soft_delete,
+  which issues a single query. Using model.delete, as in the following example,
+  is very inefficient.
+
+        for bar_ref in bar_refs:
+            bar_ref.delete(session=session)
+        # This will produce count(bar_refs) db requests.
 """
 
 import re
@@ -169,14 +230,18 @@ try:
     import MySQLdb
 except ImportError:
     MySQLdb = None
-from sqlalchemy.exc import DisconnectionError, OperationalError
+from sqlalchemy.exc import DisconnectionError, OperationalError, IntegrityError
 import sqlalchemy.interfaces
 import sqlalchemy.orm
 from sqlalchemy.pool import NullPool, StaticPool
+from sqlalchemy.sql.expression import literal_column
 
-import nova.exception
+from nova.exception import DBDuplicateEntry
+from nova.exception import DBError
+from nova.exception import InvalidUnicodeParameter
 from nova.openstack.common import cfg
 import nova.openstack.common.log as logging
+from nova.openstack.common import timeutils
 
 
 sql_opts = [
@@ -245,10 +310,88 @@ def get_session(autocommit=True, expire_on_commit=False):
     return session
 
 
+# note(boris-42): In current versions of DB backends unique constraint
+# violation messages follow the structure:
+#
+# sqlite:
+# 1 column - (IntegrityError) column c1 is not unique
+# N columns - (IntegrityError) column c1, c2, ..., N are not unique
+#
+# postgres:
+# 1 column - (IntegrityError) duplicate key value violates unique
+#               constraint "users_c1_key"
+# N columns - (IntegrityError) duplicate key value violates unique
+#               constraint "name_of_our_constraint"
+#
+# mysql:
+# 1 column - (IntegrityError) (1062, "Duplicate entry 'value_of_c1' for key
+#               'c1'")
+# N columns - (IntegrityError) (1062, "Duplicate entry 'values joined
+#               with -' for key 'name_of_our_constraint'")
+_RE_DB = {
+    "sqlite": re.compile(r"^.*columns?([^)]+)(is|are)\s+not\s+unique$"),
+    "postgresql": re.compile(r"^.*duplicate\s+key.*\"([^\"]+)\"\s*\n.*$"),
+    "mysql": re.compile(r"^.*\(1062,.*'([^\']+)'\"\)$")
+}
+
+
+def raise_if_duplicate_entry_error(integrity_error, engine_name):
+    """ In this function will be raised DBDuplicateEntry exception if integrity
+        error wrap unique constraint violation. """
+
+    def get_columns_from_uniq_cons_or_name(columns):
+        # note(boris-42): UniqueConstraint name convention: "uniq_c1_x_c2_x_c3"
+        # means that columns c1, c2, c3 are in UniqueConstraint.
+        uniqbase = "uniq_"
+        if not columns.startswith(uniqbase):
+            if engine_name == "postgresql":
+                return [columns[columns.index("_") + 1:columns.rindex("_")]]
+            return [columns]
+        return columns[len(uniqbase):].split("_x_")
+
+    if engine_name not in ["mysql", "sqlite", "postgresql"]:
+        return
+
+    m = _RE_DB[engine_name].match(integrity_error.message)
+    if not m:
+        return
+    columns = m.group(1)
+
+    if engine_name == "sqlite":
+        columns = columns.strip().split(", ")
+    else:
+        columns = get_columns_from_uniq_cons_or_name(columns)
+    raise DBDuplicateEntry(columns, integrity_error)
+
+
+def wrap_db_error(f):
+    def _wrap(*args, **kwargs):
+        try:
+            return f(*args, **kwargs)
+        except UnicodeEncodeError:
+            raise InvalidUnicodeParameter()
+        # note(boris-42): We should catch unique constraint violation and
+        # wrap it by our own DBDuplicateEntry exception. Unique constraint
+        # violation is wrapped by IntegrityError.
+        except IntegrityError, e:
+            # note(boris-42): SqlAlchemy doesn't unify errors from different
+            # DBs so we must do this. Also in some tables (for example
+            # instance_types) there are more than one unique constraint. This
+            # means we should get names of columns, which values violate
+            # unique constraint, from error message.
+            raise_if_duplicate_entry_error(e, get_engine().name)
+            raise DBError(e)
+        except Exception, e:
+            LOG.exception(_('DB exception wrapped.'))
+            raise DBError(e)
+    _wrap.func_name = f.func_name
+    return _wrap
+
+
 def wrap_session(session):
     """Return a session whose exceptions are wrapped."""
-    session.query = nova.exception.wrap_db_error(session.query)
-    session.flush = nova.exception.wrap_db_error(session.flush)
+    session.query = wrap_db_error(session.query)
+    session.flush = wrap_db_error(session.flush)
     return session
 
 
@@ -396,11 +539,21 @@ def create_engine(sql_connection):
     return engine
 
 
+class Query(sqlalchemy.orm.query.Query):
+    """Subclass of sqlalchemy.query with soft_delete() method"""
+    def soft_delete(self, synchronize_session='evaluate'):
+        return self.update({'deleted': True,
+                            'updated_at': literal_column('updated_at'),
+                            'deleted_at': timeutils.utcnow()},
+                           synchronize_session=synchronize_session)
+
+
 def get_maker(engine, autocommit=True, expire_on_commit=False):
     """Return a SQLAlchemy sessionmaker using the given engine."""
     return sqlalchemy.orm.sessionmaker(bind=engine,
                                        autocommit=autocommit,
-                                       expire_on_commit=expire_on_commit)
+                                       expire_on_commit=expire_on_commit,
+                                       query_cls=Query)
 
 
 def patch_mysqldb_with_stacktrace_comments():

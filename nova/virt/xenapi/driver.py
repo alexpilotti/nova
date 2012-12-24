@@ -39,7 +39,6 @@ A driver for XenServer or Xen Cloud Platform.
 
 import contextlib
 import cPickle as pickle
-import time
 import urlparse
 import xmlrpclib
 
@@ -497,7 +496,7 @@ class XenAPIDriver(driver.ComputeDriver):
                                  recover_method, block_migration, migrate_data)
 
     def pre_live_migration(self, context, instance_ref, block_device_info,
-                           network_info):
+                           network_info, migrate_data=None):
         """Preparation live migration.
 
         :params block_device_info:
@@ -606,6 +605,14 @@ class XenAPIDriver(driver.ComputeDriver):
                                   block_device_info=None):
         """resume guest state when a host is booted"""
         self._vmops.power_on(instance)
+
+    def get_per_instance_usage(self):
+        """Get information about instance resource usage.
+
+        :returns: dict of  nova uuid => dict of usage
+        info
+        """
+        return self._vmops.get_per_instance_usage()
 
 
 class XenAPISession(object):

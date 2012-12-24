@@ -60,6 +60,7 @@ from nova import exception
 from nova import ipv6
 from nova import manager
 from nova.network import api as network_api
+from nova.network import driver
 from nova.network import model as network_model
 from nova.network import rpcapi as network_rpcapi
 from nova.openstack.common import cfg
@@ -174,16 +175,21 @@ network_opts = [
                help='domain to use for building the hostnames'),
     cfg.StrOpt('l3_lib',
                default='nova.network.l3.LinuxNetL3',
-               help="Indicates underlying L3 management library")
+               help="Indicates underlying L3 management library"),
+    cfg.StrOpt('instance_dns_manager',
+               default='nova.network.noop_dns_driver.NoopDNSDriver',
+               help='full class name for the DNS Manager for instance IPs'),
+    cfg.StrOpt('instance_dns_domain',
+               default='',
+               help='full class name for the DNS Zone for instance IPs'),
+    cfg.StrOpt('floating_ip_dns_manager',
+               default='nova.network.noop_dns_driver.NoopDNSDriver',
+               help='full class name for the DNS Manager for floating IPs'),
     ]
 
 CONF = cfg.CONF
 CONF.register_opts(network_opts)
 CONF.import_opt('fake_network', 'nova.config')
-CONF.import_opt('floating_ip_dns_manager', 'nova.config')
-CONF.import_opt('instance_dns_domain', 'nova.config')
-CONF.import_opt('instance_dns_manager', 'nova.config')
-CONF.import_opt('network_driver', 'nova.config')
 CONF.import_opt('use_ipv6', 'nova.config')
 CONF.import_opt('my_ip', 'nova.config')
 
@@ -887,7 +893,7 @@ class NetworkManager(manager.SchedulerDependentManager):
         The one at a time part is to flatten the layout to help scale
     """
 
-    RPC_API_VERSION = '1.4'
+    RPC_API_VERSION = '1.5'
 
     # If True, this manager requires VIF to create a bridge.
     SHOULD_CREATE_BRIDGE = False
@@ -903,9 +909,7 @@ class NetworkManager(manager.SchedulerDependentManager):
     required_create_args = []
 
     def __init__(self, network_driver=None, *args, **kwargs):
-        if not network_driver:
-            network_driver = CONF.network_driver
-        self.driver = importutils.import_module(network_driver)
+        self.driver = driver.load_network_driver(network_driver)
         self.instance_dns_manager = importutils.import_object(
                 CONF.instance_dns_manager)
         self.instance_dns_domain = CONF.instance_dns_domain
@@ -1370,7 +1374,7 @@ class NetworkManager(manager.SchedulerDependentManager):
                 self.deallocate_fixed_ip(context, address, host)
                 return
         raise exception.FixedIpNotFoundForSpecificInstance(
-                                    instance_id=instance_id, ip=address)
+                                    instance_uuid=instance_id, ip=address)
 
     def _validate_instance_zone_for_dns_domain(self, context, instance):
         instance_zone = instance.get('availability_zone')
@@ -2209,6 +2213,27 @@ class VlanManager(RPCAllocateFixedIP, FloatingIP, NetworkManager):
         else:
             network_id = None
         self.db.network_associate(context, project_id, network_id, force=True)
+
+    @wrap_check_policy
+    def associate(self, context, network_uuid, associations):
+        """Associate or disassociate host or project to network."""
+        network_id = self.get_network(context, network_uuid)['id']
+        if 'host' in associations:
+            host = associations['host']
+            if host is None:
+                self.db.network_disassociate(context, network_id,
+                                             disassociate_host=True,
+                                             disassociate_project=False)
+            else:
+                self.db.network_set_host(context, network_id, host)
+        if 'project' in associations:
+            project = associations['project']
+            if project is None:
+                self.db.network_disassociate(context, network_id,
+                                             disassociate_host=False,
+                                             disassociate_project=True)
+            else:
+                self.db.network_associate(context, project, network_id, True)
 
     def _get_network_by_id(self, context, network_id):
         # NOTE(vish): Don't allow access to networks with project_id=None as

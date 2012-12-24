@@ -713,9 +713,7 @@ def floating_ip_bulk_destroy(context, ips):
         for ip_block in _ip_range_splitter(ips):
             model_query(context, models.FloatingIp).\
                 filter(models.FloatingIp.address.in_(ip_block)).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow()},
-                       synchronize_session='fetch')
+                soft_delete(synchronize_session='fetch')
 
 
 @require_context
@@ -997,9 +995,10 @@ def fixed_ip_associate(context, address, instance_uuid, network_id=None,
         #             then this has concurrency issues
         if fixed_ip_ref is None:
             raise exception.FixedIpNotFoundForNetwork(address=address,
-                                            network_id=network_id)
+                                            network_uuid=network_id)
         if fixed_ip_ref.instance_uuid:
-            raise exception.FixedIpAlreadyInUse(address=address)
+            raise exception.FixedIpAlreadyInUse(address=address,
+                                                instance_uuid=instance_uuid)
 
         if not fixed_ip_ref.network_id:
             fixed_ip_ref.network_id = network_id
@@ -1200,7 +1199,7 @@ def fixed_ip_get_by_network_host(context, network_id, host):
                  first()
 
     if not result:
-        raise exception.FixedIpNotFoundForNetworkHost(network_id=network_id,
+        raise exception.FixedIpNotFoundForNetworkHost(network_uuid=network_id,
                                                       host=host)
     return result
 
@@ -1464,22 +1463,16 @@ def instance_destroy(context, instance_uuid, constraint=None):
                         filter_by(uuid=instance_uuid)
         if constraint is not None:
             query = constraint.apply(models.Instance, query)
-        count = query.update({'deleted': True,
-                              'deleted_at': timeutils.utcnow(),
-                              'updated_at': literal_column('updated_at')})
+        count = query.soft_delete()
         if count == 0:
             raise exception.ConstraintNotMet()
         session.query(models.SecurityGroupInstanceAssociation).\
                 filter_by(instance_uuid=instance_uuid).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
+                soft_delete()
 
         session.query(models.InstanceInfoCache).\
                  filter_by(instance_uuid=instance_uuid).\
-                 update({'deleted': True,
-                         'deleted_at': timeutils.utcnow(),
-                         'updated_at': literal_column('updated_at')})
+                 soft_delete()
     return instance_ref
 
 
@@ -1917,9 +1910,7 @@ def instance_remove_security_group(context, instance_uuid, security_group_id):
     model_query(context, models.SecurityGroupInstanceAssociation).\
                 filter_by(instance_uuid=instance_uuid).\
                 filter_by(security_group_id=security_group_id).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
+                soft_delete()
 
 
 ###################
@@ -1973,9 +1964,7 @@ def instance_info_cache_delete(context, instance_uuid):
     """
     model_query(context, models.InstanceInfoCache).\
                          filter_by(instance_uuid=instance_uuid).\
-                         update({'deleted': True,
-                                 'deleted_at': timeutils.utcnow(),
-                                 'updated_at': literal_column('updated_at')})
+                         soft_delete()
 
 
 ###################
@@ -2128,16 +2117,19 @@ def network_delete_safe(context, network_id):
         session.query(models.FixedIp).\
                 filter_by(network_id=network_id).\
                 filter_by(deleted=False).\
-                update({'deleted': True,
-                        'updated_at': literal_column('updated_at'),
-                        'deleted_at': timeutils.utcnow()})
+                soft_delete()
         session.delete(network_ref)
 
 
 @require_admin_context
-def network_disassociate(context, network_id):
-    network_update(context, network_id, {'project_id': None,
-                                         'host': None})
+def network_disassociate(context, network_id, disassociate_host,
+                         disassociate_project):
+    net_update = {}
+    if disassociate_project:
+        net_update['project_id'] = None
+    if disassociate_host:
+        net_update['host'] = None
+    network_update(context, network_id, net_update)
 
 
 @require_context
@@ -2748,7 +2740,7 @@ def quota_reserve(context, resources, quotas, deltas, expire,
     return reservations
 
 
-def _quota_reservations(session, context, reservations):
+def _quota_reservations_query(session, context, reservations):
     """Return the relevant reservations."""
 
     # Get the listed reservations
@@ -2756,8 +2748,7 @@ def _quota_reservations(session, context, reservations):
                        read_deleted="no",
                        session=session).\
                    filter(models.Reservation.uuid.in_(reservations)).\
-                   with_lockmode('update').\
-                   all()
+                   with_lockmode('update')
 
 
 @require_context
@@ -2765,17 +2756,14 @@ def reservation_commit(context, reservations):
     session = get_session()
     with session.begin():
         usages = _get_quota_usages(context, session)
-
-        for reservation in _quota_reservations(session, context, reservations):
+        reservation_query = _quota_reservations_query(session, context,
+                                                      reservations)
+        for reservation in reservation_query.all():
             usage = usages[reservation.resource]
             if reservation.delta >= 0:
                 usage.reserved -= reservation.delta
             usage.in_use += reservation.delta
-
-            reservation.delete(session=session)
-
-        for usage in usages.values():
-            usage.save(session=session)
+        reservation_query.soft_delete(synchronize_session=False)
 
 
 @require_context
@@ -2783,45 +2771,33 @@ def reservation_rollback(context, reservations):
     session = get_session()
     with session.begin():
         usages = _get_quota_usages(context, session)
-
-        for reservation in _quota_reservations(session, context, reservations):
+        reservation_query = _quota_reservations_query(session, context,
+                                                      reservations)
+        for reservation in reservation_query.all():
             usage = usages[reservation.resource]
             if reservation.delta >= 0:
                 usage.reserved -= reservation.delta
-
-            reservation.delete(session=session)
-
-        for usage in usages.values():
-            usage.save(session=session)
+        reservation_query.soft_delete(synchronize_session=False)
 
 
 @require_admin_context
 def quota_destroy_all_by_project(context, project_id):
     session = get_session()
     with session.begin():
-        quotas = model_query(context, models.Quota, session=session,
-                             read_deleted="no").\
-                         filter_by(project_id=project_id).\
-                         all()
+        model_query(context, models.Quota, session=session,
+                    read_deleted="no").\
+                filter_by(project_id=project_id).\
+                soft_delete(synchronize_session=False)
 
-        for quota_ref in quotas:
-            quota_ref.delete(session=session)
+        model_query(context, models.QuotaUsage,
+                    session=session, read_deleted="no").\
+                filter_by(project_id=project_id).\
+                soft_delete(synchronize_session=False)
 
-        quota_usages = model_query(context, models.QuotaUsage,
-                                   session=session, read_deleted="no").\
-                               filter_by(project_id=project_id).\
-                               all()
-
-        for quota_usage_ref in quota_usages:
-            quota_usage_ref.delete(session=session)
-
-        reservations = model_query(context, models.Reservation,
-                                   session=session, read_deleted="no").\
-                               filter_by(project_id=project_id).\
-                               all()
-
-        for reservation_ref in reservations:
-            reservation_ref.delete(session=session)
+        model_query(context, models.Reservation,
+                    session=session, read_deleted="no").\
+                filter_by(project_id=project_id).\
+                soft_delete(synchronize_session=False)
 
 
 @require_admin_context
@@ -2829,18 +2805,16 @@ def reservation_expire(context):
     session = get_session()
     with session.begin():
         current_time = timeutils.utcnow()
-        results = model_query(context, models.Reservation, session=session,
-                              read_deleted="no").\
-                          filter(models.Reservation.expire < current_time).\
-                          all()
+        reservation_query = model_query(context, models.Reservation,
+                                        session=session, read_deleted="no").\
+                            filter(models.Reservation.expire < current_time)
 
-        if results:
-            for reservation in results:
-                if reservation.delta >= 0:
-                    reservation.usage.reserved -= reservation.delta
-                    reservation.usage.save(session=session)
+        for reservation in reservation_query.join(models.QuotaUsage).all():
+            if reservation.delta >= 0:
+                reservation.usage.reserved -= reservation.delta
+                reservation.usage.save(session=session)
 
-                reservation.delete(session=session)
+        reservation_query.soft_delete(synchronize_session=False)
 
 
 ###################
@@ -2995,9 +2969,7 @@ def block_device_mapping_update_or_create(context, values):
                 filter_by(virtual_name=virtual_name).\
                 filter(models.BlockDeviceMapping.device_name !=
                        values['device_name']).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
+                soft_delete()
 
 
 @require_context
@@ -3013,9 +2985,7 @@ def block_device_mapping_destroy(context, bdm_id):
     with session.begin():
         session.query(models.BlockDeviceMapping).\
                 filter_by(id=bdm_id).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
+                soft_delete()
 
 
 @require_context
@@ -3026,9 +2996,7 @@ def block_device_mapping_destroy_by_instance_and_volume(context, instance_uuid,
         _block_device_mapping_get_query(context, session=session).\
             filter_by(instance_uuid=instance_uuid).\
             filter_by(volume_id=volume_id).\
-            update({'deleted': True,
-                    'deleted_at': timeutils.utcnow(),
-                    'updated_at': literal_column('updated_at')})
+            soft_delete()
 
 
 @require_context
@@ -3039,9 +3007,7 @@ def block_device_mapping_destroy_by_instance_and_device(context, instance_uuid,
         _block_device_mapping_get_query(context, session=session).\
             filter_by(instance_uuid=instance_uuid).\
             filter_by(device_name=device_name).\
-            update({'deleted': True,
-                    'deleted_at': timeutils.utcnow(),
-                    'updated_at': literal_column('updated_at')})
+            soft_delete()
 
 
 ###################
@@ -3207,25 +3173,16 @@ def security_group_destroy(context, security_group_id):
     with session.begin():
         session.query(models.SecurityGroup).\
                 filter_by(id=security_group_id).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
+                soft_delete()
         session.query(models.SecurityGroupInstanceAssociation).\
                 filter_by(security_group_id=security_group_id).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
+                soft_delete()
         session.query(models.SecurityGroupIngressRule).\
                 filter_by(group_id=security_group_id).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
-
+                soft_delete()
         session.query(models.SecurityGroupIngressRule).\
                 filter_by(parent_group_id=security_group_id).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
+                soft_delete()
 
 
 @require_context
@@ -3324,9 +3281,7 @@ def provider_fw_rule_destroy(context, rule_id):
     with session.begin():
         session.query(models.ProviderFirewallRule).\
                 filter_by(id=rule_id).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
+                soft_delete()
 
 
 ###################
@@ -3679,14 +3634,10 @@ def instance_type_destroy(context, name):
         instance_type_id = instance_type_ref['id']
         session.query(models.InstanceTypes).\
                 filter_by(id=instance_type_id).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
+                soft_delete()
         session.query(models.InstanceTypeExtraSpecs).\
                 filter_by(instance_type_id=instance_type_id).\
-                update({'deleted': True,
-                        'deleted_at': timeutils.utcnow(),
-                        'updated_at': literal_column('updated_at')})
+                soft_delete()
 
 
 @require_context
@@ -3741,15 +3692,12 @@ def instance_type_access_remove(context, flavor_id, project_id):
         instance_type_ref = instance_type_get_by_flavor_id(context, flavor_id,
                                                            session=session)
         instance_type_id = instance_type_ref['id']
-        access_ref = _instance_type_access_query(context, session=session).\
+        count = _instance_type_access_query(context, session=session).\
                         filter_by(instance_type_id=instance_type_id).\
-                        filter_by(project_id=project_id).first()
+                        filter_by(project_id=project_id).\
+                        soft_delete()
 
-        if access_ref:
-            access_ref.update({'deleted': True,
-                               'deleted_at': timeutils.utcnow(),
-                               'updated_at': literal_column('updated_at')})
-        else:
+        if count == 0:
             raise exception.FlavorAccessNotFound(flavor_id=flavor_id,
                                                  project_id=project_id)
 
@@ -3826,9 +3774,7 @@ def instance_metadata_get(context, instance_uuid, session=None):
 def instance_metadata_delete(context, instance_uuid, key):
     _instance_metadata_get_query(context, instance_uuid).\
         filter_by(key=key).\
-        update({'deleted': True,
-                'deleted_at': timeutils.utcnow(),
-                'updated_at': literal_column('updated_at')})
+        soft_delete()
 
 
 @require_context
@@ -3992,15 +3938,12 @@ def agent_build_get_all(context, hypervisor=None):
 def agent_build_destroy(context, agent_build_id):
     session = get_session()
     with session.begin():
-        agent_build_ref = model_query(context, models.AgentBuild,
+        count = model_query(context, models.AgentBuild,
                     session=session, read_deleted="yes").\
                 filter_by(id=agent_build_id).\
-                first()
-        if not agent_build_ref:
+                soft_delete()
+        if count == 0:
             raise exception.AgentBuildNotFound(id=agent_build_id)
-        agent_build_ref.update({'deleted': True,
-                                'deleted_at': timeutils.utcnow(),
-                                'updated_at': literal_column('updated_at')})
 
 
 @require_admin_context
@@ -4111,10 +4054,7 @@ def instance_type_extra_specs_delete(context, flavor_id, key):
     _instance_type_extra_specs_get_query(
                             context, flavor_id).\
         filter(models.InstanceTypeExtraSpecs.key == key).\
-        update({'deleted': True,
-                'deleted_at': timeutils.utcnow(),
-                'updated_at': literal_column('updated_at')},
-                synchronize_session=False)
+        soft_delete(synchronize_session=False)
 
 
 @require_context
@@ -4377,24 +4317,22 @@ def aggregate_update(context, aggregate_id, values):
 
 @require_admin_context
 def aggregate_delete(context, aggregate_id):
-    query = _aggregate_get_query(context,
-                                 models.Aggregate,
-                                 models.Aggregate.id,
-                                 aggregate_id)
-    if query.first():
-        query.update({'deleted': True,
-                      'deleted_at': timeutils.utcnow(),
-                      'updated_at': literal_column('updated_at')})
-    else:
-        raise exception.AggregateNotFound(aggregate_id=aggregate_id)
+    session = get_session()
+    with session.begin():
+        count = _aggregate_get_query(context,
+                                     models.Aggregate,
+                                     models.Aggregate.id,
+                                     aggregate_id,
+                                     session=session).\
+                    soft_delete()
+        if count == 0:
+            raise exception.AggregateNotFound(aggregate_id=aggregate_id)
 
-    #Delete Metadata
-    model_query(context,
-                models.AggregateMetadata).\
-                filter_by(aggregate_id=aggregate_id).\
-                update({'deleted': True,
-                'deleted_at': timeutils.utcnow(),
-                'updated_at': literal_column('updated_at')})
+        #Delete Metadata
+        model_query(context,
+                    models.AggregateMetadata, session=session).\
+                    filter_by(aggregate_id=aggregate_id).\
+                    soft_delete()
 
 
 @require_admin_context
@@ -4415,16 +4353,13 @@ def aggregate_metadata_get(context, aggregate_id):
 @require_admin_context
 @require_aggregate_exists
 def aggregate_metadata_delete(context, aggregate_id, key):
-    query = _aggregate_get_query(context,
+    count = _aggregate_get_query(context,
                                  models.AggregateMetadata,
                                  models.AggregateMetadata.aggregate_id,
                                  aggregate_id).\
-                                 filter_by(key=key)
-    if query.first():
-        query.update({'deleted': True,
-                      'deleted_at': timeutils.utcnow(),
-                      'updated_at': literal_column('updated_at')})
-    else:
+                                 filter_by(key=key).\
+                                 soft_delete()
+    if count == 0:
         raise exception.AggregateMetadataNotFound(aggregate_id=aggregate_id,
                                                   metadata_key=key)
 
@@ -4492,15 +4427,13 @@ def aggregate_host_get_all(context, aggregate_id):
 @require_admin_context
 @require_aggregate_exists
 def aggregate_host_delete(context, aggregate_id, host):
-    query = _aggregate_get_query(context,
+    count = _aggregate_get_query(context,
                                  models.AggregateHost,
                                  models.AggregateHost.aggregate_id,
-                                 aggregate_id).filter_by(host=host)
-    if query.first():
-        query.update({'deleted': True,
-                      'deleted_at': timeutils.utcnow(),
-                      'updated_at': literal_column('updated_at')})
-    else:
+                                 aggregate_id).\
+            filter_by(host=host).\
+            soft_delete()
+    if count == 0:
         raise exception.AggregateHostNotFound(aggregate_id=aggregate_id,
                                               host=host)
 
