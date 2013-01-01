@@ -577,11 +577,6 @@ class LibvirtDriver(driver.ComputeDriver):
         target = os.path.join(CONF.instances_path, instance['name'])
         LOG.info(_('Deleting instance files %(target)s') % locals(),
                  instance=instance)
-        if CONF.libvirt_type == 'lxc':
-            container_dir = os.path.join(CONF.instances_path,
-                                         instance['name'],
-                                         'rootfs')
-            disk.destroy_container(container_dir=container_dir)
         if os.path.exists(target):
             # If we fail to get rid of the directory
             # tree, this shouldn't block deletion of
@@ -662,37 +657,28 @@ class LibvirtDriver(driver.ComputeDriver):
                                          connection_info,
                                          mount_device)
 
-        if CONF.libvirt_type == 'lxc':
-            self._attach_lxc_volume(conf.to_xml(), virt_dom, instance_name)
-            # TODO(danms) once libvirt has support for LXC hotplug,
-            # replace this re-define with use of the
-            # VIR_DOMAIN_AFFECT_LIVE & VIR_DOMAIN_AFFECT_CONFIG flags with
-            # attachDevice()
-            domxml = virt_dom.XMLDesc(libvirt.VIR_DOMAIN_XML_SECURE)
-            self._conn.defineXML(domxml)
-        else:
-            try:
-                # NOTE(vish): We can always affect config because our
-                #             domains are persistent, but we should only
-                #             affect live if the domain is running.
-                flags = libvirt.VIR_DOMAIN_AFFECT_CONFIG
-                state = LIBVIRT_POWER_STATE[virt_dom.info()[0]]
-                if state == power_state.RUNNING:
-                    flags |= libvirt.VIR_DOMAIN_AFFECT_LIVE
-                virt_dom.attachDeviceFlags(conf.to_xml(), flags)
-            except Exception, ex:
-                if isinstance(ex, libvirt.libvirtError):
-                    errcode = ex.get_error_code()
-                    if errcode == libvirt.VIR_ERR_OPERATION_FAILED:
-                        self.volume_driver_method('disconnect_volume',
-                                                  connection_info,
-                                                  mount_device)
-                        raise exception.DeviceIsBusy(device=mount_device)
-
-                with excutils.save_and_reraise_exception():
+        try:
+            # NOTE(vish): We can always affect config because our
+            #             domains are persistent, but we should only
+            #             affect live if the domain is running.
+            flags = libvirt.VIR_DOMAIN_AFFECT_CONFIG
+            state = LIBVIRT_POWER_STATE[virt_dom.info()[0]]
+            if state == power_state.RUNNING:
+                flags |= libvirt.VIR_DOMAIN_AFFECT_LIVE
+            virt_dom.attachDeviceFlags(conf.to_xml(), flags)
+        except Exception, ex:
+            if isinstance(ex, libvirt.libvirtError):
+                errcode = ex.get_error_code()
+                if errcode == libvirt.VIR_ERR_OPERATION_FAILED:
                     self.volume_driver_method('disconnect_volume',
-                                               connection_info,
-                                               mount_device)
+                                                connection_info,
+                                                mount_device)
+                    raise exception.DeviceIsBusy(device=mount_device)
+
+            with excutils.save_and_reraise_exception():
+                self.volume_driver_method('disconnect_volume',
+                                            connection_info,
+                                            mount_device)
 
     @staticmethod
     def _get_disk_xml(xml, device):
@@ -725,14 +711,6 @@ class LibvirtDriver(driver.ComputeDriver):
             xml = self._get_disk_xml(virt_dom.XMLDesc(0), mount_device)
             if not xml:
                 raise exception.DiskNotFound(location=mount_device)
-            if CONF.libvirt_type == 'lxc':
-                self._detach_lxc_volume(xml, virt_dom, instance_name)
-                # TODO(danms) once libvirt has support for LXC hotplug,
-                # replace this re-define with use of the
-                # VIR_DOMAIN_AFFECT_LIVE & VIR_DOMAIN_AFFECT_CONFIG flags with
-                # detachDevice()
-                domxml = virt_dom.XMLDesc(libvirt.VIR_DOMAIN_XML_SECURE)
-                self._conn.defineXML(domxml)
             else:
                 # NOTE(vish): We can always affect config because our
                 #             domains are persistent, but we should only
@@ -756,61 +734,6 @@ class LibvirtDriver(driver.ComputeDriver):
         self.volume_driver_method('disconnect_volume',
                                   connection_info,
                                   mount_device)
-
-    @exception.wrap_exception()
-    def _attach_lxc_volume(self, xml, virt_dom, instance_name):
-        LOG.info(_('attaching LXC block device'))
-
-        lxc_container_root = self.get_lxc_container_root(virt_dom)
-        lxc_host_volume = self.get_lxc_host_device(xml)
-        lxc_container_device = self.get_lxc_container_target(xml)
-        lxc_container_target = "%s/%s" % (lxc_container_root,
-                                          lxc_container_device)
-
-        if lxc_container_target:
-            disk.bind(lxc_host_volume, lxc_container_target, instance_name)
-            s = os.stat(lxc_host_volume)
-            cgroup_info = "b %s:%s rwm\n" % (os.major(s.st_rdev),
-                                             os.minor(s.st_rdev))
-            cgroups_path = ("/sys/fs/cgroup/devices/libvirt/lxc/"
-                            "%s/devices.allow" % instance_name)
-            utils.execute('tee', cgroups_path,
-                          process_input=cgroup_info, run_as_root=True)
-
-    @exception.wrap_exception()
-    def _detach_lxc_volume(self, xml, virt_dom, instance_name):
-        LOG.info(_('detaching LXC block device'))
-
-        lxc_container_root = self.get_lxc_container_root(virt_dom)
-        lxc_container_device = self.get_lxc_container_target(xml)
-        lxc_container_target = "%s/%s" % (lxc_container_root,
-                                          lxc_container_device)
-
-        if lxc_container_target:
-            disk.unbind(lxc_container_target)
-
-    @staticmethod
-    def get_lxc_container_root(virt_dom):
-        xml = virt_dom.XMLDesc(0)
-        doc = etree.fromstring(xml)
-        filesystem_block = doc.findall('./devices/filesystem')
-        for cnt, filesystem_nodes in enumerate(filesystem_block):
-            return filesystem_nodes[cnt].get('dir')
-
-    @staticmethod
-    def get_lxc_host_device(xml):
-        dom = minidom.parseString(xml)
-
-        for device in dom.getElementsByTagName('source'):
-            return device.getAttribute('dev')
-
-    @staticmethod
-    def get_lxc_container_target(xml):
-        dom = minidom.parseString(xml)
-
-        for device in dom.getElementsByTagName('target'):
-            filesystem = device.getAttribute('dev')
-            return 'dev/%s' % filesystem
 
     @exception.wrap_exception()
     def snapshot(self, context, instance, image_href):
@@ -949,7 +872,7 @@ class LibvirtDriver(driver.ComputeDriver):
                          power_state.CRASHED]:
                 LOG.info(_("Instance shutdown successfully."),
                          instance=instance)
-                self._create_domain(domain=dom)
+                self._create_domain(domain=dom, inst_name=instance['name'])
                 timer = utils.LoopingCall(self._wait_for_running, instance)
                 timer.start(interval=0.5).wait()
                 return True
@@ -1011,7 +934,7 @@ class LibvirtDriver(driver.ComputeDriver):
     def power_on(self, instance):
         """Power on the specified instance"""
         dom = self._lookup_by_name(instance['name'])
-        self._create_domain(domain=dom)
+        self._create_domain(domain=dom, inst_name=instance['name'])
         timer = utils.LoopingCall(self._wait_for_running, instance)
         timer.start(interval=0.5).wait()
 
@@ -1317,12 +1240,6 @@ class LibvirtDriver(driver.ComputeDriver):
         LOG.info(_('Creating image'), instance=instance)
         libvirt_utils.write_to_file(basepath('libvirt.xml'), libvirt_xml)
 
-        if CONF.libvirt_type == 'lxc':
-            container_dir = os.path.join(CONF.instances_path,
-                                         instance['name'],
-                                         'rootfs')
-            fileutils.ensure_tree(container_dir)
-
         # NOTE(dprince): for rescue console.log may already exist... chown it.
         self._chown_console_log_for_instance(instance['name'])
 
@@ -1483,11 +1400,6 @@ class LibvirtDriver(driver.ComputeDriver):
                 LOG.warn(_('Ignoring error injecting data into image '
                            '%(img_id)s (%(e)s)') % locals(),
                          instance=instance)
-
-        if CONF.libvirt_type == 'lxc':
-            disk.setup_container(image('disk').path,
-                                 container_dir=container_dir,
-                                 use_cow=CONF.use_cow_images)
 
         if CONF.libvirt_type == 'uml':
             libvirt_utils.chown(image('disk').path, 'root')
@@ -1947,16 +1859,37 @@ class LibvirtDriver(driver.ComputeDriver):
                 'num_cpu': num_cpu,
                 'cpu_time': cpu_time}
 
-    def _create_domain(self, xml=None, domain=None, launch_flags=0):
+    def _create_domain(self, xml=None, domain=None,
+                       inst_name='', launch_flags=0):
         """Create a domain.
 
         Either domain or xml must be passed in. If both are passed, then
         the domain definition is overwritten from the xml.
         """
+        if CONF.libvirt_type == 'lxc':
+            container_dir = os.path.join(CONF.instances_path,
+                                         inst_name,
+                                         'rootfs')
+            fileutils.ensure_tree(container_dir)
+            image = self.image_backend.image(inst_name, 'disk')
+            disk.setup_container(image.path,
+                                 container_dir=container_dir,
+                                 use_cow=CONF.use_cow_images)
+
         if xml:
             domain = self._conn.defineXML(xml)
         domain.createWithFlags(launch_flags)
         self._enable_hairpin(domain.XMLDesc(0))
+
+        # NOTE(uni): Now the container is running with its own private mount
+        # namespace and so there is no need to keep the container rootfs
+        # mounted in the host namespace
+        if CONF.libvirt_type == 'lxc':
+            container_dir = os.path.join(CONF.instances_path,
+                                         inst_name,
+                                         'rootfs')
+            disk.teardown_container(container_dir=container_dir)
+
         return domain
 
     def _create_domain_and_network(self, xml, instance, network_info,
@@ -1976,7 +1909,8 @@ class LibvirtDriver(driver.ComputeDriver):
         self.plug_vifs(instance, network_info)
         self.firewall_driver.setup_basic_filtering(instance, network_info)
         self.firewall_driver.prepare_instance_filter(instance, network_info)
-        domain = self._create_domain(xml)
+        domain = self._create_domain(xml, inst_name=instance['name'])
+
         self.firewall_driver.apply_instance_filter(instance, network_info)
         return domain
 
