@@ -12,251 +12,101 @@
 #    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
-
-"""
-Classes for dynamic generation of mock objects.
-"""
+#    under the License.
 
 import inspect
 
 
-def serialize_obj(obj):
-    if isinstance(obj, float):
-        val = str(round(obj, 10))
-    elif isinstance(obj, dict):
-        d = {}
-        for k1, v1 in obj.items():
-            d[k1] = serialize_obj(v1)
-        val = str(d)
-    elif isinstance(obj, list):
-        l1 = []
-        for i1 in obj:
-            l1.append(serialize_obj(i1))
-        val = str(l1)
-    elif isinstance(obj, tuple):
-        l1 = ()
-        for i1 in obj:
-            l1 = l1 + (serialize_obj(i1),)
-        val = str(l1)
-    else:
-        if isinstance(obj, str) or isinstance(obj, unicode):
-            val = obj
-        elif hasattr(obj, '__str__') and inspect.ismethod(obj.__str__):
-            val = str(obj)
-        else:
-            val = str(type(obj))
-    return val
-
-
-def serialize_args(*args, **kwargs):
-    """Workaround for float string conversion issues in Python 2.6"""
-    return serialize_obj((args, kwargs))
-
-
-class MockException(Exception):
-    def __init__(self, message):
-        super(MockException, self).__init__(message)
-
-
-class Mock(object):
-    def _get_next_value(self, name):
-        c = self._access_count.get(name)
-        if c is None:
-            c = 0
-        else:
-            c = c + 1
-        self._access_count[name] = c
-
-        try:
-            value = self._values[name][c]
-        except IndexError as ex:
-            raise MockException(_('Couldn\'t find invocation num. %(c)d '
-                'of attribute "%(name)s"') % locals())
-        return value
-
-    def _get_next_ret_value(self, name, params):
-        d = self._access_count.get(name)
-        if d is None:
-            d = {}
-            self._access_count[name] = d
-        c = d.get(params)
-        if c is None:
-            c = 0
-        else:
-            c = c + 1
-        d[params] = c
-
-        try:
-            m = self._values[name]
-        except KeyError as ex:
-            raise MockException(_('Couldn\'t find attribute "%s"') % (name))
-
-        try:
-            value = m[params][c]
-        except KeyError as ex:
-            raise MockException(_('Couldn\'t find attribute "%(name)s" '
-                'with arguments "%(params)s"') % locals())
-        except IndexError as ex:
-            raise MockException(_('Couldn\'t find invocation num. %(c)d '
-                'of attribute "%(name)s" with arguments "%(params)s"')
-                    % locals())
-
-        return value
-
-    def __init__(self, values):
-        self._values = values
-        self._access_count = {}
-
-    def has_values(self):
-        return len(self._values) > 0
-
-    def __getattr__(self, name):
-        if name.startswith('__') and name.endswith('__'):
-            return object.__getattribute__(self, name)
-        else:
-            try:
-                isdict = isinstance(self._values[name], dict)
-            except KeyError as ex:
-                raise MockException(_('Couldn\'t find attribute "%s"')
-                    % (name))
-
-            if isdict:
-                def newfunc(*args, **kwargs):
-                    params = serialize_args(args, kwargs)
-                    return self._get_next_ret_value(name, params)
-                return newfunc
-            else:
-                return self._get_next_value(name)
-
-    def __str__(self):
-        return self._get_next_value('__str__')
-
-    def __iter__(self):
-        return getattr(self._get_next_value('__iter__'), '__iter__')()
-
-    def __len__(self):
-        return self._get_next_value('__len__')
-
-    def __getitem__(self, key):
-        return self._get_next_ret_value('__getitem__', str(key))
-
-    def __call__(self, *args, **kwargs):
-        params = serialize_args(args, kwargs)
-        return self._get_next_ret_value('__call__', params)
-
-
 class MockProxy(object):
-    def __init__(self, wrapped):
+    def __init__(self, wrapped, id_sequence=None):
         self._wrapped = wrapped
         self._recorded_values = {}
+        self._recorded_values_ret = {}
+        self._types = {}
+
+        if not id_sequence:
+            self._id_sequence = [1]
+        else:
+            self._id_sequence = id_sequence
+            self._id_sequence[0] += 1
+        self._instance_id = self._id_sequence[0]
 
     def _get_proxy_object(self, obj):
-        if hasattr(obj, '__dict__') or isinstance(obj, tuple) or \
-            isinstance(obj, list) or isinstance(obj, dict):
-            p = MockProxy(obj)
+        if isinstance(obj, list):
+            p = [self._get_proxy_object(i) for i in obj]
+        elif isinstance(obj, tuple):
+            p = tuple(self._get_proxy_object(i) for i in obj)
+        elif isinstance(obj, dict):
+            p = {self._get_proxy_object(i[0]): self._get_proxy_object(i[1])
+                for i in obj.items()}
+        elif hasattr(obj, '__dict__'):
+            p = MockProxy(obj, self._id_sequence)
         else:
             p = obj
         return p
 
     def __getattr__(self, name):
-        if name in ['_wrapped']:
+        if name in ['_wrapped', '_instance_id', '_id_sequence']:
             return object.__getattribute__(self, name)
         else:
             attr = getattr(self._wrapped, name)
             if inspect.isfunction(attr) or inspect.ismethod(attr) or \
-                inspect.isbuiltin(attr):
+                    inspect.isbuiltin(attr):
                 def newfunc(*args, **kwargs):
                     result = attr(*args, **kwargs)
                     p = self._get_proxy_object(result)
-                    params = serialize_args(args, kwargs)
+                    params = self._serialize_args(args, kwargs)
                     self._add_recorded_ret_value(name, params, p)
                     return p
                 return newfunc
-            elif hasattr(attr, '__dict__') or (hasattr(attr, '__getitem__')
-                and not (isinstance(attr, str) or isinstance(attr, unicode))):
-                p = MockProxy(attr)
             else:
-                p = attr
+                p = self._get_proxy_object(attr)
             self._add_recorded_value(name, p)
             return p
 
     def __setattr__(self, name, value):
-        if name in ['_wrapped', '_recorded_values']:
+        if name in ['_wrapped', '_recorded_values', '_recorded_values_ret',
+                '_types', '_instance_id', '_id_sequence']:
             object.__setattr__(self, name, value)
         else:
             setattr(self._wrapped, name, value)
 
     def _add_recorded_ret_value(self, name, params, val):
-        d = self._recorded_values.get(name)
-        if d is None:
-            d = {}
-            self._recorded_values[name] = d
-        l = d.get(params)
+        l = self._recorded_values_ret.get(name)
         if l is None:
             l = []
-            d[params] = l
-        l.append(val)
+            self._recorded_values_ret[name] = l
+        l1 = [r for r in l if r[0] == params]
+        if l1:
+            l2 = l1[0][1]
+        else:
+            l2 = []
+            l.append((params, l2))
+        l2.append(val)
 
     def _add_recorded_value(self, name, val):
         if not name in self._recorded_values:
             self._recorded_values[name] = []
         self._recorded_values[name].append(val)
 
-    def get_mock(self):
-        values = {}
-        for k, v in self._recorded_values.items():
-            if isinstance(v, dict):
-                d = {}
-                values[k] = d
-                for k1, v1 in v.items():
-                    l = []
-                    d[k1] = l
-                    for i1 in v1:
-                        if isinstance(i1, MockProxy):
-                            l.append(i1.get_mock())
-                        else:
-                            l.append(i1)
-            else:
-                l = []
-                values[k] = l
-                for i in v:
-                    if isinstance(i, MockProxy):
-                        l.append(i.get_mock())
-                    elif isinstance(i, dict):
-                        d = {}
-                        for k1, v1 in v.items():
-                            if isinstance(v1, MockProxy):
-                                d[k1] = v1.get_mock()
-                            else:
-                                d[k1] = v1
-                        l.append(d)
-                    elif isinstance(i, list):
-                        l1 = []
-                        for i1 in i:
-                            if isinstance(i1, MockProxy):
-                                l1.append(i1.get_mock())
-                            else:
-                                l1.append(i1)
-                        l.append(l1)
-                    else:
-                        l.append(i)
-        return Mock(values)
+    def _serialize_args(self, *args, **kwargs):
+        return (args[0], tuple(args[1].items()))
 
     def __str__(self):
         s = str(self._wrapped)
-        self._add_recorded_value('__str__', s)
+        self._add_recorded_ret_value('__str__', ((), ()), s)
         return s
 
     def __len__(self):
         l = len(self._wrapped)
-        self._add_recorded_value('__len__', l)
+        self._add_recorded_ret_value('__len__', ((), ()), l)
         return l
 
     def __iter__(self):
         it = []
         for i in self._wrapped:
             it.append(self._get_proxy_object(i))
-        self._add_recorded_value('__iter__', it)
+        self._add_recorded_ret_value('__iter__', ((), ()), it)
         return iter(it)
 
     def __getitem__(self, key):
@@ -267,6 +117,6 @@ class MockProxy(object):
     def __call__(self, *args, **kwargs):
         c = self._wrapped(*args, **kwargs)
         p = self._get_proxy_object(c)
-        params = serialize_args(args, kwargs)
+        params = self._serialize_args(args, kwargs)
         self._add_recorded_ret_value('__call__', params, p)
         return p

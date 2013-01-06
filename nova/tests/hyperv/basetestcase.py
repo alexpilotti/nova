@@ -18,19 +18,41 @@
 TestCase for MockProxy based tests and related classes.
 """
 
-import gzip
 import os
-import pickle
 import sys
 
 from nova import test
 from nova.tests.hyperv import mockproxy
+from nova.tests.hyperv import pythonemitter
 
-gen_test_mocks_key = 'NOVA_GENERATE_TEST_MOCKS'
+emit_test_mocks_key = 'EMIT_TEST_MOCKS'
 
 
 class BaseTestCase(test.TestCase):
     """TestCase for MockProxy based tests."""
+
+    _copyright_info = \
+    '# vim: tabstop=4 shiftwidth=4 softtabstop=4\n' \
+    '#    Licensed under the Apache License, Version 2.0 (the "License"); '\
+    'you may\n' \
+    '#    not use this file except in compliance with the License. ' \
+    'You may obtain\n' \
+    '#    a copy of the License at\n' \
+    '#\n' \
+    '#         http://www.apache.org/licenses/LICENSE-2.0\n' \
+    '#\n' \
+    '#    Unless required by applicable law or agreed to in writing, ' \
+    'software\n' \
+    '#    distributed under the License is distributed on an "AS IS" BASIS, ' \
+    'WITHOUT\n' \
+    '#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. ' \
+    'See the\n' \
+    '#    License for the specific language governing permissions and ' \
+    'limitations\n' \
+    '#    under the License.\n\n' \
+    '\'\'\'\n' \
+    'This file contains auto generated mock classes and functions.\n' \
+    '\'\'\'\n'
 
     def run(self, result=None):
         self._currentResult = result
@@ -58,31 +80,32 @@ class BaseTestCase(test.TestCase):
         if not has_errors and not failed:
             self._save_mock_proxies()
 
-    def _save_mock(self, name, mock):
-        path = self._get_stub_file_path(self.id(), name)
-        pickle.dump(mock, gzip.open(path, 'wb'))
-
     def _get_stub_file_path(self, test_name, mock_name):
         # test naming differs between platforms
         prefix = 'nova.tests.'
         if test_name.startswith(prefix):
             test_name = test_name[len(prefix):]
-        file_name = '{0}_{1}.p.gz'.format(test_name, mock_name)
+        file_name = '{0}_{1}.py'.format(test_name.replace('.', '_'),
+            mock_name.replace('.', '_'))
         return os.path.join(os.path.dirname(mockproxy.__file__),
                 "stubs", file_name)
 
     def _load_mock(self, name):
+        import imp
         path = self._get_stub_file_path(self.id(), name)
         if os.path.exists(path):
-            return pickle.load(gzip.open(path, 'rb'))
+            return imp.load_source('%s_%s_mock' % (name, self.id()), path)
         else:
             return None
 
+    def _is_test_mocks_generation_on(self):
+        return emit_test_mocks_key in os.environ and \
+            os.environ[emit_test_mocks_key].lower() \
+            in ['true', 'yes', '1']
+
     def _load_mock_or_create_proxy(self, module_name):
         m = None
-        if not gen_test_mocks_key in os.environ or \
-                os.environ[gen_test_mocks_key].lower() \
-                    not in ['true', 'yes', '1']:
+        if not self._is_test_mocks_generation_on():
             m = self._load_mock(module_name)
         else:
             __import__(module_name)
@@ -99,7 +122,11 @@ class BaseTestCase(test.TestCase):
                 setattr(mt, module_local_name, mp)
 
     def _save_mock_proxies(self):
+        pe = pythonemitter.PythonEmitter()
         for name, mp in self._mps.items():
-            m = mp.get_mock()
-            if m.has_values():
-                self._save_mock(name, m)
+            path = self._get_stub_file_path(self.id(), name)
+            with open(path, 'wb') as f:
+                f.write(self._copyright_info)
+                for (module_name, python_code) in pe.emit(mp,
+                        include_imports=False).items():
+                    f.write(python_code)

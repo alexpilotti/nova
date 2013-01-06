@@ -180,8 +180,8 @@ class VMOps(baseops.BaseOps):
             LOG.info(_('Started VM %s '), instance_name)
         except Exception as exn:
             LOG.exception(_('spawn vm failed: %s'), exn)
-            self.destroy(instance)
-            raise exn
+            #self.destroy(instance)
+            raise
 
     def _create_config_drive(self, instance, injected_files, admin_password):
         if CONF.config_drive_format != 'iso9660':

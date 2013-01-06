@@ -42,11 +42,11 @@ class VolumeUtilsV2(basevolumeutils.BaseVolumeUtils):
             target_address = target_portal[:separator]
             target_port = target_portal[separator + 1:]
             #Adding target portal to iscsi initiator. Sending targets
-            portal = self._conn_storage.__getattr__("MSFT_iSCSITargetPortal")
+            portal = getattr(self._conn_storage, "MSFT_iSCSITargetPortal")
             portal.New(TargetPortalAddress=target_address,
                        TargetPortalPortNumber=target_port)
             #Connecting to the target
-            target = self._conn_storage.__getattr__("MSFT_iSCSITarget")
+            target = getattr(self._conn_storage, "MSFT_iSCSITarget")
             target.Connect(NodeAddress=target_iqn,
                            IsPersistent=True)
             #Waiting the disk to be mounted. Research this

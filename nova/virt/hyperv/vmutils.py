@@ -46,7 +46,8 @@ class HyperVException(exception.NovaException):
 
 class VMUtils(object):
     def lookup(self, conn, i):
-        vms = conn.Msvm_ComputerSystem(ElementName=i)
+        o = conn.Msvm_ComputerSystem
+        vms = o(ElementName=i)
         n = len(vms)
         if n == 0:
             return None
@@ -116,7 +117,7 @@ class VMUtils(object):
 
     def clone_wmi_obj(self, conn, wmi_class, wmi_obj):
         """Clone a WMI object"""
-        cl = conn.__getattr__(wmi_class)  # get the class
+        cl = getattr(conn, wmi_class)  # get the class
         newinst = cl.new()
         #Copy the properties from the original.
         for prop in wmi_obj._properties:

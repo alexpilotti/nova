@@ -60,7 +60,7 @@ class HyperVAPITestCase(basetestcase.BaseTestCase):
         self._post_method_called = False
         self._recover_method_called = False
         self._volume_target_portal = 'testtargetportal:3260'
-        self._volume_id = '8957e088-dbee-4216-8056-978353a3e737'
+        self._volume_id = 'ccb39627-34fa-4f47-968b-6580d9d7ee2b'
         self._context = context.RequestContext(self._user_id, self._project_id)
 
         self._setup_stubs()
@@ -117,6 +117,7 @@ class HyperVAPITestCase(basetestcase.BaseTestCase):
         from nova.virt.hyperv import hostops
         from nova.virt.hyperv import livemigrationops
         from nova.virt.hyperv import snapshotops
+        from nova.virt.hyperv import vif
         from nova.virt.hyperv import vmops
         from nova.virt.hyperv import volumeops
         from nova.virt.hyperv import volumeutils
@@ -136,12 +137,13 @@ class HyperVAPITestCase(basetestcase.BaseTestCase):
             livemigrationops,
             hypervutils,
             db_fakes,
+            vif,
             sys.modules[__name__]
         ]
 
         self._inject_mocks_in_modules(modules_to_mock, modules_to_test)
 
-        if isinstance(snapshotops.wmi, mockproxy.Mock):
+        if not isinstance(snapshotops.wmi, mockproxy.MockProxy):
             from nova.virt.hyperv import ioutils
             import StringIO
 
@@ -151,19 +153,20 @@ class HyperVAPITestCase(basetestcase.BaseTestCase):
 
     def tearDown(self):
         try:
-            if self._instance_data and self._hypervutils.vm_exists(
-                    self._instance_data["name"]):
-                self._hypervutils.remove_vm(self._instance_data["name"])
-
-            if self._dest_server and \
-                    self._hypervutils.remote_vm_exists(self._dest_server,
+            if self._is_test_mocks_generation_on():
+                if self._instance_data and self._hypervutils.vm_exists(
                         self._instance_data["name"]):
-                self._hypervutils.remove_remote_vm(self._dest_server,
-                    self._instance_data["name"])
+                    self._hypervutils.remove_vm(self._instance_data["name"])
 
-            self._hypervutils.logout_iscsi_volume_sessions(self._volume_id)
+                if self._dest_server and \
+                        self._hypervutils.remote_vm_exists(self._dest_server,
+                            self._instance_data["name"]):
+                    self._hypervutils.remove_remote_vm(self._dest_server,
+                        self._instance_data["name"])
 
-            shutil.rmtree(CONF.instances_path, True)
+                self._hypervutils.logout_iscsi_volume_sessions(self._volume_id)
+
+                shutil.rmtree(CONF.instances_path, True)
 
             fake_image.FakeImageService_reset()
         finally:
