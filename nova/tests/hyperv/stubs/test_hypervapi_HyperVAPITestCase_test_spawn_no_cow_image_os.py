@@ -22,43 +22,43 @@ path = sys.modules[__name__]
 
 def makedirs(name, mode=511):
     if name ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea\
--e051bded0026':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19\
+-a992e98d8ee5':
         return None
 
 
 def join(a, *p):
     if len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
- 'openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea-e051bded0026':
+ 'openstack_unit_test_vm_0866fef5-e332-43b9-bc19-a992e98d8ee5':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea\
--e051bded0026'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19\
+-a992e98d8ee5'
     elif len(p) == 1 and a ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea\
--e051bded0026' and p[0] ==\
- 'openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea-e051bded0026.vhd':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19\
+-a992e98d8ee5' and p[0] ==\
+ 'openstack_unit_test_vm_0866fef5-e332-43b9-bc19-a992e98d8ee5.vhd':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea\
--e051bded0026\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea-e051bded0026.vhd'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19\
+-a992e98d8ee5\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19-a992e98d8ee5.vhd'
 
 
 def exists(path):
     if path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea\
--e051bded0026':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19\
+-a992e98d8ee5':
         return False
     elif path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea\
--e051bded0026\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea-e051bded0026.vhd\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19\
+-a992e98d8ee5\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19-a992e98d8ee5.vhd\
 ':
         return False
     elif path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea\
--e051bded0026\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea-e051bded0026.vhd\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19\
+-a992e98d8ee5\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19-a992e98d8ee5.vhd\
 ':
         return False
     elif path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea\
--e051bded0026\\openstack_unit_test_vm_29e58ba9-c5c2-4c8a-9cea-e051bded0026.vhd\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19\
+-a992e98d8ee5\\openstack_unit_test_vm_0866fef5-e332-43b9-bc19-a992e98d8ee5.vhd\
 ':
         return False

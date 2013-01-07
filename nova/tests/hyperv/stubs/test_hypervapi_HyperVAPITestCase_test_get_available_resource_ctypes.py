@@ -18,60 +18,47 @@ This file contains auto generated mock classes and functions.
 
 class LibraryLoader(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
 
     @property
     def kernel32(self):
         if self.__id__ == 2:
-            v = WinDLL()
-            v.__instance_id__ = 3
+            v = WinDLL(3)
             return v
         elif self.__id__ == 5:
-            v = WinDLL()
-            v.__instance_id__ = 6
+            v = WinDLL(6)
             return v
         elif self.__id__ == 8:
-            v = WinDLL()
-            v.__instance_id__ = 9
+            v = WinDLL(9)
             return v
         elif self.__id__ == 11:
-            v = WinDLL()
-            v.__instance_id__ = 12
+            v = WinDLL(12)
             return v
         elif self.__id__ == 14:
-            v = WinDLL()
-            v.__instance_id__ = 15
+            v = WinDLL(15)
             return v
         elif self.__id__ == 17:
-            v = WinDLL()
-            v.__instance_id__ = 18
+            v = WinDLL(18)
             return v
         elif self.__id__ == 20:
-            v = WinDLL()
-            v.__instance_id__ = 21
+            v = WinDLL(21)
             return v
         elif self.__id__ == 23:
-            v = WinDLL()
-            v.__instance_id__ = 24
+            v = WinDLL(24)
             return v
         elif self.__id__ == 26:
-            v = WinDLL()
-            v.__instance_id__ = 27
+            v = WinDLL(27)
             return v
         elif self.__id__ == 29:
-            v = WinDLL()
-            v.__instance_id__ = 30
+            v = WinDLL(30)
             return v
         elif self.__id__ == 32:
-            v = WinDLL()
-            v.__instance_id__ = 33
+            v = WinDLL(33)
             return v
 
     @kernel32.setter
@@ -81,60 +68,47 @@ class LibraryLoader(object):
 
 class WinDLL(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
 
     @property
     def IsProcessorFeaturePresent(self):
         if self.__id__ == 3:
-            v = _FuncPtr()
-            v.__instance_id__ = 4
+            v = _FuncPtr(4)
             return v
         elif self.__id__ == 6:
-            v = _FuncPtr()
-            v.__instance_id__ = 7
+            v = _FuncPtr(7)
             return v
         elif self.__id__ == 9:
-            v = _FuncPtr()
-            v.__instance_id__ = 10
+            v = _FuncPtr(10)
             return v
         elif self.__id__ == 12:
-            v = _FuncPtr()
-            v.__instance_id__ = 13
+            v = _FuncPtr(13)
             return v
         elif self.__id__ == 15:
-            v = _FuncPtr()
-            v.__instance_id__ = 16
+            v = _FuncPtr(16)
             return v
         elif self.__id__ == 18:
-            v = _FuncPtr()
-            v.__instance_id__ = 19
+            v = _FuncPtr(19)
             return v
         elif self.__id__ == 21:
-            v = _FuncPtr()
-            v.__instance_id__ = 22
+            v = _FuncPtr(22)
             return v
         elif self.__id__ == 24:
-            v = _FuncPtr()
-            v.__instance_id__ = 25
+            v = _FuncPtr(25)
             return v
         elif self.__id__ == 27:
-            v = _FuncPtr()
-            v.__instance_id__ = 28
+            v = _FuncPtr(28)
             return v
         elif self.__id__ == 30:
-            v = _FuncPtr()
-            v.__instance_id__ = 31
+            v = _FuncPtr(31)
             return v
         elif self.__id__ == 33:
-            v = _FuncPtr()
-            v.__instance_id__ = 34
+            v = _FuncPtr(34)
             return v
 
     @IsProcessorFeaturePresent.setter
@@ -144,15 +118,12 @@ class WinDLL(object):
 
 class _FuncPtr(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def __call__(*p):
         if len(p) == 1 and p[0] == 3:

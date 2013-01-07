@@ -18,4 +18,4 @@ This file contains auto generated mock classes and functions.
 
 def generate_uid(topic, size=8):
     if topic == 'r':
-        return 'r-q5r0pzn3'
+        return 'r-9c6fz88e'

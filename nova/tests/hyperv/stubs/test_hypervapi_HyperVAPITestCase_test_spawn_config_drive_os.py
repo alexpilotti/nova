@@ -22,8 +22,8 @@ path = sys.modules[__name__]
 
 def makedirs(name, mode=511):
     if name ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8':
         return None
     elif name == 'C:\\Hyper-V\\test\\instances\\_base':
         return None
@@ -31,24 +31,24 @@ def makedirs(name, mode=511):
 
 def remove(*p):
     if len(p) == 1 and p[0] ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff\\configdrive.iso':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8\\configdrive.iso':
         return None
 
 
 def join(a, *p):
     if len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
- 'openstack_unit_test_vm_ac388e12-d662-48a1-b444-fa15482b40ff':
+ 'openstack_unit_test_vm_4978e512-aa2d-492f-ac9f-09ed770c00d8':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8'
     elif len(p) == 1 and a ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff' and p[0] ==\
- 'openstack_unit_test_vm_ac388e12-d662-48a1-b444-fa15482b40ff.vhd':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8' and p[0] ==\
+ 'openstack_unit_test_vm_4978e512-aa2d-492f-ac9f-09ed770c00d8.vhd':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff\\openstack_unit_test_vm_ac388e12-d662-48a1-b444-fa15482b40ff.vhd'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f-09ed770c00d8.vhd'
     elif len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
  '_base':
         return 'C:\\Hyper-V\\test\\instances\\_base'
@@ -56,32 +56,32 @@ def join(a, *p):
  == '1.vhd':
         return 'C:\\Hyper-V\\test\\instances\\_base\\1.vhd'
     elif len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
- 'openstack_unit_test_vm_ac388e12-d662-48a1-b444-fa15482b40ff':
+ 'openstack_unit_test_vm_4978e512-aa2d-492f-ac9f-09ed770c00d8':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8'
     elif len(p) == 1 and a ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff' and p[0] == 'configdrive.iso':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8' and p[0] == 'configdrive.iso':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff\\configdrive.iso'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8\\configdrive.iso'
     elif len(p) == 1 and a ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff' and p[0] == 'configdrive.vhd':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8' and p[0] == 'configdrive.vhd':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff\\configdrive.vhd'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8\\configdrive.vhd'
 
 
 def exists(path):
     if path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8':
         return False
     elif path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff\\openstack_unit_test_vm_ac388e12-d662-48a1-b444-fa15482b40ff.vhd\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f-09ed770c00d8.vhd\
 ':
         return False
     elif path == 'C:\\Hyper-V\\test\\instances\\_base':
@@ -91,6 +91,6 @@ def exists(path):
     elif path == 'C:\\Hyper-V\\test\\instances\\_base\\1.vhd':
         return False
     elif path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8':
         return True

@@ -22,8 +22,8 @@ path = sys.modules[__name__]
 
 def makedirs(name, mode=511):
     if name ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d':
         return None
     elif name == 'C:\\Hyper-V\\test\\instances\\_base':
         return None
@@ -31,17 +31,17 @@ def makedirs(name, mode=511):
 
 def join(a, *p):
     if len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
- 'openstack_unit_test_vm_15983892-548b-4b11-8d77-323bbf89fabc':
+ 'openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a-091e55c1ca9d':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d'
     elif len(p) == 1 and a ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc' and p[0] ==\
- 'openstack_unit_test_vm_15983892-548b-4b11-8d77-323bbf89fabc.vhd':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d' and p[0] ==\
+ 'openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a-091e55c1ca9d.vhd':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc\\openstack_unit_test_vm_15983892-548b-4b11-8d77-323bbf89fabc.vhd'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a-091e55c1ca9d.vhd'
     elif len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
  '_base':
         return 'C:\\Hyper-V\\test\\instances\\_base'
@@ -49,26 +49,26 @@ def join(a, *p):
  == '1.vhd':
         return 'C:\\Hyper-V\\test\\instances\\_base\\1.vhd'
     elif len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
- 'openstack_unit_test_vm_15983892-548b-4b11-8d77-323bbf89fabc':
+ 'openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a-091e55c1ca9d':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d'
     elif len(p) == 1 and a ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc' and p[0] == 'configdrive.iso':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d' and p[0] == 'configdrive.iso':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc\\configdrive.iso'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d\\configdrive.iso'
 
 
 def exists(path):
     if path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d':
         return False
     elif path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc\\openstack_unit_test_vm_15983892-548b-4b11-8d77-323bbf89fabc.vhd\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a-091e55c1ca9d.vhd\
 ':
         return False
     elif path == 'C:\\Hyper-V\\test\\instances\\_base':
@@ -78,10 +78,10 @@ def exists(path):
     elif path == 'C:\\Hyper-V\\test\\instances\\_base\\1.vhd':
         return False
     elif path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d':
         return True
     elif path ==\
- u'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d7\
-7-323bbf89fabc\\configdrive.iso':
+ u'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7\
+a-091e55c1ca9d\\configdrive.iso':
         return True

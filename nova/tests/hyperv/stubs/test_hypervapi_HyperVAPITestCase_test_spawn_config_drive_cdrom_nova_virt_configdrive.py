@@ -18,57 +18,49 @@ This file contains auto generated mock classes and functions.
 
 class type(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def __call__(*p):
         if len(p) == 0 and str(instance_md) ==\
- '<nova.api.metadata.base.InstanceMetadata instance at 0x0EAD6B48>':
-            v = ConfigDriveBuilder()
-            v.__instance_id__ = 3
+ '<nova.api.metadata.base.InstanceMetadata instance at 0x0E690FA8>':
+            v = ConfigDriveBuilder(3)
             return v
 
 
 def required_by(instance):
     if str(instance) == '{\'vm_state\': \'building\', \'project_id\':\
  \'fake\', \'user_id\': \'fake\', \'name\':\
- \'openstack_unit_test_vm_15983892-548b-4b11-8d77-323bbf89fabc\',\
+ \'openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a-091e55c1ca9d\',\
  \'kernel_id\': \'1\', \'ramdisk_id\': \'1\', \'launch_time\':\
- \'2013-01-03T23:48:02Z\', \'mac_addresses\': [{\'address\':\
+ \'2013-01-06T22:59:34Z\', \'mac_addresses\': [{\'address\':\
  \'de:ad:be:ef:be:ef\'}], \'memory_mb\': 512, \'instance_type\': {\'root_gb\':\
  0, \'name\': \'m1.tiny\', \'memory_mb\': 512, \'vcpus\': 1, \'rxtx_factor\':\
  1, \'flavorid\': 1}, \'vcpus\': 1, \'root_gb\': 0, \'image_ref\': \'1\',\
- \'task_state\': \'scheduling\', \'reservation_id\': \'r-q1s4sqfr\', \'id\':\
- 1, \'uuid\': \'d930b3ef-7fba-460b-88f1-d1b92cdf9bef\'}':
+ \'task_state\': \'scheduling\', \'reservation_id\': \'r-jc0i5zyk\', \'id\':\
+ 1, \'uuid\': \'b10fc8c3-9453-402e-a0ef-9ef712a185fe\'}':
         return True
 
 
 class ConfigDriveBuilder(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def cleanup(self):
         if self.__id__ == 3:
             return None
 
-
     def make_drive(self, path):
         if self.__id__ == 3 and path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_15983892-548b-4b11-8d77\
--323bbf89fabc\\configdrive.iso':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_81f8b976-3c30-4d1c-8c7a\
+-091e55c1ca9d\\configdrive.iso':
             return None

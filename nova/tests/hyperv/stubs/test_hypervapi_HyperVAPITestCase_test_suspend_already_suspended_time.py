@@ -74,22 +74,18 @@ def sleep(seconds=0):
             v = None
         elif _sleep_count_0 == 25:
             v = None
-        elif _sleep_count_0 == 26:
-            v = None
-        elif _sleep_count_0 == 27:
-            v = None
         _sleep_count_0 += 1
         return v
 
 
 def gmtime(*p):
     if len(p) == 0:
-        return 'time.struct_time(tm_year=2013, tm_mon=1, tm_mday=3,\
- tm_hour=23, tm_min=48, tm_sec=44, tm_wday=3, tm_yday=3, tm_isdst=0)'
+        return 'time.struct_time(tm_year=2013, tm_mon=1, tm_mday=6,\
+ tm_hour=23, tm_min=0, tm_sec=12, tm_wday=6, tm_yday=6, tm_isdst=0)'
 
 
 def strftime(*p):
     if len(p) == 2 and p[0] == '%Y-%m-%dT%H:%M:%SZ' and str(p[1]) ==\
- 'time.struct_time(tm_year=2013, tm_mon=1, tm_mday=3, tm_hour=23, tm_min=48,\
- tm_sec=44, tm_wday=3, tm_yday=3, tm_isdst=0)':
-        return '2013-01-03T23:48:44Z'
+ 'time.struct_time(tm_year=2013, tm_mon=1, tm_mday=6, tm_hour=23, tm_min=0,\
+ tm_sec=12, tm_wday=6, tm_yday=6, tm_isdst=0)':
+        return '2013-01-06T23:00:12Z'

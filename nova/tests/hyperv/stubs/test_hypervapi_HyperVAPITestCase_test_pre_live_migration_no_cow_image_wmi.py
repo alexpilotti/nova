@@ -25,11 +25,9 @@ def WMI(computer='', impersonation_level='', authentication_level='',
         if not '_WMI_count_0' in globals():
             _WMI_count_0 = 0
         if _WMI_count_0 == 0:
-            v = _wmi_namespace()
-            v.__instance_id__ = 2
+            v = _wmi_namespace(2)
         elif _WMI_count_0 == 1:
-            v = _wmi_namespace()
-            v.__instance_id__ = 7
+            v = _wmi_namespace(7)
         _WMI_count_0 += 1
         return v
     elif moniker == '//./root/wmi':
@@ -38,39 +36,32 @@ def WMI(computer='', impersonation_level='', authentication_level='',
         if not '_WMI_count_1' in globals():
             _WMI_count_1 = 0
         if _WMI_count_1 == 0:
-            v = _wmi_namespace()
-            v.__instance_id__ = 3
+            v = _wmi_namespace(3)
         elif _WMI_count_1 == 1:
-            v = _wmi_namespace()
-            v.__instance_id__ = 8
+            v = _wmi_namespace(8)
         _WMI_count_1 += 1
         return v
     elif moniker == '//./root/cimv2':
-        v = _wmi_namespace()
-        v.__instance_id__ = 4
+        v = _wmi_namespace(4)
         return v
     elif moniker == '//./root/virtualization/v2':
-        v = _wmi_namespace()
-        v.__instance_id__ = 9
+        v = _wmi_namespace(9)
         return v
 
 
 class _wmi_namespace(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
 
     @property
     def Msvm_VirtualSystemMigrationService(self):
         if self.__id__ == 9:
-            v = _wmi_class()
-            v.__instance_id__ = 10
+            v = _wmi_class(10)
             return v
 
     @Msvm_VirtualSystemMigrationService.setter
@@ -80,14 +71,12 @@ class _wmi_namespace(object):
     @property
     def Win32_OperatingSystem(self):
         if self.__id__ == 4:
-            v = _wmi_class()
-            v.__instance_id__ = 5
+            v = _wmi_class(5)
             return v
 
     @Win32_OperatingSystem.setter
     def Win32_OperatingSystem(self, value):
         pass
-
 
     def query(self, wql, instance_of=None, fields='[]'):
         if self.__id__ == 3 and wql == 'SELECT * FROM\
@@ -100,40 +89,33 @@ class _wmi_namespace(object):
 
 class _wmi_class(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def __call__(self, fields='[]', **where_clause):
         if self.__id__ == 5:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 6
+            v1 = _wmi_object(6)
             v.append(v1)
             return v
         elif self.__id__ == 10:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 11
+            v1 = _wmi_object(11)
             v.append(v1)
             return v
 
 
 class _wmi_object(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
 
     @property
@@ -172,13 +154,11 @@ class _wmi_object(object):
     def MigrationServiceListenerIPAddressList(self, value):
         pass
 
-
     def associators(self, wmi_association_class='', wmi_result_class=''):
         if self.__id__ == 11 and wmi_association_class ==\
  'Msvm_ElementSettingData' and wmi_result_class ==\
  'Msvm_VirtualSystemMigrationServiceSettingData':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 12
+            v1 = _wmi_object(12)
             v.append(v1)
             return v

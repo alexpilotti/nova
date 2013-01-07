@@ -22,69 +22,56 @@ def uuid4():
     if not '_uuid4_count_0' in globals():
         _uuid4_count_0 = 0
     if _uuid4_count_0 == 0:
-        v = UUID()
-        v.__instance_id__ = 2
+        v = UUID(2)
     elif _uuid4_count_0 == 1:
-        v = UUID()
-        v.__instance_id__ = 3
+        v = UUID(3)
     elif _uuid4_count_0 == 2:
-        v = UUID()
-        v.__instance_id__ = 4
+        v = UUID(4)
     elif _uuid4_count_0 == 3:
-        v = UUID()
-        v.__instance_id__ = 5
+        v = UUID(5)
     elif _uuid4_count_0 == 4:
-        v = UUID()
-        v.__instance_id__ = 6
+        v = UUID(6)
     elif _uuid4_count_0 == 5:
-        v = UUID()
-        v.__instance_id__ = 7
+        v = UUID(7)
     elif _uuid4_count_0 == 6:
-        v = UUID()
-        v.__instance_id__ = 8
+        v = UUID(8)
     elif _uuid4_count_0 == 7:
-        v = UUID()
-        v.__instance_id__ = 9
+        v = UUID(9)
     elif _uuid4_count_0 == 8:
-        v = UUID()
-        v.__instance_id__ = 10
+        v = UUID(10)
     elif _uuid4_count_0 == 9:
-        v = UUID()
-        v.__instance_id__ = 11
+        v = UUID(11)
     _uuid4_count_0 += 1
     return v
 
 
 class UUID(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def __str__(self):
         if self.__id__ == 2:
-            return 'f65363cb-0a0f-40ea-b826-24088908a5f7'
+            return '67a39e13-209c-4108-8bd8-54c0ea5832bb'
         elif self.__id__ == 3:
-            return 'aaf1267b-fbc6-49fe-b84a-e72081546b49'
+            return 'b05f5e4a-8b68-4d41-afdd-4ec322e8f082'
         elif self.__id__ == 4:
-            return 'd6ce76f6-2b35-4564-9dda-952be64636f9'
+            return 'ef8c4aac-5499-4d28-8d04-6a5a5ec7b3ff'
         elif self.__id__ == 5:
-            return 'a10333d1-1a52-4a29-942a-b7ec8c5ba302'
+            return '4a94bb43-4fbd-40ab-b174-68f48097e0db'
         elif self.__id__ == 6:
-            return 'bb9b6efa-0087-4b65-9774-54521b99ad02'
+            return '179f705a-d9dd-490f-b94d-81fc0cd54788'
         elif self.__id__ == 7:
-            return '0ba8bf8f-5166-4e5e-9a33-b4aae6c3bd54'
+            return '0b447533-4a42-4b70-95f7-eb0e317d47df'
         elif self.__id__ == 8:
-            return '3247be57-b150-413d-aaaa-c8a048fff023'
+            return '5dc852bd-4fc9-488e-9907-7c1f51940c4c'
         elif self.__id__ == 9:
-            return 'fbaea9e8-7432-4ab1-9097-32b676327021'
+            return '76eb2345-4700-4077-ba32-8d3a2d8f07ab'
         elif self.__id__ == 10:
-            return '1c116448-cb95-4a32-a0b3-fc00f7f8f891'
+            return 'a9196905-c530-4bb5-bf89-21584ec59c67'
         elif self.__id__ == 11:
-            return 'e0e51f63-33b7-4385-bae5-843a2f9eebb1'
+            return '96a27d1d-74ad-4054-9450-1bb9887d15ea'

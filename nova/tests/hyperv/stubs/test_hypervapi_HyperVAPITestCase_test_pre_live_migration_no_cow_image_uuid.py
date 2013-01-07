@@ -22,29 +22,24 @@ def uuid4():
     if not '_uuid4_count_0' in globals():
         _uuid4_count_0 = 0
     if _uuid4_count_0 == 0:
-        v = UUID()
-        v.__instance_id__ = 2
+        v = UUID(2)
     elif _uuid4_count_0 == 1:
-        v = UUID()
-        v.__instance_id__ = 3
+        v = UUID(3)
     _uuid4_count_0 += 1
     return v
 
 
 class UUID(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def __str__(self):
         if self.__id__ == 2:
-            return '131e8fec-3f92-4918-a04a-c8b8c8ce47e1'
+            return '0fae43cb-b2bf-486b-9820-f2adef79a2f7'
         elif self.__id__ == 3:
-            return 'cc738ee7-820b-447b-8afc-eb395bd366db'
+            return 'eb1c846d-ef97-424c-9b47-8a37f3a90ad3'

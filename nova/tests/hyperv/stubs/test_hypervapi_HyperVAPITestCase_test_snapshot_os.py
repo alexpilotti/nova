@@ -22,48 +22,48 @@ path = sys.modules[__name__]
 
 def makedirs(name, mode=511):
     if name ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_8271e765-499e-4317-88a1\
--a7ed2329ec34':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5\
+-3032172e237e':
         return None
     elif name == 'C:\\Hyper-V\\test\\instances\\_base':
         return None
     elif name ==\
- 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_8271e765-499e-4\
-317-88a1-a7ed2329ec34':
+ 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_2ccaa158-2156-4\
+6f0-a5a5-3032172e237e':
         return None
 
 
 def isdir(*p):
     if len(p) == 1 and p[0] ==\
- 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_8271e765-499e-4\
-317-88a1-a7ed2329ec34':
+ 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_2ccaa158-2156-4\
+6f0-a5a5-3032172e237e':
         return False
 
 
 def basename(p):
     if p ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_8271e765-499e-4317-88a1\
--a7ed2329ec34\\openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34.vhd\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5\
+-3032172e237e\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e.vhd\
 ':
         return\
- 'openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34.vhd'
+ 'openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e.vhd'
     elif p == 'C:\\Hyper-V\\test\\instances\\_base\\1.vhd':
         return '1.vhd'
 
 
 def join(a, *p):
     if len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
- 'openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34':
+ 'openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_8271e765-499e-4317-88a1\
--a7ed2329ec34'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5\
+-3032172e237e'
     elif len(p) == 1 and a ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_8271e765-499e-4317-88a1\
--a7ed2329ec34' and p[0] ==\
- 'openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34.vhd':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5\
+-3032172e237e' and p[0] ==\
+ 'openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e.vhd':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_8271e765-499e-4317-88a1\
--a7ed2329ec34\\openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34.vhd'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5\
+-3032172e237e\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e.vhd'
     elif len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
  '_base':
         return 'C:\\Hyper-V\\test\\instances\\_base'
@@ -71,41 +71,41 @@ def join(a, *p):
  == '1.vhd':
         return 'C:\\Hyper-V\\test\\instances\\_base\\1.vhd'
     elif len(p) == 2 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
- 'openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34' and p[1] ==\
- 'openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34.vhd':
+ 'openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e' and p[1] ==\
+ 'openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e.vhd':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_8271e765-499e-4317-88a1\
--a7ed2329ec34\\openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34.vhd'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5\
+-3032172e237e\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e.vhd'
     elif len(p) == 2 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
  'export' and p[1] ==\
- 'openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34':
+ 'openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e':
         return\
- 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_8271e765-499e-4\
-317-88a1-a7ed2329ec34'
+ 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_2ccaa158-2156-4\
+6f0-a5a5-3032172e237e'
     elif len(p) == 1 and a ==\
- 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_8271e765-499e-4\
-317-88a1-a7ed2329ec34' and p[0] ==\
- 'openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34.vhd':
+ 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_2ccaa158-2156-4\
+6f0-a5a5-3032172e237e' and p[0] ==\
+ 'openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e.vhd':
         return\
- 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_8271e765-499e-4\
-317-88a1-a7ed2329ec34\\openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329\
-ec34.vhd'
+ 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_2ccaa158-2156-4\
+6f0-a5a5-3032172e237e\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e\
+237e.vhd'
     elif len(p) == 1 and a ==\
- 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_8271e765-499e-4\
-317-88a1-a7ed2329ec34' and p[0] == '1.vhd':
+ 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_2ccaa158-2156-4\
+6f0-a5a5-3032172e237e' and p[0] == '1.vhd':
         return\
- 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_8271e765-499e-4\
-317-88a1-a7ed2329ec34\\1.vhd'
+ 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_2ccaa158-2156-4\
+6f0-a5a5-3032172e237e\\1.vhd'
 
 
 def exists(path):
     if path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_8271e765-499e-4317-88a1\
--a7ed2329ec34':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5\
+-3032172e237e':
         return False
     elif path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_8271e765-499e-4317-88a1\
--a7ed2329ec34\\openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34.vhd\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5\
+-3032172e237e\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e.vhd\
 ':
         return False
     elif path == 'C:\\Hyper-V\\test\\instances\\_base':

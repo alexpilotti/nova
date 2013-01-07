@@ -19,12 +19,12 @@ This file contains auto generated mock classes and functions.
 def required_by(instance):
     if str(instance) == '{\'vm_state\': \'building\', \'project_id\':\
  \'fake\', \'user_id\': \'fake\', \'name\':\
- \'openstack_unit_test_vm_34dcc778-36a6-4390-a46e-dad9110caf97\',\
+ \'openstack_unit_test_vm_5731f99b-bceb-4416-bb49-7a1a0962d5ac\',\
  \'kernel_id\': \'1\', \'ramdisk_id\': \'1\', \'launch_time\':\
- \'2013-01-03T23:48:36Z\', \'mac_addresses\': [{\'address\':\
+ \'2013-01-06T23:00:05Z\', \'mac_addresses\': [{\'address\':\
  \'de:ad:be:ef:be:ef\'}], \'memory_mb\': 512, \'instance_type\': {\'root_gb\':\
  0, \'name\': \'m1.tiny\', \'memory_mb\': 512, \'vcpus\': 1, \'rxtx_factor\':\
  1, \'flavorid\': 1}, \'vcpus\': 1, \'root_gb\': 0, \'image_ref\': \'1\',\
- \'task_state\': \'scheduling\', \'reservation_id\': \'r-9aull3kb\', \'id\':\
- 1, \'uuid\': \'d57302f0-503d-4f0f-bec3-e4016f529b3b\'}':
+ \'task_state\': \'scheduling\', \'reservation_id\': \'r-q6lgjm6c\', \'id\':\
+ 1, \'uuid\': \'1461f7b4-6b35-44a8-9f0d-586456283043\'}':
         return None

@@ -18,23 +18,23 @@ This file contains auto generated mock classes and functions.
 
 def copyfile(src, dst):
     if src ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_8271e765-499e-4317-88a1\
--a7ed2329ec34\\openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329ec34.vhd\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5\
+-3032172e237e\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e237e.vhd\
 ' and dst ==\
- 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_8271e765-499e-4\
-317-88a1-a7ed2329ec34\\openstack_unit_test_vm_8271e765-499e-4317-88a1-a7ed2329\
-ec34.vhd':
+ 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_2ccaa158-2156-4\
+6f0-a5a5-3032172e237e\\openstack_unit_test_vm_2ccaa158-2156-46f0-a5a5-3032172e\
+237e.vhd':
         return None
     elif src == 'C:\\Hyper-V\\test\\instances\\_base\\1.vhd' and dst ==\
- 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_8271e765-499e-4\
-317-88a1-a7ed2329ec34\\1.vhd':
+ 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_2ccaa158-2156-4\
+6f0-a5a5-3032172e237e\\1.vhd':
         return None
 
 
 def rmtree(path, ignore_errors=False, onerror=None):
     if path ==\
- 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_8271e765-499e-4\
-317-88a1-a7ed2329ec34':
+ 'C:\\Hyper-V\\test\\instances\\export\\openstack_unit_test_vm_2ccaa158-2156-4\
+6f0-a5a5-3032172e237e':
         return None
     elif path == 'C:\\Hyper-V\\test\\instances' and ignore_errors is True:
         return None

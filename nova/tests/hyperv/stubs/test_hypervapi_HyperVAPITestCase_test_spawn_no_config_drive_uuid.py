@@ -22,64 +22,52 @@ def uuid4():
     if not '_uuid4_count_0' in globals():
         _uuid4_count_0 = 0
     if _uuid4_count_0 == 0:
-        v = UUID()
-        v.__instance_id__ = 2
+        v = UUID(2)
     elif _uuid4_count_0 == 1:
-        v = UUID()
-        v.__instance_id__ = 3
+        v = UUID(3)
     elif _uuid4_count_0 == 2:
-        v = UUID()
-        v.__instance_id__ = 4
+        v = UUID(4)
     elif _uuid4_count_0 == 3:
-        v = UUID()
-        v.__instance_id__ = 5
+        v = UUID(5)
     elif _uuid4_count_0 == 4:
-        v = UUID()
-        v.__instance_id__ = 6
+        v = UUID(6)
     elif _uuid4_count_0 == 5:
-        v = UUID()
-        v.__instance_id__ = 7
+        v = UUID(7)
     elif _uuid4_count_0 == 6:
-        v = UUID()
-        v.__instance_id__ = 8
+        v = UUID(8)
     elif _uuid4_count_0 == 7:
-        v = UUID()
-        v.__instance_id__ = 9
+        v = UUID(9)
     elif _uuid4_count_0 == 8:
-        v = UUID()
-        v.__instance_id__ = 10
+        v = UUID(10)
     _uuid4_count_0 += 1
     return v
 
 
 class UUID(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def __str__(self):
         if self.__id__ == 2:
-            return 'd7c25f8a-2da4-48ae-b16e-6d13c224a8b4'
+            return '2d08a0b0-31c0-41f3-8108-e87569b1591b'
         elif self.__id__ == 3:
-            return '1caba02f-06b4-450a-abfe-7e36a74db234'
+            return 'c8bf9a17-70ba-45cd-9550-ddf096d56de5'
         elif self.__id__ == 4:
-            return '14127685-d8d0-4017-8433-c312dd06fcca'
+            return 'edcc0614-b734-4e5a-89e0-370b1f25dbf1'
         elif self.__id__ == 5:
-            return '212135b9-70fb-4a23-b4dd-cde1b775c1ba'
+            return '16c65add-1007-4066-9d13-e1a636faa05d'
         elif self.__id__ == 6:
-            return '6b41fe34-3dfc-45cd-83eb-8bd3e086af50'
+            return 'b9e622f7-8617-48b7-9e23-b66046a39103'
         elif self.__id__ == 7:
-            return 'be249a15-ac58-41b2-9380-c2b9ce99ef30'
+            return '434089b0-38a1-4222-a39a-0589b0273524'
         elif self.__id__ == 8:
-            return '512590bb-6da9-4267-b4d5-f1f5f5acd3dd'
+            return '158eee15-3cdb-4e63-bddc-0723aaa3a2e5'
         elif self.__id__ == 9:
-            return '450c1070-08c2-4276-995a-a896511d4846'
+            return 'afcf95d9-f4c4-4706-a89e-3f238b5719f3'
         elif self.__id__ == 10:
-            return '0fae32a7-5ee2-4b0e-ba7f-e71f817e1523'
+            return '56a1b5e2-31f5-4e22-83e8-965ca97ae001'

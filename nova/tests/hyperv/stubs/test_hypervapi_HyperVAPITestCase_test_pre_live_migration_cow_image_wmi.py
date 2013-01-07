@@ -25,11 +25,9 @@ def WMI(computer='', impersonation_level='', authentication_level='',
         if not '_WMI_count_0' in globals():
             _WMI_count_0 = 0
         if _WMI_count_0 == 0:
-            v = _wmi_namespace()
-            v.__instance_id__ = 2
+            v = _wmi_namespace(2)
         elif _WMI_count_0 == 1:
-            v = _wmi_namespace()
-            v.__instance_id__ = 7
+            v = _wmi_namespace(7)
         _WMI_count_0 += 1
         return v
     elif moniker == '//./root/wmi':
@@ -38,82 +36,62 @@ def WMI(computer='', impersonation_level='', authentication_level='',
         if not '_WMI_count_1' in globals():
             _WMI_count_1 = 0
         if _WMI_count_1 == 0:
-            v = _wmi_namespace()
-            v.__instance_id__ = 3
+            v = _wmi_namespace(3)
         elif _WMI_count_1 == 1:
-            v = _wmi_namespace()
-            v.__instance_id__ = 8
+            v = _wmi_namespace(8)
         _WMI_count_1 += 1
         return v
     elif moniker == '//./root/cimv2':
-        v = _wmi_namespace()
-        v.__instance_id__ = 4
+        v = _wmi_namespace(4)
         return v
     elif moniker == '//./root/virtualization/v2':
-        v = _wmi_namespace()
-        v.__instance_id__ = 9
+        v = _wmi_namespace(9)
         return v
     elif moniker == '//./root/virtualization':
-        v = _wmi_namespace()
-        v.__instance_id__ = 13
+        v = _wmi_namespace(13)
         return v
     elif moniker ==\
- u'//HV12OSDEMO1/root/virtualization:Msvm_StorageJob.InstanceID="91FF0FE7-1E1E\
--44C2-839D-827C758825C0"':
+ u'//HV12OSDEMO1/root/virtualization:Msvm_StorageJob.InstanceID="C1DF8980-7A8C\
+-4F84-BA78-5C1F9448ED15"':
         ret_value = None
         global _WMI_count_5
         if not '_WMI_count_5' in globals():
             _WMI_count_5 = 0
         if _WMI_count_5 == 0:
-            v = _wmi_object()
-            v.__instance_id__ = 16
+            v = _wmi_object(16)
         elif _WMI_count_5 == 1:
-            v = _wmi_object()
-            v.__instance_id__ = 17
+            v = _wmi_object(17)
         elif _WMI_count_5 == 2:
-            v = _wmi_object()
-            v.__instance_id__ = 18
+            v = _wmi_object(18)
         elif _WMI_count_5 == 3:
-            v = _wmi_object()
-            v.__instance_id__ = 19
+            v = _wmi_object(19)
         elif _WMI_count_5 == 4:
-            v = _wmi_object()
-            v.__instance_id__ = 20
+            v = _wmi_object(20)
         elif _WMI_count_5 == 5:
-            v = _wmi_object()
-            v.__instance_id__ = 21
+            v = _wmi_object(21)
         elif _WMI_count_5 == 6:
-            v = _wmi_object()
-            v.__instance_id__ = 22
+            v = _wmi_object(22)
         elif _WMI_count_5 == 7:
-            v = _wmi_object()
-            v.__instance_id__ = 23
+            v = _wmi_object(23)
         elif _WMI_count_5 == 8:
-            v = _wmi_object()
-            v.__instance_id__ = 24
-        elif _WMI_count_5 == 9:
-            v = _wmi_object()
-            v.__instance_id__ = 25
+            v = _wmi_object(24)
         _WMI_count_5 += 1
         return v
 
 
 class _wmi_namespace(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
 
     @property
     def Msvm_VirtualSystemMigrationService(self):
         if self.__id__ == 9:
-            v = _wmi_class()
-            v.__instance_id__ = 10
+            v = _wmi_class(10)
             return v
 
     @Msvm_VirtualSystemMigrationService.setter
@@ -123,14 +101,12 @@ class _wmi_namespace(object):
     @property
     def Win32_OperatingSystem(self):
         if self.__id__ == 4:
-            v = _wmi_class()
-            v.__instance_id__ = 5
+            v = _wmi_class(5)
             return v
 
     @Win32_OperatingSystem.setter
     def Win32_OperatingSystem(self, value):
         pass
-
 
     def query(self, wql, instance_of=None, fields='[]'):
         if self.__id__ == 3 and wql == 'SELECT * FROM\
@@ -142,48 +118,40 @@ class _wmi_namespace(object):
         elif self.__id__ == 13 and wql == 'Select * from\
  Msvm_ImageManagementService':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 14
+            v1 = _wmi_object(14)
             v.append(v1)
             return v
 
 
 class _wmi_class(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def __call__(self, fields='[]', **where_clause):
         if self.__id__ == 5:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 6
+            v1 = _wmi_object(6)
             v.append(v1)
             return v
         elif self.__id__ == 10:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 11
+            v1 = _wmi_object(11)
             v.append(v1)
             return v
 
 
 class _wmi_object(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
 
     @property
@@ -207,8 +175,7 @@ class _wmi_object(object):
     @property
     def CreateDynamicVirtualHardDisk(self):
         if self.__id__ == 14:
-            v = _wmi_method()
-            v.__instance_id__ = 15
+            v = _wmi_method(15)
             return v
 
     @CreateDynamicVirtualHardDisk.setter
@@ -252,45 +219,38 @@ class _wmi_object(object):
         elif self.__id__ == 23:
             return 4
         elif self.__id__ == 24:
-            return 4
-        elif self.__id__ == 25:
             ret_value = None
-            if not hasattr(self, '_JobState_count_9'):
-                self._JobState_count_9 = 0
-            if self._JobState_count_9 == 0:
+            if not hasattr(self, '_JobState_count_8'):
+                self._JobState_count_8 = 0
+            if self._JobState_count_8 == 0:
                 v = 7
-            elif self._JobState_count_9 == 1:
+            elif self._JobState_count_8 == 1:
                 v = 7
-            self._JobState_count_9 += 1
+            self._JobState_count_8 += 1
             return v
 
     @JobState.setter
     def JobState(self, value):
         pass
 
-
     def associators(self, wmi_association_class='', wmi_result_class=''):
         if self.__id__ == 11 and wmi_association_class ==\
  'Msvm_ElementSettingData' and wmi_result_class ==\
  'Msvm_VirtualSystemMigrationServiceSettingData':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 12
+            v1 = _wmi_object(12)
             v.append(v1)
             return v
 
 
 class _wmi_method(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def __call__(self, *args, **kwargs):
         if len(args) == 0 and self.__id__ == 15 and\
@@ -298,8 +258,8 @@ class _wmi_method(object):
  'C:\\Hyper-V\\test\\instances\\_base\\1.vhd':
             v = ()
             v1 =\
- u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_StorageJob.InstanceID="91FF0FE7-\
-1E1E-44C2-839D-827C758825C0"'
+ u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_StorageJob.InstanceID="C1DF8980-\
+7A8C-4F84-BA78-5C1F9448ED15"'
             v += (v1,)
             v1 = 4096
             v += (v1,)

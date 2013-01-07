@@ -25,11 +25,9 @@ def WMI(computer='', impersonation_level='', authentication_level='',
         if not '_WMI_count_0' in globals():
             _WMI_count_0 = 0
         if _WMI_count_0 == 0:
-            v = _wmi_namespace()
-            v.__instance_id__ = 2
+            v = _wmi_namespace(2)
         elif _WMI_count_0 == 1:
-            v = _wmi_namespace()
-            v.__instance_id__ = 7
+            v = _wmi_namespace(7)
         _WMI_count_0 += 1
         return v
     elif moniker == '//./root/wmi':
@@ -38,11 +36,9 @@ def WMI(computer='', impersonation_level='', authentication_level='',
         if not '_WMI_count_1' in globals():
             _WMI_count_1 = 0
         if _WMI_count_1 == 0:
-            v = _wmi_namespace()
-            v.__instance_id__ = 3
+            v = _wmi_namespace(3)
         elif _WMI_count_1 == 1:
-            v = _wmi_namespace()
-            v.__instance_id__ = 8
+            v = _wmi_namespace(8)
         _WMI_count_1 += 1
         return v
     elif moniker == '//./root/cimv2':
@@ -51,11 +47,9 @@ def WMI(computer='', impersonation_level='', authentication_level='',
         if not '_WMI_count_2' in globals():
             _WMI_count_2 = 0
         if _WMI_count_2 == 0:
-            v = _wmi_namespace()
-            v.__instance_id__ = 4
+            v = _wmi_namespace(4)
         elif _WMI_count_2 == 1:
-            v = _wmi_namespace()
-            v.__instance_id__ = 378
+            v = _wmi_namespace(378)
         _WMI_count_2 += 1
         return v
     elif moniker == '//./root/virtualization':
@@ -64,175 +58,134 @@ def WMI(computer='', impersonation_level='', authentication_level='',
         if not '_WMI_count_3' in globals():
             _WMI_count_3 = 0
         if _WMI_count_3 == 0:
-            v = _wmi_namespace()
-            v.__instance_id__ = 9
+            v = _wmi_namespace(9)
         elif _WMI_count_3 == 1:
-            v = _wmi_namespace()
-            v.__instance_id__ = 11
+            v = _wmi_namespace(11)
         _WMI_count_3 += 1
         return v
     elif moniker ==\
- u'//HV12OSDEMO1/root/virtualization:Msvm_StorageJob.InstanceID="834C3EF1-B0B7\
--4A82-BE13-6D4BA1B1790F"':
+ u'//HV12OSDEMO1/root/virtualization:Msvm_StorageJob.InstanceID="1FFFA674-9739\
+-4475-806E-B8A59D599D41"':
         ret_value = None
         global _WMI_count_4
         if not '_WMI_count_4' in globals():
             _WMI_count_4 = 0
         if _WMI_count_4 == 0:
-            v = _wmi_object()
-            v.__instance_id__ = 14
+            v = _wmi_object(14)
         elif _WMI_count_4 == 1:
-            v = _wmi_object()
-            v.__instance_id__ = 15
+            v = _wmi_object(15)
         elif _WMI_count_4 == 2:
-            v = _wmi_object()
-            v.__instance_id__ = 16
+            v = _wmi_object(16)
         elif _WMI_count_4 == 3:
-            v = _wmi_object()
-            v.__instance_id__ = 17
+            v = _wmi_object(17)
         elif _WMI_count_4 == 4:
-            v = _wmi_object()
-            v.__instance_id__ = 18
+            v = _wmi_object(18)
         elif _WMI_count_4 == 5:
-            v = _wmi_object()
-            v.__instance_id__ = 19
+            v = _wmi_object(19)
         elif _WMI_count_4 == 6:
-            v = _wmi_object()
-            v.__instance_id__ = 20
+            v = _wmi_object(20)
         elif _WMI_count_4 == 7:
-            v = _wmi_object()
-            v.__instance_id__ = 21
+            v = _wmi_object(21)
         elif _WMI_count_4 == 8:
-            v = _wmi_object()
-            v.__instance_id__ = 22
+            v = _wmi_object(22)
+        elif _WMI_count_4 == 9:
+            v = _wmi_object(23)
         _WMI_count_4 += 1
         return v
     elif moniker ==\
- u'//HV12OSDEMO1/root/virtualization:Msvm_StorageJob.InstanceID="7EE3039D-FB28\
--45D6-A62F-19203559065F"':
+ u'//HV12OSDEMO1/root/virtualization:Msvm_StorageJob.InstanceID="8D5B2476-1065\
+-4F21-A487-7D72B201AFC0"':
         ret_value = None
         global _WMI_count_5
         if not '_WMI_count_5' in globals():
             _WMI_count_5 = 0
         if _WMI_count_5 == 0:
-            v = _wmi_object()
-            v.__instance_id__ = 25
+            v = _wmi_object(26)
         elif _WMI_count_5 == 1:
-            v = _wmi_object()
-            v.__instance_id__ = 26
+            v = _wmi_object(27)
         elif _WMI_count_5 == 2:
-            v = _wmi_object()
-            v.__instance_id__ = 27
+            v = _wmi_object(28)
         elif _WMI_count_5 == 3:
-            v = _wmi_object()
-            v.__instance_id__ = 28
+            v = _wmi_object(29)
         elif _WMI_count_5 == 4:
-            v = _wmi_object()
-            v.__instance_id__ = 29
+            v = _wmi_object(30)
         elif _WMI_count_5 == 5:
-            v = _wmi_object()
-            v.__instance_id__ = 30
+            v = _wmi_object(31)
         elif _WMI_count_5 == 6:
-            v = _wmi_object()
-            v.__instance_id__ = 31
+            v = _wmi_object(32)
         elif _WMI_count_5 == 7:
-            v = _wmi_object()
-            v.__instance_id__ = 32
+            v = _wmi_object(33)
         elif _WMI_count_5 == 8:
-            v = _wmi_object()
-            v.__instance_id__ = 33
+            v = _wmi_object(34)
         _WMI_count_5 += 1
         return v
     elif moniker ==\
- u'//HV12OSDEMO1/root/virtualization:Msvm_ConcreteJob.InstanceID="2CB501C4-5A7\
-1-4523-B227-DA2196320724"':
+ u'//HV12OSDEMO1/root/virtualization:Msvm_ConcreteJob.InstanceID="AED4B786-5F5\
+2-41FB-904D-FF0324976F5D"':
         ret_value = None
         global _WMI_count_6
         if not '_WMI_count_6' in globals():
             _WMI_count_6 = 0
         if _WMI_count_6 == 0:
-            v = _wmi_object()
-            v.__instance_id__ = 354
+            v = _wmi_object(355)
         elif _WMI_count_6 == 1:
-            v = _wmi_object()
-            v.__instance_id__ = 355
+            v = _wmi_object(356)
         elif _WMI_count_6 == 2:
-            v = _wmi_object()
-            v.__instance_id__ = 356
+            v = _wmi_object(357)
         elif _WMI_count_6 == 3:
-            v = _wmi_object()
-            v.__instance_id__ = 357
+            v = _wmi_object(358)
         elif _WMI_count_6 == 4:
-            v = _wmi_object()
-            v.__instance_id__ = 358
+            v = _wmi_object(359)
         elif _WMI_count_6 == 5:
-            v = _wmi_object()
-            v.__instance_id__ = 359
+            v = _wmi_object(360)
         _WMI_count_6 += 1
         return v
     elif moniker ==\
- u'//HV12OSDEMO1/root/virtualization:Msvm_ConcreteJob.InstanceID="01FEED52-06C\
-5-4E6F-91F0-91DD7B3A2F2C"':
-        ret_value = None
-        global _WMI_count_7
-        if not '_WMI_count_7' in globals():
-            _WMI_count_7 = 0
-        if _WMI_count_7 == 0:
-            v = _wmi_object()
-            v.__instance_id__ = 363
-        elif _WMI_count_7 == 1:
-            v = _wmi_object()
-            v.__instance_id__ = 364
-        _WMI_count_7 += 1
+ u'//HV12OSDEMO1/root/virtualization:Msvm_ConcreteJob.InstanceID="8B33221D-9E8\
+A-41B9-96FB-DDAC49D5E8B3"':
+        v = _wmi_object(364)
         return v
     elif moniker ==\
- u'//HV12OSDEMO1/root/virtualization:Msvm_ConcreteJob.InstanceID="02BE598B-655\
-9-4955-8B87-16A33330C0D8"':
+ u'//HV12OSDEMO1/root/virtualization:Msvm_ConcreteJob.InstanceID="D3ECBA7D-C75\
+0-40AB-B11F-8658FF528483"':
         ret_value = None
         global _WMI_count_8
         if not '_WMI_count_8' in globals():
             _WMI_count_8 = 0
         if _WMI_count_8 == 0:
-            v = _wmi_object()
-            v.__instance_id__ = 386
+            v = _wmi_object(386)
         elif _WMI_count_8 == 1:
-            v = _wmi_object()
-            v.__instance_id__ = 387
+            v = _wmi_object(387)
         _WMI_count_8 += 1
         return v
     elif moniker ==\
- u'//HV12OSDEMO1/root/virtualization:Msvm_ConcreteJob.InstanceID="35C1ABAA-F12\
-8-4D14-9C5A-8D24D0268B52"':
+ u'//HV12OSDEMO1/root/virtualization:Msvm_ConcreteJob.InstanceID="D6B00745-2CC\
+D-4A58-8B51-0AA585932392"':
         ret_value = None
         global _WMI_count_9
         if not '_WMI_count_9' in globals():
             _WMI_count_9 = 0
         if _WMI_count_9 == 0:
-            v = _wmi_object()
-            v.__instance_id__ = 408
+            v = _wmi_object(408)
         elif _WMI_count_9 == 1:
-            v = _wmi_object()
-            v.__instance_id__ = 409
+            v = _wmi_object(409)
         _WMI_count_9 += 1
         return v
 
 
 class _wmi_namespace(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
 
     @property
     def Win32_OperatingSystem(self):
         if self.__id__ == 4:
-            v = _wmi_class()
-            v.__instance_id__ = 5
+            v = _wmi_class(5)
             return v
 
     @Win32_OperatingSystem.setter
@@ -247,14 +200,11 @@ class _wmi_namespace(object):
  '_Msvm_ResourceAllocationSettingData_count_0'):
                 self._Msvm_ResourceAllocationSettingData_count_0 = 0
             if self._Msvm_ResourceAllocationSettingData_count_0 == 0:
-                v = _wmi_class()
-                v.__instance_id__ = 64
+                v = _wmi_class(65)
             elif self._Msvm_ResourceAllocationSettingData_count_0 == 1:
-                v = _wmi_class()
-                v.__instance_id__ = 158
+                v = _wmi_class(159)
             elif self._Msvm_ResourceAllocationSettingData_count_0 == 2:
-                v = _wmi_class()
-                v.__instance_id__ = 253
+                v = _wmi_class(254)
             self._Msvm_ResourceAllocationSettingData_count_0 += 1
             return v
 
@@ -270,20 +220,15 @@ class _wmi_namespace(object):
  '_Msvm_VirtualSystemManagementService_count_0'):
                 self._Msvm_VirtualSystemManagementService_count_0 = 0
             if self._Msvm_VirtualSystemManagementService_count_0 == 0:
-                v = _wmi_class()
-                v.__instance_id__ = 34
+                v = _wmi_class(35)
             elif self._Msvm_VirtualSystemManagementService_count_0 == 1:
-                v = _wmi_class()
-                v.__instance_id__ = 153
+                v = _wmi_class(154)
             elif self._Msvm_VirtualSystemManagementService_count_0 == 2:
-                v = _wmi_class()
-                v.__instance_id__ = 246
+                v = _wmi_class(247)
             elif self._Msvm_VirtualSystemManagementService_count_0 == 3:
-                v = _wmi_class()
-                v.__instance_id__ = 341
+                v = _wmi_class(342)
             elif self._Msvm_VirtualSystemManagementService_count_0 == 4:
-                v = _wmi_class()
-                v.__instance_id__ = 347
+                v = _wmi_class(348)
             self._Msvm_VirtualSystemManagementService_count_0 += 1
             return v
         elif self.__id__ == 11:
@@ -292,11 +237,9 @@ class _wmi_namespace(object):
  '_Msvm_VirtualSystemManagementService_count_1'):
                 self._Msvm_VirtualSystemManagementService_count_1 = 0
             if self._Msvm_VirtualSystemManagementService_count_1 == 0:
-                v = _wmi_class()
-                v.__instance_id__ = 370
+                v = _wmi_class(370)
             elif self._Msvm_VirtualSystemManagementService_count_1 == 1:
-                v = _wmi_class()
-                v.__instance_id__ = 381
+                v = _wmi_class(381)
             self._Msvm_VirtualSystemManagementService_count_1 += 1
             return v
 
@@ -307,8 +250,7 @@ class _wmi_namespace(object):
     @property
     def Msvm_VirtualSystemGlobalSettingData(self):
         if self.__id__ == 9:
-            v = _wmi_class()
-            v.__instance_id__ = 36
+            v = _wmi_class(37)
             return v
 
     @Msvm_VirtualSystemGlobalSettingData.setter
@@ -322,20 +264,15 @@ class _wmi_namespace(object):
             if not hasattr(self, '_Msvm_ComputerSystem_count_0'):
                 self._Msvm_ComputerSystem_count_0 = 0
             if self._Msvm_ComputerSystem_count_0 == 0:
-                v = _wmi_class()
-                v.__instance_id__ = 10
+                v = _wmi_class(10)
             elif self._Msvm_ComputerSystem_count_0 == 1:
-                v = _wmi_class()
-                v.__instance_id__ = 39
+                v = _wmi_class(40)
             elif self._Msvm_ComputerSystem_count_0 == 2:
-                v = _wmi_class()
-                v.__instance_id__ = 345
+                v = _wmi_class(346)
             elif self._Msvm_ComputerSystem_count_0 == 3:
-                v = _wmi_class()
-                v.__instance_id__ = 351
+                v = _wmi_class(352)
             elif self._Msvm_ComputerSystem_count_0 == 4:
-                v = _wmi_class()
-                v.__instance_id__ = 365
+                v = _wmi_class(365)
             self._Msvm_ComputerSystem_count_0 += 1
             return v
         elif self.__id__ == 11:
@@ -343,23 +280,17 @@ class _wmi_namespace(object):
             if not hasattr(self, '_Msvm_ComputerSystem_count_1'):
                 self._Msvm_ComputerSystem_count_1 = 0
             if self._Msvm_ComputerSystem_count_1 == 0:
-                v = _wmi_class()
-                v.__instance_id__ = 360
+                v = _wmi_class(361)
             elif self._Msvm_ComputerSystem_count_1 == 1:
-                v = _wmi_class()
-                v.__instance_id__ = 368
+                v = _wmi_class(368)
             elif self._Msvm_ComputerSystem_count_1 == 2:
-                v = _wmi_class()
-                v.__instance_id__ = 376
+                v = _wmi_class(376)
             elif self._Msvm_ComputerSystem_count_1 == 3:
-                v = _wmi_class()
-                v.__instance_id__ = 379
+                v = _wmi_class(379)
             elif self._Msvm_ComputerSystem_count_1 == 4:
-                v = _wmi_class()
-                v.__instance_id__ = 383
+                v = _wmi_class(383)
             elif self._Msvm_ComputerSystem_count_1 == 5:
-                v = _wmi_class()
-                v.__instance_id__ = 388
+                v = _wmi_class(388)
             self._Msvm_ComputerSystem_count_1 += 1
             return v
 
@@ -374,18 +305,15 @@ class _wmi_namespace(object):
             if not hasattr(self, '_MSVM_ComputerSystem_count_0'):
                 self._MSVM_ComputerSystem_count_0 = 0
             if self._MSVM_ComputerSystem_count_0 == 0:
-                v = _wmi_class()
-                v.__instance_id__ = 48
+                v = _wmi_class(49)
             elif self._MSVM_ComputerSystem_count_0 == 1:
-                v = _wmi_class()
-                v.__instance_id__ = 250
+                v = _wmi_class(251)
             self._MSVM_ComputerSystem_count_0 += 1
             return v
 
     @MSVM_ComputerSystem.setter
     def MSVM_ComputerSystem(self, value):
         pass
-
 
     def query(self, wql, instance_of=None, fields='[]'):
         if self.__id__ == 3 and wql == 'SELECT * FROM\
@@ -396,19 +324,17 @@ class _wmi_namespace(object):
             return v
         elif self.__id__ == 378 and wql == u'Select * from CIM_DataFile where\
  Name =\
- \'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_e8d0288a-15ba-4647-a71\
-4-1054db0f506d\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d.vh\
+ \'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf4\
+6-ccfbbb618bf0\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0.vh\
 d\'':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 410
+            v1 = _wmi_object(410)
             v.append(v1)
             return v
         elif self.__id__ == 9 and wql == 'Select * from\
  Msvm_ImageManagementService':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 23
+            v1 = _wmi_object(24)
             v.append(v1)
             return v
         elif self.__id__ == 9 and wql == 'SELECT * FROM\
@@ -416,8 +342,7 @@ d\'':
  \'Microsoft Synthetic Disk Drive\'            AND InstanceID LIKE\
  \'%Default%\'':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 63
+            v1 = _wmi_object(64)
             v.append(v1)
             return v
         elif self.__id__ == 9 and wql == 'SELECT * FROM\
@@ -425,8 +350,7 @@ d\'':
  LIKE \'Microsoft Virtual Hard Disk\' AND                  InstanceID LIKE\
  \'%Default%\' ':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 157
+            v1 = _wmi_object(158)
             v.append(v1)
             return v
         elif self.__id__ == 9 and wql == 'SELECT * FROM\
@@ -434,205 +358,172 @@ d\'':
  \'Microsoft Synthetic SCSI Controller\'                AND InstanceID LIKE\
  \'%Default%\'':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 252
+            v1 = _wmi_object(253)
             v.append(v1)
             return v
         elif self.__id__ == 11 and wql == 'Select * from\
  Msvm_ImageManagementService':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 12
+            v1 = _wmi_object(12)
             v.append(v1)
             return v
 
 
 class _wmi_class(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def __call__(self, fields='[]', **where_clause):
         if self.__id__ == 5:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 6
+            v1 = _wmi_object(6)
             v.append(v1)
             return v
-        elif self.__id__ == 48 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+        elif self.__id__ == 49 and where_clause.get('ElementName') ==\
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 49
+            v1 = _wmi_object(50)
             v.append(v1)
             return v
-        elif self.__id__ == 250 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+        elif self.__id__ == 251 and where_clause.get('ElementName') ==\
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 251
+            v1 = _wmi_object(252)
             v.append(v1)
             return v
         elif self.__id__ == 10 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
             return v
-        elif self.__id__ == 39 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+        elif self.__id__ == 40 and where_clause.get('ElementName') ==\
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 40
+            v1 = _wmi_object(41)
             v.append(v1)
             return v
-        elif self.__id__ == 345 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+        elif self.__id__ == 346 and where_clause.get('ElementName') ==\
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 346
+            v1 = _wmi_object(347)
             v.append(v1)
             return v
-        elif self.__id__ == 351 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+        elif self.__id__ == 352 and where_clause.get('ElementName') ==\
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 352
+            v1 = _wmi_object(353)
             v.append(v1)
             return v
         elif self.__id__ == 365 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 366
+            v1 = _wmi_object(366)
             v.append(v1)
             return v
-        elif self.__id__ == 34:
+        elif self.__id__ == 35:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 35
+            v1 = _wmi_object(36)
             v.append(v1)
             return v
-        elif self.__id__ == 153:
+        elif self.__id__ == 154:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 154
+            v1 = _wmi_object(155)
             v.append(v1)
             return v
-        elif self.__id__ == 246:
+        elif self.__id__ == 247:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 247
+            v1 = _wmi_object(248)
             v.append(v1)
             return v
-        elif self.__id__ == 341:
+        elif self.__id__ == 342:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 342
+            v1 = _wmi_object(343)
             v.append(v1)
             return v
-        elif self.__id__ == 347:
+        elif self.__id__ == 348:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 348
+            v1 = _wmi_object(349)
             v.append(v1)
             return v
-        elif self.__id__ == 360 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+        elif self.__id__ == 361 and where_clause.get('ElementName') ==\
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 361
+            v1 = _wmi_object(362)
             v.append(v1)
             return v
         elif self.__id__ == 368 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 369
+            v1 = _wmi_object(369)
             v.append(v1)
             return v
         elif self.__id__ == 376 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 377
+            v1 = _wmi_object(377)
             v.append(v1)
             return v
         elif self.__id__ == 379 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 380
+            v1 = _wmi_object(380)
             v.append(v1)
             return v
         elif self.__id__ == 383 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 384
+            v1 = _wmi_object(384)
             v.append(v1)
             return v
         elif self.__id__ == 388 and where_clause.get('ElementName') ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 389
+            v1 = _wmi_object(389)
             v.append(v1)
             return v
         elif self.__id__ == 370:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 371
+            v1 = _wmi_object(371)
             v.append(v1)
             return v
         elif self.__id__ == 381:
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 382
+            v1 = _wmi_object(382)
             v.append(v1)
             return v
 
-
     def new(self, **kwargs):
-        if self.__id__ == 36:
-            v = _wmi_object()
-            v.__instance_id__ = 37
+        if self.__id__ == 37:
+            v = _wmi_object(38)
             return v
-        elif self.__id__ == 64:
-            v = _wmi_object()
-            v.__instance_id__ = 65
+        elif self.__id__ == 65:
+            v = _wmi_object(66)
             return v
-        elif self.__id__ == 158:
-            v = _wmi_object()
-            v.__instance_id__ = 159
+        elif self.__id__ == 159:
+            v = _wmi_object(160)
             return v
-        elif self.__id__ == 253:
-            v = _wmi_object()
-            v.__instance_id__ = 254
+        elif self.__id__ == 254:
+            v = _wmi_object(255)
             return v
 
 
 class _wmi_object(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
 
     @property
     def CreateDifferencingVirtualHardDisk(self):
-        if self.__id__ == 23:
-            v = _wmi_method()
-            v.__instance_id__ = 24
+        if self.__id__ == 24:
+            v = _wmi_method(25)
             return v
 
     @CreateDifferencingVirtualHardDisk.setter
@@ -641,21 +532,17 @@ class _wmi_object(object):
 
     @property
     def RequestStateChange(self):
-        if self.__id__ == 352:
-            v = _wmi_method()
-            v.__instance_id__ = 353
+        if self.__id__ == 353:
+            v = _wmi_method(354)
             return v
         elif self.__id__ == 366:
-            v = _wmi_method()
-            v.__instance_id__ = 367
+            v = _wmi_method(367)
             return v
-        elif self.__id__ == 361:
-            v = _wmi_method()
-            v.__instance_id__ = 362
+        elif self.__id__ == 362:
+            v = _wmi_method(363)
             return v
         elif self.__id__ == 384:
-            v = _wmi_method()
-            v.__instance_id__ = 385
+            v = _wmi_method(385)
             return v
 
     @RequestStateChange.setter
@@ -664,16 +551,14 @@ class _wmi_object(object):
 
     @property
     def ModifyVirtualSystemResources(self):
-        if self.__id__ == 35:
+        if self.__id__ == 36:
             ret_value = None
             if not hasattr(self, '_ModifyVirtualSystemResources_count_0'):
                 self._ModifyVirtualSystemResources_count_0 = 0
             if self._ModifyVirtualSystemResources_count_0 == 0:
-                v = _wmi_method()
-                v.__instance_id__ = 43
+                v = _wmi_method(44)
             elif self._ModifyVirtualSystemResources_count_0 == 1:
-                v = _wmi_method()
-                v.__instance_id__ = 46
+                v = _wmi_method(47)
             self._ModifyVirtualSystemResources_count_0 += 1
             return v
 
@@ -683,9 +568,9 @@ class _wmi_object(object):
 
     @property
     def Description(self):
-        if self.__id__ == 33:
+        if self.__id__ == 34:
             return u'Creating Virtual Hard Disk'
-        elif self.__id__ == 359:
+        elif self.__id__ == 360:
             return u'Initializing and Starting Virtual Machine'
 
     @Description.setter
@@ -694,7 +579,7 @@ class _wmi_object(object):
 
     @property
     def SettingType(self):
-        if self.__id__ == 41:
+        if self.__id__ == 42:
             return 3
 
     @SettingType.setter
@@ -703,21 +588,17 @@ class _wmi_object(object):
 
     @property
     def AddVirtualSystemResources(self):
-        if self.__id__ == 154:
-            v = _wmi_method()
-            v.__instance_id__ = 155
+        if self.__id__ == 155:
+            v = _wmi_method(156)
             return v
-        elif self.__id__ == 247:
-            v = _wmi_method()
-            v.__instance_id__ = 248
+        elif self.__id__ == 248:
+            v = _wmi_method(249)
             return v
-        elif self.__id__ == 342:
-            v = _wmi_method()
-            v.__instance_id__ = 343
+        elif self.__id__ == 343:
+            v = _wmi_method(344)
             return v
-        elif self.__id__ == 348:
-            v = _wmi_method()
-            v.__instance_id__ = 349
+        elif self.__id__ == 349:
+            v = _wmi_method(350)
             return v
 
     @AddVirtualSystemResources.setter
@@ -726,9 +607,9 @@ class _wmi_object(object):
 
     @property
     def Address(self):
-        if self.__id__ == 59:
+        if self.__id__ == 60:
             return u'0'
-        elif self.__id__ == 60:
+        elif self.__id__ == 61:
             return u'1'
 
     @Address.setter
@@ -737,29 +618,29 @@ class _wmi_object(object):
 
     @property
     def ResourceSubType(self):
-        if self.__id__ == 51:
+        if self.__id__ == 52:
             return u'Microsoft Virtual Keyboard'
-        elif self.__id__ == 52:
-            return u'Microsoft Virtual PS2 Mouse'
         elif self.__id__ == 53:
-            return u'Microsoft S3 Display Controller'
+            return u'Microsoft Virtual PS2 Mouse'
         elif self.__id__ == 54:
-            return u'Microsoft Synthetic Diskette Drive'
+            return u'Microsoft S3 Display Controller'
         elif self.__id__ == 55:
-            return None
+            return u'Microsoft Synthetic Diskette Drive'
         elif self.__id__ == 56:
-            return u'Microsoft Serial Controller'
+            return None
         elif self.__id__ == 57:
-            return u'Microsoft Serial Port'
+            return u'Microsoft Serial Controller'
         elif self.__id__ == 58:
             return u'Microsoft Serial Port'
         elif self.__id__ == 59:
-            return u'Microsoft Emulated IDE Controller'
+            return u'Microsoft Serial Port'
         elif self.__id__ == 60:
             return u'Microsoft Emulated IDE Controller'
         elif self.__id__ == 61:
-            return u'Microsoft Synthetic Mouse'
+            return u'Microsoft Emulated IDE Controller'
         elif self.__id__ == 62:
+            return u'Microsoft Synthetic Mouse'
+        elif self.__id__ == 63:
             return u'Microsoft Synthetic Display Controller'
         elif self.__id__ == 391:
             ret_value = None
@@ -948,49 +829,40 @@ class _wmi_object(object):
 
     @property
     def path_(self):
-        if self.__id__ == 59:
-            v = CDispatch()
-            v.__instance_id__ = 152
+        if self.__id__ == 60:
+            v = CDispatch(153)
             return v
-        elif self.__id__ == 49:
+        elif self.__id__ == 50:
             ret_value = None
             if not hasattr(self, '_path__count_1'):
                 self._path__count_1 = 0
             if self._path__count_1 == 0:
-                v = CDispatch()
-                v.__instance_id__ = 156
+                v = CDispatch(157)
             elif self._path__count_1 == 1:
-                v = CDispatch()
-                v.__instance_id__ = 249
+                v = CDispatch(250)
             self._path__count_1 += 1
             return v
-        elif self.__id__ == 251:
-            v = CDispatch()
-            v.__instance_id__ = 344
+        elif self.__id__ == 252:
+            v = CDispatch(345)
             return v
-        elif self.__id__ == 40:
+        elif self.__id__ == 41:
             ret_value = None
             if not hasattr(self, '_path__count_3'):
                 self._path__count_3 = 0
             if self._path__count_3 == 0:
-                v = CDispatch()
-                v.__instance_id__ = 44
+                v = CDispatch(45)
             elif self._path__count_3 == 1:
-                v = CDispatch()
-                v.__instance_id__ = 47
+                v = CDispatch(48)
             self._path__count_3 += 1
             return v
-        elif self.__id__ == 346:
-            v = CDispatch()
-            v.__instance_id__ = 350
+        elif self.__id__ == 347:
+            v = CDispatch(351)
             return v
         elif self.__id__ == 372:
-            v = CDispatch()
-            v.__instance_id__ = 373
+            v = CDispatch(373)
             return v
         elif self.__id__ == 380:
-            v = CDispatch()
-            v.__instance_id__ = 407
+            v = CDispatch(407)
             return v
 
     @path_.setter
@@ -999,10 +871,10 @@ class _wmi_object(object):
 
     @property
     def ElapsedTime(self):
-        if self.__id__ == 33:
-            return u'00000000000001.005270:000'
-        elif self.__id__ == 359:
-            return u'00000000000000.771023:000'
+        if self.__id__ == 34:
+            return u'00000000000001.009551:000'
+        elif self.__id__ == 360:
+            return u'00000000000000.644864:000'
 
     @ElapsedTime.setter
     def ElapsedTime(self, value):
@@ -1010,427 +882,298 @@ class _wmi_object(object):
 
     @property
     def Properties_(self):
-        if self.__id__ == 63:
+        if self.__id__ == 64:
             ret_value = None
             if not hasattr(self, '_Properties__count_0'):
                 self._Properties__count_0 = 0
             if self._Properties__count_0 == 0:
-                v = CDispatch()
-                v.__instance_id__ = 66
+                v = CDispatch(67)
             elif self._Properties__count_0 == 1:
-                v = CDispatch()
-                v.__instance_id__ = 70
+                v = CDispatch(71)
             elif self._Properties__count_0 == 2:
-                v = CDispatch()
-                v.__instance_id__ = 74
+                v = CDispatch(75)
             elif self._Properties__count_0 == 3:
-                v = CDispatch()
-                v.__instance_id__ = 78
+                v = CDispatch(79)
             elif self._Properties__count_0 == 4:
-                v = CDispatch()
-                v.__instance_id__ = 82
+                v = CDispatch(83)
             elif self._Properties__count_0 == 5:
-                v = CDispatch()
-                v.__instance_id__ = 86
+                v = CDispatch(87)
             elif self._Properties__count_0 == 6:
-                v = CDispatch()
-                v.__instance_id__ = 90
+                v = CDispatch(91)
             elif self._Properties__count_0 == 7:
-                v = CDispatch()
-                v.__instance_id__ = 94
+                v = CDispatch(95)
             elif self._Properties__count_0 == 8:
-                v = CDispatch()
-                v.__instance_id__ = 98
+                v = CDispatch(99)
             elif self._Properties__count_0 == 9:
-                v = CDispatch()
-                v.__instance_id__ = 102
+                v = CDispatch(103)
             elif self._Properties__count_0 == 10:
-                v = CDispatch()
-                v.__instance_id__ = 106
+                v = CDispatch(107)
             elif self._Properties__count_0 == 11:
-                v = CDispatch()
-                v.__instance_id__ = 110
+                v = CDispatch(111)
             elif self._Properties__count_0 == 12:
-                v = CDispatch()
-                v.__instance_id__ = 114
+                v = CDispatch(115)
             elif self._Properties__count_0 == 13:
-                v = CDispatch()
-                v.__instance_id__ = 118
+                v = CDispatch(119)
             elif self._Properties__count_0 == 14:
-                v = CDispatch()
-                v.__instance_id__ = 122
+                v = CDispatch(123)
             elif self._Properties__count_0 == 15:
-                v = CDispatch()
-                v.__instance_id__ = 126
+                v = CDispatch(127)
             elif self._Properties__count_0 == 16:
-                v = CDispatch()
-                v.__instance_id__ = 130
+                v = CDispatch(131)
             elif self._Properties__count_0 == 17:
-                v = CDispatch()
-                v.__instance_id__ = 134
+                v = CDispatch(135)
             elif self._Properties__count_0 == 18:
-                v = CDispatch()
-                v.__instance_id__ = 138
+                v = CDispatch(139)
             elif self._Properties__count_0 == 19:
-                v = CDispatch()
-                v.__instance_id__ = 142
+                v = CDispatch(143)
             elif self._Properties__count_0 == 20:
-                v = CDispatch()
-                v.__instance_id__ = 148
+                v = CDispatch(149)
             self._Properties__count_0 += 1
             return v
-        elif self.__id__ == 157:
+        elif self.__id__ == 158:
             ret_value = None
             if not hasattr(self, '_Properties__count_1'):
                 self._Properties__count_1 = 0
             if self._Properties__count_1 == 0:
-                v = CDispatch()
-                v.__instance_id__ = 160
+                v = CDispatch(161)
             elif self._Properties__count_1 == 1:
-                v = CDispatch()
-                v.__instance_id__ = 164
+                v = CDispatch(165)
             elif self._Properties__count_1 == 2:
-                v = CDispatch()
-                v.__instance_id__ = 168
+                v = CDispatch(169)
             elif self._Properties__count_1 == 3:
-                v = CDispatch()
-                v.__instance_id__ = 172
+                v = CDispatch(173)
             elif self._Properties__count_1 == 4:
-                v = CDispatch()
-                v.__instance_id__ = 176
+                v = CDispatch(177)
             elif self._Properties__count_1 == 5:
-                v = CDispatch()
-                v.__instance_id__ = 180
+                v = CDispatch(181)
             elif self._Properties__count_1 == 6:
-                v = CDispatch()
-                v.__instance_id__ = 184
+                v = CDispatch(185)
             elif self._Properties__count_1 == 7:
-                v = CDispatch()
-                v.__instance_id__ = 188
+                v = CDispatch(189)
             elif self._Properties__count_1 == 8:
-                v = CDispatch()
-                v.__instance_id__ = 192
+                v = CDispatch(193)
             elif self._Properties__count_1 == 9:
-                v = CDispatch()
-                v.__instance_id__ = 196
+                v = CDispatch(197)
             elif self._Properties__count_1 == 10:
-                v = CDispatch()
-                v.__instance_id__ = 200
+                v = CDispatch(201)
             elif self._Properties__count_1 == 11:
-                v = CDispatch()
-                v.__instance_id__ = 204
+                v = CDispatch(205)
             elif self._Properties__count_1 == 12:
-                v = CDispatch()
-                v.__instance_id__ = 208
+                v = CDispatch(209)
             elif self._Properties__count_1 == 13:
-                v = CDispatch()
-                v.__instance_id__ = 212
+                v = CDispatch(213)
             elif self._Properties__count_1 == 14:
-                v = CDispatch()
-                v.__instance_id__ = 216
+                v = CDispatch(217)
             elif self._Properties__count_1 == 15:
-                v = CDispatch()
-                v.__instance_id__ = 220
+                v = CDispatch(221)
             elif self._Properties__count_1 == 16:
-                v = CDispatch()
-                v.__instance_id__ = 224
+                v = CDispatch(225)
             elif self._Properties__count_1 == 17:
-                v = CDispatch()
-                v.__instance_id__ = 228
+                v = CDispatch(229)
             elif self._Properties__count_1 == 18:
-                v = CDispatch()
-                v.__instance_id__ = 232
+                v = CDispatch(233)
             elif self._Properties__count_1 == 19:
-                v = CDispatch()
-                v.__instance_id__ = 236
+                v = CDispatch(237)
             elif self._Properties__count_1 == 20:
-                v = CDispatch()
-                v.__instance_id__ = 242
+                v = CDispatch(243)
             self._Properties__count_1 += 1
             return v
-        elif self.__id__ == 252:
+        elif self.__id__ == 253:
             ret_value = None
             if not hasattr(self, '_Properties__count_2'):
                 self._Properties__count_2 = 0
             if self._Properties__count_2 == 0:
-                v = CDispatch()
-                v.__instance_id__ = 255
+                v = CDispatch(256)
             elif self._Properties__count_2 == 1:
-                v = CDispatch()
-                v.__instance_id__ = 259
+                v = CDispatch(260)
             elif self._Properties__count_2 == 2:
-                v = CDispatch()
-                v.__instance_id__ = 263
+                v = CDispatch(264)
             elif self._Properties__count_2 == 3:
-                v = CDispatch()
-                v.__instance_id__ = 267
+                v = CDispatch(268)
             elif self._Properties__count_2 == 4:
-                v = CDispatch()
-                v.__instance_id__ = 271
+                v = CDispatch(272)
             elif self._Properties__count_2 == 5:
-                v = CDispatch()
-                v.__instance_id__ = 275
+                v = CDispatch(276)
             elif self._Properties__count_2 == 6:
-                v = CDispatch()
-                v.__instance_id__ = 279
+                v = CDispatch(280)
             elif self._Properties__count_2 == 7:
-                v = CDispatch()
-                v.__instance_id__ = 283
+                v = CDispatch(284)
             elif self._Properties__count_2 == 8:
-                v = CDispatch()
-                v.__instance_id__ = 287
+                v = CDispatch(288)
             elif self._Properties__count_2 == 9:
-                v = CDispatch()
-                v.__instance_id__ = 291
+                v = CDispatch(292)
             elif self._Properties__count_2 == 10:
-                v = CDispatch()
-                v.__instance_id__ = 295
+                v = CDispatch(296)
             elif self._Properties__count_2 == 11:
-                v = CDispatch()
-                v.__instance_id__ = 299
+                v = CDispatch(300)
             elif self._Properties__count_2 == 12:
-                v = CDispatch()
-                v.__instance_id__ = 303
+                v = CDispatch(304)
             elif self._Properties__count_2 == 13:
-                v = CDispatch()
-                v.__instance_id__ = 307
+                v = CDispatch(308)
             elif self._Properties__count_2 == 14:
-                v = CDispatch()
-                v.__instance_id__ = 311
+                v = CDispatch(312)
             elif self._Properties__count_2 == 15:
-                v = CDispatch()
-                v.__instance_id__ = 315
+                v = CDispatch(316)
             elif self._Properties__count_2 == 16:
-                v = CDispatch()
-                v.__instance_id__ = 319
+                v = CDispatch(320)
             elif self._Properties__count_2 == 17:
-                v = CDispatch()
-                v.__instance_id__ = 323
+                v = CDispatch(324)
             elif self._Properties__count_2 == 18:
-                v = CDispatch()
-                v.__instance_id__ = 327
+                v = CDispatch(328)
             elif self._Properties__count_2 == 19:
-                v = CDispatch()
-                v.__instance_id__ = 331
+                v = CDispatch(332)
             elif self._Properties__count_2 == 20:
-                v = CDispatch()
-                v.__instance_id__ = 337
+                v = CDispatch(338)
             self._Properties__count_2 += 1
             return v
-        elif self.__id__ == 65:
+        elif self.__id__ == 66:
             ret_value = None
             if not hasattr(self, '_Properties__count_3'):
                 self._Properties__count_3 = 0
             if self._Properties__count_3 == 0:
-                v = CDispatch()
-                v.__instance_id__ = 68
+                v = CDispatch(69)
             elif self._Properties__count_3 == 1:
-                v = CDispatch()
-                v.__instance_id__ = 72
+                v = CDispatch(73)
             elif self._Properties__count_3 == 2:
-                v = CDispatch()
-                v.__instance_id__ = 76
+                v = CDispatch(77)
             elif self._Properties__count_3 == 3:
-                v = CDispatch()
-                v.__instance_id__ = 80
+                v = CDispatch(81)
             elif self._Properties__count_3 == 4:
-                v = CDispatch()
-                v.__instance_id__ = 84
+                v = CDispatch(85)
             elif self._Properties__count_3 == 5:
-                v = CDispatch()
-                v.__instance_id__ = 88
+                v = CDispatch(89)
             elif self._Properties__count_3 == 6:
-                v = CDispatch()
-                v.__instance_id__ = 92
+                v = CDispatch(93)
             elif self._Properties__count_3 == 7:
-                v = CDispatch()
-                v.__instance_id__ = 96
+                v = CDispatch(97)
             elif self._Properties__count_3 == 8:
-                v = CDispatch()
-                v.__instance_id__ = 100
+                v = CDispatch(101)
             elif self._Properties__count_3 == 9:
-                v = CDispatch()
-                v.__instance_id__ = 104
+                v = CDispatch(105)
             elif self._Properties__count_3 == 10:
-                v = CDispatch()
-                v.__instance_id__ = 108
+                v = CDispatch(109)
             elif self._Properties__count_3 == 11:
-                v = CDispatch()
-                v.__instance_id__ = 112
+                v = CDispatch(113)
             elif self._Properties__count_3 == 12:
-                v = CDispatch()
-                v.__instance_id__ = 116
+                v = CDispatch(117)
             elif self._Properties__count_3 == 13:
-                v = CDispatch()
-                v.__instance_id__ = 120
+                v = CDispatch(121)
             elif self._Properties__count_3 == 14:
-                v = CDispatch()
-                v.__instance_id__ = 124
+                v = CDispatch(125)
             elif self._Properties__count_3 == 15:
-                v = CDispatch()
-                v.__instance_id__ = 128
+                v = CDispatch(129)
             elif self._Properties__count_3 == 16:
-                v = CDispatch()
-                v.__instance_id__ = 132
+                v = CDispatch(133)
             elif self._Properties__count_3 == 17:
-                v = CDispatch()
-                v.__instance_id__ = 136
+                v = CDispatch(137)
             elif self._Properties__count_3 == 18:
-                v = CDispatch()
-                v.__instance_id__ = 140
+                v = CDispatch(141)
             elif self._Properties__count_3 == 19:
-                v = CDispatch()
-                v.__instance_id__ = 144
+                v = CDispatch(145)
             elif self._Properties__count_3 == 20:
-                v = CDispatch()
-                v.__instance_id__ = 146
+                v = CDispatch(147)
             elif self._Properties__count_3 == 21:
-                v = CDispatch()
-                v.__instance_id__ = 150
+                v = CDispatch(151)
             self._Properties__count_3 += 1
             return v
-        elif self.__id__ == 159:
+        elif self.__id__ == 160:
             ret_value = None
             if not hasattr(self, '_Properties__count_4'):
                 self._Properties__count_4 = 0
             if self._Properties__count_4 == 0:
-                v = CDispatch()
-                v.__instance_id__ = 162
+                v = CDispatch(163)
             elif self._Properties__count_4 == 1:
-                v = CDispatch()
-                v.__instance_id__ = 166
+                v = CDispatch(167)
             elif self._Properties__count_4 == 2:
-                v = CDispatch()
-                v.__instance_id__ = 170
+                v = CDispatch(171)
             elif self._Properties__count_4 == 3:
-                v = CDispatch()
-                v.__instance_id__ = 174
+                v = CDispatch(175)
             elif self._Properties__count_4 == 4:
-                v = CDispatch()
-                v.__instance_id__ = 178
+                v = CDispatch(179)
             elif self._Properties__count_4 == 5:
-                v = CDispatch()
-                v.__instance_id__ = 182
+                v = CDispatch(183)
             elif self._Properties__count_4 == 6:
-                v = CDispatch()
-                v.__instance_id__ = 186
+                v = CDispatch(187)
             elif self._Properties__count_4 == 7:
-                v = CDispatch()
-                v.__instance_id__ = 190
+                v = CDispatch(191)
             elif self._Properties__count_4 == 8:
-                v = CDispatch()
-                v.__instance_id__ = 194
+                v = CDispatch(195)
             elif self._Properties__count_4 == 9:
-                v = CDispatch()
-                v.__instance_id__ = 198
+                v = CDispatch(199)
             elif self._Properties__count_4 == 10:
-                v = CDispatch()
-                v.__instance_id__ = 202
+                v = CDispatch(203)
             elif self._Properties__count_4 == 11:
-                v = CDispatch()
-                v.__instance_id__ = 206
+                v = CDispatch(207)
             elif self._Properties__count_4 == 12:
-                v = CDispatch()
-                v.__instance_id__ = 210
+                v = CDispatch(211)
             elif self._Properties__count_4 == 13:
-                v = CDispatch()
-                v.__instance_id__ = 214
+                v = CDispatch(215)
             elif self._Properties__count_4 == 14:
-                v = CDispatch()
-                v.__instance_id__ = 218
+                v = CDispatch(219)
             elif self._Properties__count_4 == 15:
-                v = CDispatch()
-                v.__instance_id__ = 222
+                v = CDispatch(223)
             elif self._Properties__count_4 == 16:
-                v = CDispatch()
-                v.__instance_id__ = 226
+                v = CDispatch(227)
             elif self._Properties__count_4 == 17:
-                v = CDispatch()
-                v.__instance_id__ = 230
+                v = CDispatch(231)
             elif self._Properties__count_4 == 18:
-                v = CDispatch()
-                v.__instance_id__ = 234
+                v = CDispatch(235)
             elif self._Properties__count_4 == 19:
-                v = CDispatch()
-                v.__instance_id__ = 238
+                v = CDispatch(239)
             elif self._Properties__count_4 == 20:
-                v = CDispatch()
-                v.__instance_id__ = 240
+                v = CDispatch(241)
             elif self._Properties__count_4 == 21:
-                v = CDispatch()
-                v.__instance_id__ = 244
+                v = CDispatch(245)
             self._Properties__count_4 += 1
             return v
-        elif self.__id__ == 254:
+        elif self.__id__ == 255:
             ret_value = None
             if not hasattr(self, '_Properties__count_5'):
                 self._Properties__count_5 = 0
             if self._Properties__count_5 == 0:
-                v = CDispatch()
-                v.__instance_id__ = 257
+                v = CDispatch(258)
             elif self._Properties__count_5 == 1:
-                v = CDispatch()
-                v.__instance_id__ = 261
+                v = CDispatch(262)
             elif self._Properties__count_5 == 2:
-                v = CDispatch()
-                v.__instance_id__ = 265
+                v = CDispatch(266)
             elif self._Properties__count_5 == 3:
-                v = CDispatch()
-                v.__instance_id__ = 269
+                v = CDispatch(270)
             elif self._Properties__count_5 == 4:
-                v = CDispatch()
-                v.__instance_id__ = 273
+                v = CDispatch(274)
             elif self._Properties__count_5 == 5:
-                v = CDispatch()
-                v.__instance_id__ = 277
+                v = CDispatch(278)
             elif self._Properties__count_5 == 6:
-                v = CDispatch()
-                v.__instance_id__ = 281
+                v = CDispatch(282)
             elif self._Properties__count_5 == 7:
-                v = CDispatch()
-                v.__instance_id__ = 285
+                v = CDispatch(286)
             elif self._Properties__count_5 == 8:
-                v = CDispatch()
-                v.__instance_id__ = 289
+                v = CDispatch(290)
             elif self._Properties__count_5 == 9:
-                v = CDispatch()
-                v.__instance_id__ = 293
+                v = CDispatch(294)
             elif self._Properties__count_5 == 10:
-                v = CDispatch()
-                v.__instance_id__ = 297
+                v = CDispatch(298)
             elif self._Properties__count_5 == 11:
-                v = CDispatch()
-                v.__instance_id__ = 301
+                v = CDispatch(302)
             elif self._Properties__count_5 == 12:
-                v = CDispatch()
-                v.__instance_id__ = 305
+                v = CDispatch(306)
             elif self._Properties__count_5 == 13:
-                v = CDispatch()
-                v.__instance_id__ = 309
+                v = CDispatch(310)
             elif self._Properties__count_5 == 14:
-                v = CDispatch()
-                v.__instance_id__ = 313
+                v = CDispatch(314)
             elif self._Properties__count_5 == 15:
-                v = CDispatch()
-                v.__instance_id__ = 317
+                v = CDispatch(318)
             elif self._Properties__count_5 == 16:
-                v = CDispatch()
-                v.__instance_id__ = 321
+                v = CDispatch(322)
             elif self._Properties__count_5 == 17:
-                v = CDispatch()
-                v.__instance_id__ = 325
+                v = CDispatch(326)
             elif self._Properties__count_5 == 18:
-                v = CDispatch()
-                v.__instance_id__ = 329
+                v = CDispatch(330)
             elif self._Properties__count_5 == 19:
-                v = CDispatch()
-                v.__instance_id__ = 333
+                v = CDispatch(334)
             elif self._Properties__count_5 == 20:
-                v = CDispatch()
-                v.__instance_id__ = 335
+                v = CDispatch(336)
             elif self._Properties__count_5 == 21:
-                v = CDispatch()
-                v.__instance_id__ = 339
+                v = CDispatch(340)
             self._Properties__count_5 += 1
             return v
 
@@ -1443,8 +1186,8 @@ class _wmi_object(object):
         if self.__id__ == 400:
             v = ()
             v1 =\
- u'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_e8d0288a-15ba-4647-a71\
-4-1054db0f506d\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d.vh\
+ u'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf4\
+6-ccfbbb618bf0\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0.vh\
 d'
             v += (v1,)
             return v
@@ -1465,8 +1208,7 @@ d'
     @property
     def CreateDynamicVirtualHardDisk(self):
         if self.__id__ == 12:
-            v = _wmi_method()
-            v.__instance_id__ = 13
+            v = _wmi_method(13)
             return v
 
     @CreateDynamicVirtualHardDisk.setter
@@ -1492,17 +1234,17 @@ d'
         elif self.__id__ == 21:
             return 4
         elif self.__id__ == 22:
-            ret_value = None
-            if not hasattr(self, '_JobState_count_8'):
-                self._JobState_count_8 = 0
-            if self._JobState_count_8 == 0:
-                v = 7
-            elif self._JobState_count_8 == 1:
-                v = 7
-            self._JobState_count_8 += 1
-            return v
-        elif self.__id__ == 25:
             return 4
+        elif self.__id__ == 23:
+            ret_value = None
+            if not hasattr(self, '_JobState_count_9'):
+                self._JobState_count_9 = 0
+            if self._JobState_count_9 == 0:
+                v = 7
+            elif self._JobState_count_9 == 1:
+                v = 7
+            self._JobState_count_9 += 1
+            return v
         elif self.__id__ == 26:
             return 4
         elif self.__id__ == 27:
@@ -1518,17 +1260,17 @@ d'
         elif self.__id__ == 32:
             return 4
         elif self.__id__ == 33:
-            ret_value = None
-            if not hasattr(self, '_JobState_count_17'):
-                self._JobState_count_17 = 0
-            if self._JobState_count_17 == 0:
-                v = 7
-            elif self._JobState_count_17 == 1:
-                v = 7
-            self._JobState_count_17 += 1
-            return v
-        elif self.__id__ == 354:
             return 4
+        elif self.__id__ == 34:
+            ret_value = None
+            if not hasattr(self, '_JobState_count_18'):
+                self._JobState_count_18 = 0
+            if self._JobState_count_18 == 0:
+                v = 7
+            elif self._JobState_count_18 == 1:
+                v = 7
+            self._JobState_count_18 += 1
+            return v
         elif self.__id__ == 355:
             return 4
         elif self.__id__ == 356:
@@ -1538,17 +1280,17 @@ d'
         elif self.__id__ == 358:
             return 4
         elif self.__id__ == 359:
-            ret_value = None
-            if not hasattr(self, '_JobState_count_23'):
-                self._JobState_count_23 = 0
-            if self._JobState_count_23 == 0:
-                v = 7
-            elif self._JobState_count_23 == 1:
-                v = 7
-            self._JobState_count_23 += 1
-            return v
-        elif self.__id__ == 363:
             return 4
+        elif self.__id__ == 360:
+            ret_value = None
+            if not hasattr(self, '_JobState_count_24'):
+                self._JobState_count_24 = 0
+            if self._JobState_count_24 == 0:
+                v = 7
+            elif self._JobState_count_24 == 1:
+                v = 7
+            self._JobState_count_24 += 1
+            return v
         elif self.__id__ == 364:
             ret_value = None
             if not hasattr(self, '_JobState_count_25'):
@@ -1590,9 +1332,8 @@ d'
 
     @property
     def DefineVirtualSystem(self):
-        if self.__id__ == 35:
-            v = _wmi_method()
-            v.__instance_id__ = 38
+        if self.__id__ == 36:
+            v = _wmi_method(39)
             return v
 
     @DefineVirtualSystem.setter
@@ -1601,7 +1342,7 @@ d'
 
     @property
     def _properties(self):
-        if self.__id__ == 63:
+        if self.__id__ == 64:
             v = []
             v1 = u'InstanceID'
             v.append(v1)
@@ -1648,7 +1389,7 @@ d'
             v1 = u'Connection'
             v.append(v1)
             return v
-        elif self.__id__ == 157:
+        elif self.__id__ == 158:
             v = []
             v1 = u'InstanceID'
             v.append(v1)
@@ -1695,7 +1436,7 @@ d'
             v1 = u'Connection'
             v.append(v1)
             return v
-        elif self.__id__ == 252:
+        elif self.__id__ == 253:
             v = []
             v1 = u'InstanceID'
             v.append(v1)
@@ -1750,8 +1491,7 @@ d'
     @property
     def DestroyVirtualSystem(self):
         if self.__id__ == 382:
-            v = _wmi_method()
-            v.__instance_id__ = 406
+            v = _wmi_method(406)
             return v
 
     @DestroyVirtualSystem.setter
@@ -1761,8 +1501,7 @@ d'
     @property
     def GetSummaryInformation(self):
         if self.__id__ == 371:
-            v = _wmi_method()
-            v.__instance_id__ = 374
+            v = _wmi_method(374)
             return v
 
     @GetSummaryInformation.setter
@@ -1772,157 +1511,121 @@ d'
     @property
     def Delete(self):
         if self.__id__ == 410:
-            v = _wmi_method()
-            v.__instance_id__ = 411
+            v = _wmi_method(411)
             return v
 
     @Delete.setter
     def Delete(self, value):
         pass
 
-
     def associators(self, wmi_association_class='', wmi_result_class=''):
-        if self.__id__ == 50 and wmi_result_class ==\
+        if self.__id__ == 51 and wmi_result_class ==\
  'MSVM_ResourceAllocationSettingData':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 51
+            v1 = _wmi_object(52)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 52
+            v1 = _wmi_object(53)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 53
+            v1 = _wmi_object(54)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 54
+            v1 = _wmi_object(55)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 55
+            v1 = _wmi_object(56)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 56
+            v1 = _wmi_object(57)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 57
+            v1 = _wmi_object(58)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 58
+            v1 = _wmi_object(59)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 59
+            v1 = _wmi_object(60)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 60
+            v1 = _wmi_object(61)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 61
+            v1 = _wmi_object(62)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 62
+            v1 = _wmi_object(63)
             v.append(v1)
             return v
-        elif self.__id__ == 49 and wmi_result_class ==\
+        elif self.__id__ == 50 and wmi_result_class ==\
  'Msvm_VirtualSystemSettingData':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 50
+            v1 = _wmi_object(51)
             v.append(v1)
             return v
-        elif self.__id__ == 41 and wmi_result_class ==\
+        elif self.__id__ == 42 and wmi_result_class ==\
  'Msvm_MemorySettingData':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 42
+            v1 = _wmi_object(43)
+            v.append(v1)
+            return v
+        elif self.__id__ == 42 and wmi_result_class ==\
+ 'Msvm_ProcessorSettingData':
+            v = []
+            v1 = _wmi_object(46)
             v.append(v1)
             return v
         elif self.__id__ == 41 and wmi_result_class ==\
- 'Msvm_ProcessorSettingData':
-            v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 45
-            v.append(v1)
-            return v
-        elif self.__id__ == 40 and wmi_result_class ==\
  'Msvm_VirtualSystemSettingData':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 41
+            v1 = _wmi_object(42)
             v.append(v1)
             return v
         elif self.__id__ == 369 and wmi_association_class ==\
  'Msvm_SettingsDefineState' and wmi_result_class ==\
  'Msvm_VirtualSystemSettingData':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 372
+            v1 = _wmi_object(372)
             v.append(v1)
             return v
         elif self.__id__ == 390 and wmi_result_class ==\
  'MSVM_ResourceAllocationSettingData':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 391
+            v1 = _wmi_object(391)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 392
+            v1 = _wmi_object(392)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 393
+            v1 = _wmi_object(393)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 394
+            v1 = _wmi_object(394)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 395
+            v1 = _wmi_object(395)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 396
+            v1 = _wmi_object(396)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 397
+            v1 = _wmi_object(397)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 398
+            v1 = _wmi_object(398)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 399
+            v1 = _wmi_object(399)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 400
+            v1 = _wmi_object(400)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 401
+            v1 = _wmi_object(401)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 402
+            v1 = _wmi_object(402)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 403
+            v1 = _wmi_object(403)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 404
+            v1 = _wmi_object(404)
             v.append(v1)
-            v1 = _wmi_object()
-            v1.__instance_id__ = 405
+            v1 = _wmi_object(405)
             v.append(v1)
             return v
         elif self.__id__ == 389 and wmi_result_class ==\
  'Msvm_VirtualSystemSettingData':
             v = []
-            v1 = _wmi_object()
-            v1.__instance_id__ = 390
+            v1 = _wmi_object(390)
             v.append(v1)
             return v
 
-
     def GetText_(self, iObjectTextFormat='<PyOleMissing object at\
- 0x040917C0>', iFlags=0, objWbemNamedValueSet=None):
-        if self.__id__ == 42 and iObjectTextFormat == 1:
+ 0x03237588>', iFlags=0, objWbemNamedValueSet=None):
+        if self.__id__ == 43 and iObjectTextFormat == 1:
             return u'<INSTANCE CLASSNAME="Msvm_MemorySettingData"><PROPERTY\
  NAME="__PATH" CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>\\\\HV12OSDEMO1\\root\\virtualization:Msvm_MemorySetting\
-Data.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\\\4764334d-e0\
+Data.InstanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\\\4764334d-e0\
 01-4176-82ee-5594ec9b530e"</VALUE></PROPERTY><PROPERTY NAME="__NAMESPACE"\
  CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>root\\virtualization</VALUE></PROPERTY><PROPERTY\
@@ -1934,8 +1637,8 @@ ALUE>CIM_SettingData</VALUE><VALUE>CIM_ManagedElement</VALUE></VALUE.ARRAY></P\
 ROPERTY.ARRAY><PROPERTY NAME="__PROPERTY_COUNT" CLASSORIGIN="___SYSTEM"\
  TYPE="sint32"><VALUE>26</VALUE></PROPERTY><PROPERTY NAME="__RELPATH"\
  CLASSORIGIN="___SYSTEM"\
- TYPE="string"><VALUE>Msvm_MemorySettingData.InstanceID="Microsoft:E927FF62-0A\
-23-4E56-8F93-C2B00FFBF5BE\\\\4764334d-e001-4176-82ee-5594ec9b530e"</VALUE></PR\
+ TYPE="string"><VALUE>Msvm_MemorySettingData.InstanceID="Microsoft:3755DA23-3B\
+95-4B27-BE7B-B6C617FE1F04\\\\4764334d-e001-4176-82ee-5594ec9b530e"</VALUE></PR\
 OPERTY><PROPERTY NAME="__DYNASTY" CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>CIM_ManagedElement</VALUE></PROPERTY><PROPERTY\
  NAME="__SUPERCLASS" CLASSORIGIN="___SYSTEM"\
@@ -1970,7 +1673,7 @@ PERTY NAME="__CLASS" CLASSORIGIN="___SYSTEM"\
  NAME="HostResource" CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"></PROPERTY.ARRAY><PROPERTY NAME="InstanceID"\
  CLASSORIGIN="CIM_SettingData"\
- TYPE="string"><VALUE>Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\4764334d\
+ TYPE="string"><VALUE>Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\4764334d\
 -e001-4176-82ee-5594ec9b530e</VALUE></PROPERTY><PROPERTY NAME="IsVirtualized"\
  CLASSORIGIN="Msvm_MemorySettingData"\
  TYPE="boolean"><VALUE>TRUE</VALUE></PROPERTY><PROPERTY NAME="Limit"\
@@ -1997,11 +1700,11 @@ PROPERTY NAME="Reservation" CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint64"><VALUE>512</VALUE></PROPERTY><PROPERTY NAME="Weight"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint32"><VALUE>5000</VALUE></PROPERTY></INSTANCE>'
-        elif self.__id__ == 45 and iObjectTextFormat == 1:
+        elif self.__id__ == 46 and iObjectTextFormat == 1:
             return u'<INSTANCE CLASSNAME="Msvm_ProcessorSettingData"><PROPERTY\
  NAME="__PATH" CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ProcessorSett\
-ingData.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\\\b637f346\
+ingData.InstanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\\\b637f346\
 -6a0e-4dec-af52-bd70cb80a21d\\\\0"</VALUE></PROPERTY><PROPERTY\
  NAME="__NAMESPACE" CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>root\\virtualization</VALUE></PROPERTY><PROPERTY\
@@ -2013,8 +1716,8 @@ ALUE>CIM_SettingData</VALUE><VALUE>CIM_ManagedElement</VALUE></VALUE.ARRAY></P\
 ROPERTY.ARRAY><PROPERTY NAME="__PROPERTY_COUNT" CLASSORIGIN="___SYSTEM"\
  TYPE="sint32"><VALUE>29</VALUE></PROPERTY><PROPERTY NAME="__RELPATH"\
  CLASSORIGIN="___SYSTEM"\
- TYPE="string"><VALUE>Msvm_ProcessorSettingData.InstanceID="Microsoft:E927FF62\
--0A23-4E56-8F93-C2B00FFBF5BE\\\\b637f346-6a0e-4dec-af52-bd70cb80a21d\\\\0"</VA\
+ TYPE="string"><VALUE>Msvm_ProcessorSettingData.InstanceID="Microsoft:3755DA23\
+-3B95-4B27-BE7B-B6C617FE1F04\\\\b637f346-6a0e-4dec-af52-bd70cb80a21d\\\\0"</VA\
 LUE></PROPERTY><PROPERTY NAME="__DYNASTY" CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>CIM_ManagedElement</VALUE></PROPERTY><PROPERTY\
  NAME="__SUPERCLASS" CLASSORIGIN="___SYSTEM"\
@@ -2047,7 +1750,7 @@ PERTY NAME="__CLASS" CLASSORIGIN="___SYSTEM"\
  NAME="HostResource" CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"></PROPERTY.ARRAY><PROPERTY NAME="InstanceID"\
  CLASSORIGIN="CIM_SettingData"\
- TYPE="string"><VALUE>Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\b637f346\
+ TYPE="string"><VALUE>Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\b637f346\
 -6a0e-4dec-af52-bd70cb80a21d\\0</VALUE></PROPERTY><PROPERTY\
  NAME="IsVirtualized" CLASSORIGIN="Msvm_ProcessorSettingData"\
  TYPE="boolean"><VALUE>TRUE</VALUE></PROPERTY><PROPERTY NAME="Limit"\
@@ -2080,7 +1783,7 @@ PROPERTY NAME="ProcessorsPerSocket" CLASSORIGIN="Msvm_ProcessorSettingData"\
  TYPE="uint64"><VALUE>1</VALUE></PROPERTY><PROPERTY NAME="Weight"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint32"><VALUE>100</VALUE></PROPERTY></INSTANCE>'
-        elif self.__id__ == 37 and iObjectTextFormat == 1:
+        elif self.__id__ == 38 and iObjectTextFormat == 1:
             return u'<INSTANCE\
  CLASSNAME="Msvm_VirtualSystemGlobalSettingData"><PROPERTY NAME="__PATH"\
  CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY NAME="__NAMESPACE"\
@@ -2128,8 +1831,8 @@ ROPERTY NAME="__GENUS" CLASSORIGIN="___SYSTEM"\
  CLASSORIGIN="CIM_ManagedElement" PROPAGATED="true"\
  TYPE="string"></PROPERTY><PROPERTY NAME="ElementName"\
  CLASSORIGIN="CIM_ManagedElement"\
- TYPE="string"><VALUE>openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f5\
-06d</VALUE></PROPERTY><PROPERTY NAME="ExternalDataRoot"\
+ TYPE="string"><VALUE>openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618\
+bf0</VALUE></PROPERTY><PROPERTY NAME="ExternalDataRoot"\
  CLASSORIGIN="Msvm_VirtualSystemGlobalSettingData" PROPAGATED="true"\
  TYPE="string"></PROPERTY><PROPERTY NAME="InstanceID"\
  CLASSORIGIN="CIM_SettingData" PROPAGATED="true"\
@@ -2148,7 +1851,7 @@ ROPERTY NAME="__GENUS" CLASSORIGIN="___SYSTEM"\
  TYPE="string"></PROPERTY><PROPERTY NAME="VirtualSystemType"\
  CLASSORIGIN="CIM_VirtualSystemSettingData" PROPAGATED="true"\
  TYPE="uint16"></PROPERTY></INSTANCE>'
-        elif self.__id__ == 65 and iObjectTextFormat == 1:
+        elif self.__id__ == 66 and iObjectTextFormat == 1:
             return u'<INSTANCE\
  CLASSNAME="Msvm_ResourceAllocationSettingData"><PROPERTY NAME="__PATH"\
  CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY NAME="__NAMESPACE"\
@@ -2201,7 +1904,7 @@ OPERTY NAME="__GENUS" CLASSORIGIN="___SYSTEM"\
  TYPE="string"></PROPERTY><PROPERTY NAME="Parent"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"><VALUE>\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ResourceAlloc\
-ationSettingData.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\
+ationSettingData.InstanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\
 \\\\83F8638B-8DCA-4152-9EDA-2CA8B33039B4\\\\0"</VALUE></PROPERTY><PROPERTY\
  NAME="PoolID" CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"><VALUE>Microsoft:118C3BE5-0D31-4804-85F0-5C6074ABEA8F\\Root</VA\
@@ -2217,11 +1920,11 @@ LUE></PROPERTY><PROPERTY NAME="Reservation"\
  TYPE="uint64"><VALUE>1</VALUE></PROPERTY><PROPERTY.ARRAY\
  NAME="VirtualSystemIdentifiers"\
  CLASSORIGIN="Msvm_ResourceAllocationSettingData"\
- TYPE="string"><VALUE.ARRAY><VALUE>18f851ad-fe9b-4304-8668-52d346e7f244</VALUE\
+ TYPE="string"><VALUE.ARRAY><VALUE>5184445f-413e-4a36-93f1-5cd1c57e0581</VALUE\
 ></VALUE.ARRAY></PROPERTY.ARRAY><PROPERTY NAME="Weight"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint32"><VALUE>0</VALUE></PROPERTY></INSTANCE>'
-        elif self.__id__ == 159 and iObjectTextFormat == 1:
+        elif self.__id__ == 160 and iObjectTextFormat == 1:
             return u'<INSTANCE\
  CLASSNAME="Msvm_ResourceAllocationSettingData"><PROPERTY NAME="__PATH"\
  CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY NAME="__NAMESPACE"\
@@ -2255,8 +1958,8 @@ OPERTY NAME="__GENUS" CLASSORIGIN="___SYSTEM"\
  Image</VALUE></PROPERTY><PROPERTY.ARRAY NAME="Connection"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"><VALUE.ARRAY><VALUE>C:\\Hyper-V\\test\\instances\\openstack_uni\
-t_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d\\openstack_unit_test_vm_e8d0288\
-a-15ba-4647-a714-1054db0f506d.vhd</VALUE></VALUE.ARRAY></PROPERTY.ARRAY><PROPE\
+t_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0\\openstack_unit_test_vm_fe88a3b\
+0-6f96-4fa7-bf46-ccfbbb618bf0.vhd</VALUE></VALUE.ARRAY></PROPERTY.ARRAY><PROPE\
 RTY NAME="ConsumerVisibility" CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint16"></PROPERTY><PROPERTY NAME="Description"\
  CLASSORIGIN="CIM_ManagedElement" TYPE="string"><VALUE>Settings for the\
@@ -2276,7 +1979,7 @@ F8\\Default</VALUE></PROPERTY><PROPERTY NAME="Limit"\
  TYPE="string"></PROPERTY><PROPERTY NAME="Parent"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"><VALUE>\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ResourceAlloc\
-ationSettingData.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\
+ationSettingData.InstanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\
 \\\\83F8638B-8DCA-4152-9EDA-2CA8B33039B4\\\\0\\\\0\\\\D"</VALUE></PROPERTY><PR\
 OPERTY NAME="PoolID" CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"><VALUE>Microsoft:70BB60D2-A9D3-46aa-B654-3DE53004B4F8\\Root</VA\
@@ -2291,11 +1994,11 @@ LUE></PROPERTY><PROPERTY NAME="Reservation"\
  TYPE="uint64"><VALUE>1</VALUE></PROPERTY><PROPERTY.ARRAY\
  NAME="VirtualSystemIdentifiers"\
  CLASSORIGIN="Msvm_ResourceAllocationSettingData"\
- TYPE="string"><VALUE.ARRAY><VALUE>0f3ff39c-c0e5-4fe7-b440-d154558a8a2f</VALUE\
+ TYPE="string"><VALUE.ARRAY><VALUE>e1249ea0-ef00-4863-995c-12ff64826f12</VALUE\
 ></VALUE.ARRAY></PROPERTY.ARRAY><PROPERTY NAME="Weight"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint32"><VALUE>0</VALUE></PROPERTY></INSTANCE>'
-        elif self.__id__ == 254 and iObjectTextFormat == 1:
+        elif self.__id__ == 255 and iObjectTextFormat == 1:
             return u'<INSTANCE\
  CLASSNAME="Msvm_ResourceAllocationSettingData"><PROPERTY NAME="__PATH"\
  CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY NAME="__NAMESPACE"\
@@ -2362,7 +2065,7 @@ LUE></PROPERTY><PROPERTY NAME="Reservation"\
  TYPE="uint64"><VALUE>1</VALUE></PROPERTY><PROPERTY.ARRAY\
  NAME="VirtualSystemIdentifiers"\
  CLASSORIGIN="Msvm_ResourceAllocationSettingData"\
- TYPE="string"><VALUE.ARRAY><VALUE>{49bef8a3-d697-4945-b8c4-0b19161aa540}</VAL\
+ TYPE="string"><VALUE.ARRAY><VALUE>{64d9fae9-5932-4ed0-a2dd-4e29fd6204dc}</VAL\
 UE></VALUE.ARRAY></PROPERTY.ARRAY><PROPERTY NAME="Weight"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint32"><VALUE>0</VALUE></PROPERTY></INSTANCE>'
@@ -2370,15 +2073,12 @@ UE></VALUE.ARRAY></PROPERTY.ARRAY><PROPERTY NAME="Weight"\
 
 class _wmi_method(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
-
 
     def __call__(self, *args, **kwargs):
         if len(args) == 0 and self.__id__ == 411:
@@ -2386,23 +2086,23 @@ class _wmi_method(object):
             v1 = 0
             v += (v1,)
             return v
-        elif len(args) == 0 and self.__id__ == 24 and kwargs.get('Path') ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714\
--1054db0f506d\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d.vhd\
+        elif len(args) == 0 and self.__id__ == 25 and kwargs.get('Path') ==\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46\
+-ccfbbb618bf0\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0.vhd\
 ' and kwargs.get('ParentPath') == 'C:\\Hyper-V\\test\\instances\\_base\\1.vhd':
             v = ()
             v1 =\
- u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_StorageJob.InstanceID="7EE3039D-\
-FB28-45D6-A62F-19203559065F"'
+ u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_StorageJob.InstanceID="8D5B2476-\
+1065-4F21-A487-7D72B201AFC0"'
             v += (v1,)
             v1 = 4096
             v += (v1,)
             return v
-        elif len(args) == 1 and self.__id__ == 353 and args[0] == 2:
+        elif len(args) == 1 and self.__id__ == 354 and args[0] == 2:
             v = ()
             v1 =\
- u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ConcreteJob.InstanceID="2CB501C4\
--5A71-4523-B227-DA2196320724"'
+ u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ConcreteJob.InstanceID="AED4B786\
+-5F52-41FB-904D-FF0324976F5D"'
             v += (v1,)
             v1 = 4096
             v += (v1,)
@@ -2414,7 +2114,7 @@ FB28-45D6-A62F-19203559065F"'
             v1 = 32775
             v += (v1,)
             return v
-        elif len(args) == 3 and self.__id__ == 38 and str(args[0]) == '[]' and\
+        elif len(args) == 3 and self.__id__ == 39 and str(args[0]) == '[]' and\
  args[1] is None and args[2] == u'<INSTANCE\
  CLASSNAME="Msvm_VirtualSystemGlobalSettingData"><PROPERTY NAME="__PATH"\
  CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY NAME="__NAMESPACE"\
@@ -2462,8 +2162,8 @@ ROPERTY NAME="__GENUS" CLASSORIGIN="___SYSTEM"\
  CLASSORIGIN="CIM_ManagedElement" PROPAGATED="true"\
  TYPE="string"></PROPERTY><PROPERTY NAME="ElementName"\
  CLASSORIGIN="CIM_ManagedElement"\
- TYPE="string"><VALUE>openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f5\
-06d</VALUE></PROPERTY><PROPERTY NAME="ExternalDataRoot"\
+ TYPE="string"><VALUE>openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618\
+bf0</VALUE></PROPERTY><PROPERTY NAME="ExternalDataRoot"\
  CLASSORIGIN="Msvm_VirtualSystemGlobalSettingData" PROPAGATED="true"\
  TYPE="string"></PROPERTY><PROPERTY NAME="InstanceID"\
  CLASSORIGIN="CIM_SettingData" PROPAGATED="true"\
@@ -2485,20 +2185,20 @@ ROPERTY NAME="__GENUS" CLASSORIGIN="___SYSTEM"\
             v = ()
             v1 =\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"'
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"'
             v += (v1,)
             v1 = None
             v += (v1,)
             v1 = 0
             v += (v1,)
             return v
-        elif len(args) == 2 and self.__id__ == 43 and args[0] ==\
+        elif len(args) == 2 and self.__id__ == 44 and args[0] ==\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"' and\
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"' and\
  str(args[1]) == '[u\'<INSTANCE CLASSNAME="Msvm_MemorySettingData"><PROPERTY\
  NAME="__PATH" CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>\\\\\\\\HV12OSDEMO1\\\\root\\\\virtualization:Msvm_Memor\
-ySettingData.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\
+ySettingData.InstanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\
 \\\\\\\\4764334d-e001-4176-82ee-5594ec9b530e"</VALUE></PROPERTY><PROPERTY\
  NAME="__NAMESPACE" CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>root\\\\virtualization</VALUE></PROPERTY><PROPERTY\
@@ -2510,8 +2210,8 @@ ALUE>CIM_SettingData</VALUE><VALUE>CIM_ManagedElement</VALUE></VALUE.ARRAY></P\
 ROPERTY.ARRAY><PROPERTY NAME="__PROPERTY_COUNT" CLASSORIGIN="___SYSTEM"\
  TYPE="sint32"><VALUE>26</VALUE></PROPERTY><PROPERTY NAME="__RELPATH"\
  CLASSORIGIN="___SYSTEM"\
- TYPE="string"><VALUE>Msvm_MemorySettingData.InstanceID="Microsoft:E927FF62-0A\
-23-4E56-8F93-C2B00FFBF5BE\\\\\\\\4764334d-e001-4176-82ee-5594ec9b530e"</VALUE>\
+ TYPE="string"><VALUE>Msvm_MemorySettingData.InstanceID="Microsoft:3755DA23-3B\
+95-4B27-BE7B-B6C617FE1F04\\\\\\\\4764334d-e001-4176-82ee-5594ec9b530e"</VALUE>\
 </PROPERTY><PROPERTY NAME="__DYNASTY" CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>CIM_ManagedElement</VALUE></PROPERTY><PROPERTY\
  NAME="__SUPERCLASS" CLASSORIGIN="___SYSTEM"\
@@ -2546,7 +2246,7 @@ PERTY NAME="__CLASS" CLASSORIGIN="___SYSTEM"\
  NAME="HostResource" CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"></PROPERTY.ARRAY><PROPERTY NAME="InstanceID"\
  CLASSORIGIN="CIM_SettingData"\
- TYPE="string"><VALUE>Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\\\476433\
+ TYPE="string"><VALUE>Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\\\476433\
 4d-e001-4176-82ee-5594ec9b530e</VALUE></PROPERTY><PROPERTY\
  NAME="IsVirtualized" CLASSORIGIN="Msvm_MemorySettingData"\
  TYPE="boolean"><VALUE>TRUE</VALUE></PROPERTY><PROPERTY NAME="Limit"\
@@ -2579,14 +2279,14 @@ PROPERTY NAME="Reservation" CLASSORIGIN="CIM_ResourceAllocationSettingData"\
             v1 = 0
             v += (v1,)
             return v
-        elif len(args) == 2 and self.__id__ == 46 and args[0] ==\
+        elif len(args) == 2 and self.__id__ == 47 and args[0] ==\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"' and\
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"' and\
  str(args[1]) == '[u\'<INSTANCE\
  CLASSNAME="Msvm_ProcessorSettingData"><PROPERTY NAME="__PATH"\
  CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>\\\\\\\\HV12OSDEMO1\\\\root\\\\virtualization:Msvm_Proce\
-ssorSettingData.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\
+ssorSettingData.InstanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\
 \\\\\\\\b637f346-6a0e-4dec-af52-bd70cb80a21d\\\\\\\\0"</VALUE></PROPERTY><PROP\
 ERTY NAME="__NAMESPACE" CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>root\\\\virtualization</VALUE></PROPERTY><PROPERTY\
@@ -2598,8 +2298,8 @@ ALUE>CIM_SettingData</VALUE><VALUE>CIM_ManagedElement</VALUE></VALUE.ARRAY></P\
 ROPERTY.ARRAY><PROPERTY NAME="__PROPERTY_COUNT" CLASSORIGIN="___SYSTEM"\
  TYPE="sint32"><VALUE>29</VALUE></PROPERTY><PROPERTY NAME="__RELPATH"\
  CLASSORIGIN="___SYSTEM"\
- TYPE="string"><VALUE>Msvm_ProcessorSettingData.InstanceID="Microsoft:E927FF62\
--0A23-4E56-8F93-C2B00FFBF5BE\\\\\\\\b637f346-6a0e-4dec-af52-bd70cb80a21d\
+ TYPE="string"><VALUE>Msvm_ProcessorSettingData.InstanceID="Microsoft:3755DA23\
+-3B95-4B27-BE7B-B6C617FE1F04\\\\\\\\b637f346-6a0e-4dec-af52-bd70cb80a21d\
 \\\\\\\\0"</VALUE></PROPERTY><PROPERTY NAME="__DYNASTY"\
  CLASSORIGIN="___SYSTEM"\
  TYPE="string"><VALUE>CIM_ManagedElement</VALUE></PROPERTY><PROPERTY\
@@ -2633,7 +2333,7 @@ PERTY NAME="__CLASS" CLASSORIGIN="___SYSTEM"\
  NAME="HostResource" CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"></PROPERTY.ARRAY><PROPERTY NAME="InstanceID"\
  CLASSORIGIN="CIM_SettingData"\
- TYPE="string"><VALUE>Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\\\b637f3\
+ TYPE="string"><VALUE>Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\\\b637f3\
 46-6a0e-4dec-af52-bd70cb80a21d\\\\0</VALUE></PROPERTY><PROPERTY\
  NAME="IsVirtualized" CLASSORIGIN="Msvm_ProcessorSettingData"\
  TYPE="boolean"><VALUE>TRUE</VALUE></PROPERTY><PROPERTY NAME="Limit"\
@@ -2672,7 +2372,7 @@ PROPERTY NAME="ProcessorsPerSocket" CLASSORIGIN="Msvm_ProcessorSettingData"\
             v1 = 0
             v += (v1,)
             return v
-        elif len(args) == 2 and self.__id__ == 155 and str(args[0]) ==\
+        elif len(args) == 2 and self.__id__ == 156 and str(args[0]) ==\
  '[u\'<INSTANCE CLASSNAME="Msvm_ResourceAllocationSettingData"><PROPERTY\
  NAME="__PATH" CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY\
  NAME="__NAMESPACE" CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY\
@@ -2725,8 +2425,8 @@ EA8F\\\\Default</VALUE></PROPERTY><PROPERTY NAME="Limit"\
  TYPE="string"></PROPERTY><PROPERTY NAME="Parent"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"><VALUE>\\\\\\\\HV12OSDEMO1\\\\root\\\\virtualization:Msvm_Resou\
-rceAllocationSettingData.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FF\
-BF5BE\\\\\\\\83F8638B-8DCA-4152-9EDA-2CA8B33039B4\\\\\\\\0"</VALUE></PROPERTY>\
+rceAllocationSettingData.InstanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617F\
+E1F04\\\\\\\\83F8638B-8DCA-4152-9EDA-2CA8B33039B4\\\\\\\\0"</VALUE></PROPERTY>\
 <PROPERTY NAME="PoolID" CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"><VALUE>Microsoft:118C3BE5-0D31-4804-85F0-5C6074ABEA8F\\\\Root</\
 VALUE></PROPERTY><PROPERTY NAME="Reservation"\
@@ -2741,26 +2441,26 @@ VALUE></PROPERTY><PROPERTY NAME="Reservation"\
  TYPE="uint64"><VALUE>1</VALUE></PROPERTY><PROPERTY.ARRAY\
  NAME="VirtualSystemIdentifiers"\
  CLASSORIGIN="Msvm_ResourceAllocationSettingData"\
- TYPE="string"><VALUE.ARRAY><VALUE>18f851ad-fe9b-4304-8668-52d346e7f244</VALUE\
+ TYPE="string"><VALUE.ARRAY><VALUE>5184445f-413e-4a36-93f1-5cd1c57e0581</VALUE\
 ></VALUE.ARRAY></PROPERTY.ARRAY><PROPERTY NAME="Weight"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint32"><VALUE>0</VALUE></PROPERTY></INSTANCE>\']' and args[1] ==\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"':
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"':
             v = ()
             v1 = None
             v += (v1,)
             v1 = []
             v2 =\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ResourceAllocationSettingData.In\
-stanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\\\83F8638B-8DCA-4152\
+stanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\\\83F8638B-8DCA-4152\
 -9EDA-2CA8B33039B4\\\\0\\\\0\\\\D"'
             v1.append(v2)
             v += (v1,)
             v1 = 0
             v += (v1,)
             return v
-        elif len(args) == 2 and self.__id__ == 248 and str(args[0]) ==\
+        elif len(args) == 2 and self.__id__ == 249 and str(args[0]) ==\
  '[u\'<INSTANCE CLASSNAME="Msvm_ResourceAllocationSettingData"><PROPERTY\
  NAME="__PATH" CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY\
  NAME="__NAMESPACE" CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY\
@@ -2794,8 +2494,8 @@ OPERTY NAME="__GENUS" CLASSORIGIN="___SYSTEM"\
  Image</VALUE></PROPERTY><PROPERTY.ARRAY NAME="Connection"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"><VALUE.ARRAY><VALUE>C:\\\\Hyper-V\\\\test\\\\instances\\\\opens\
-tack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d\\\\openstack_unit_test_\
-vm_e8d0288a-15ba-4647-a714-1054db0f506d.vhd</VALUE></VALUE.ARRAY></PROPERTY.AR\
+tack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0\\\\openstack_unit_test_\
+vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0.vhd</VALUE></VALUE.ARRAY></PROPERTY.AR\
 RAY><PROPERTY NAME="ConsumerVisibility"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint16"></PROPERTY><PROPERTY NAME="Description"\
@@ -2816,8 +2516,8 @@ B4F8\\\\Default</VALUE></PROPERTY><PROPERTY NAME="Limit"\
  TYPE="string"></PROPERTY><PROPERTY NAME="Parent"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"><VALUE>\\\\\\\\HV12OSDEMO1\\\\root\\\\virtualization:Msvm_Resou\
-rceAllocationSettingData.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FF\
-BF5BE\\\\\\\\83F8638B-8DCA-4152-9EDA-2CA8B33039B4\\\\\\\\0\\\\\\\\0\\\\\\\\D"<\
+rceAllocationSettingData.InstanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617F\
+E1F04\\\\\\\\83F8638B-8DCA-4152-9EDA-2CA8B33039B4\\\\\\\\0\\\\\\\\0\\\\\\\\D"<\
 /VALUE></PROPERTY><PROPERTY NAME="PoolID"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="string"><VALUE>Microsoft:70BB60D2-A9D3-46aa-B654-3DE53004B4F8\\\\Root</\
@@ -2832,26 +2532,26 @@ VALUE></PROPERTY><PROPERTY NAME="Reservation"\
  TYPE="uint64"><VALUE>1</VALUE></PROPERTY><PROPERTY.ARRAY\
  NAME="VirtualSystemIdentifiers"\
  CLASSORIGIN="Msvm_ResourceAllocationSettingData"\
- TYPE="string"><VALUE.ARRAY><VALUE>0f3ff39c-c0e5-4fe7-b440-d154558a8a2f</VALUE\
+ TYPE="string"><VALUE.ARRAY><VALUE>e1249ea0-ef00-4863-995c-12ff64826f12</VALUE\
 ></VALUE.ARRAY></PROPERTY.ARRAY><PROPERTY NAME="Weight"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint32"><VALUE>0</VALUE></PROPERTY></INSTANCE>\']' and args[1] ==\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"':
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"':
             v = ()
             v1 = None
             v += (v1,)
             v1 = []
             v2 =\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ResourceAllocationSettingData.In\
-stanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\\\83F8638B-8DCA-4152\
+stanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\\\83F8638B-8DCA-4152\
 -9EDA-2CA8B33039B4\\\\0\\\\0\\\\L"'
             v1.append(v2)
             v += (v1,)
             v1 = 0
             v += (v1,)
             return v
-        elif len(args) == 2 and self.__id__ == 343 and str(args[0]) ==\
+        elif len(args) == 2 and self.__id__ == 344 and str(args[0]) ==\
  '[u\'<INSTANCE CLASSNAME="Msvm_ResourceAllocationSettingData"><PROPERTY\
  NAME="__PATH" CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY\
  NAME="__NAMESPACE" CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY\
@@ -2918,26 +2618,26 @@ VALUE></PROPERTY><PROPERTY NAME="Reservation"\
  TYPE="uint64"><VALUE>1</VALUE></PROPERTY><PROPERTY.ARRAY\
  NAME="VirtualSystemIdentifiers"\
  CLASSORIGIN="Msvm_ResourceAllocationSettingData"\
- TYPE="string"><VALUE.ARRAY><VALUE>{49bef8a3-d697-4945-b8c4-0b19161aa540}</VAL\
+ TYPE="string"><VALUE.ARRAY><VALUE>{64d9fae9-5932-4ed0-a2dd-4e29fd6204dc}</VAL\
 UE></VALUE.ARRAY></PROPERTY.ARRAY><PROPERTY NAME="Weight"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint32"><VALUE>0</VALUE></PROPERTY></INSTANCE>\']' and args[1] ==\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"':
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"':
             v = ()
             v1 = None
             v += (v1,)
             v1 = []
             v2 =\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ResourceAllocationSettingData.In\
-stanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\\\B806C804-205F-45FB\
--AFB6-20A97CD516A0\\\\0"'
+stanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\\\6749E429-5249-4F12\
+-987B-C45CCB3C23B5\\\\0"'
             v1.append(v2)
             v += (v1,)
             v1 = 0
             v += (v1,)
             return v
-        elif len(args) == 2 and self.__id__ == 349 and str(args[0]) ==\
+        elif len(args) == 2 and self.__id__ == 350 and str(args[0]) ==\
  '[u\'<INSTANCE CLASSNAME="Msvm_SyntheticEthernetPortSettingData"><PROPERTY\
  NAME="__PATH" CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY\
  NAME="__NAMESPACE" CLASSORIGIN="___SYSTEM" TYPE="string"></PROPERTY><PROPERTY\
@@ -3007,20 +2707,20 @@ VALUE></PROPERTY><PROPERTY NAME="Reservation"\
  TYPE="uint64"><VALUE>1</VALUE></PROPERTY><PROPERTY.ARRAY\
  NAME="VirtualSystemIdentifiers"\
  CLASSORIGIN="Msvm_SyntheticEthernetPortSettingData"\
- TYPE="string"><VALUE.ARRAY><VALUE>{7323b20a-06f9-422b-a807-a81cb10a7614}</VAL\
+ TYPE="string"><VALUE.ARRAY><VALUE>{ec93f40e-bf11-4880-b47b-2983f6cef5d0}</VAL\
 UE></VALUE.ARRAY></PROPERTY.ARRAY><PROPERTY NAME="Weight"\
  CLASSORIGIN="CIM_ResourceAllocationSettingData"\
  TYPE="uint32"><VALUE>0</VALUE></PROPERTY></INSTANCE>\']' and args[1] ==\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"':
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"':
             v = ()
             v1 = None
             v += (v1,)
             v1 = []
             v2 =\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_SyntheticEthernetPortSettingData\
-.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\\\85B22C2F-27D5-4\
-36D-AFE8-34FD3ACFC4E2"'
+.InstanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\\\3C059607-C3F1-4\
+1CE-AC31-CD6ECA76AB3D"'
             v1.append(v2)
             v += (v1,)
             v1 = 0
@@ -3031,17 +2731,17 @@ UE></VALUE.ARRAY></PROPERTY.ARRAY><PROPERTY NAME="Weight"\
  'C:\\Hyper-V\\test\\instances\\_base\\1.vhd':
             v = ()
             v1 =\
- u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_StorageJob.InstanceID="834C3EF1-\
-B0B7-4A82-BE13-6D4BA1B1790F"'
+ u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_StorageJob.InstanceID="1FFFA674-\
+9739-4475-806E-B8A59D599D41"'
             v += (v1,)
             v1 = 4096
             v += (v1,)
             return v
-        elif len(args) == 1 and self.__id__ == 362 and args[0] == 32768:
+        elif len(args) == 1 and self.__id__ == 363 and args[0] == 32768:
             v = ()
             v1 =\
- u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ConcreteJob.InstanceID="01FEED52\
--06C5-4E6F-91F0-91DD7B3A2F2C"'
+ u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ConcreteJob.InstanceID="8B33221D\
+-9E8A-41B9-96FB-DDAC49D5E8B3"'
             v += (v1,)
             v1 = 4096
             v += (v1,)
@@ -3049,8 +2749,8 @@ B0B7-4A82-BE13-6D4BA1B1790F"'
         elif len(args) == 1 and self.__id__ == 385 and args[0] == 3:
             v = ()
             v1 =\
- u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ConcreteJob.InstanceID="02BE598B\
--6559-4955-8B87-16A33330C0D8"'
+ u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ConcreteJob.InstanceID="D3ECBA7D\
+-C750-40AB-B11F-8658FF528483"'
             v += (v1,)
             v1 = 4096
             v += (v1,)
@@ -3058,23 +2758,22 @@ B0B7-4A82-BE13-6D4BA1B1790F"'
         elif len(args) == 2 and self.__id__ == 374 and str(args[0]) == '[100,\
  105]' and str(args[1]) ==\
  '[u\'\\\\\\\\HV12OSDEMO1\\\\root\\\\virtualization:Msvm_VirtualSystemSettingD\
-ata.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"\']':
+ata.InstanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04"\']':
             v = ()
             v1 = 0
             v += (v1,)
             v1 = []
-            v2 = CDispatch()
-            v2.__instance_id__ = 375
+            v2 = CDispatch(375)
             v1.append(v2)
             v += (v1,)
             return v
         elif len(args) == 1 and self.__id__ == 406 and args[0] ==\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"':
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"':
             v = ()
             v1 =\
- u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ConcreteJob.InstanceID="35C1ABAA\
--F128-4D14-9C5A-8D24D0268B52"'
+ u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ConcreteJob.InstanceID="D6B00745\
+-2CCD-4A58-8B51-0AA585932392"'
             v += (v1,)
             v1 = 4096
             v += (v1,)
@@ -3083,13 +2782,11 @@ ata.InstanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"\']':
 
 class CDispatch(object):
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self, instance_id=1, *args, **kwargs):
+        self.__instance_id__ = instance_id
 
     @property
     def __id__(self):
-        if not hasattr(self, '__instance_id__'):
-            self.__instance_id__ = 1
         return self.__instance_id__
 
     @property
@@ -3103,695 +2800,564 @@ class CDispatch(object):
 
     @property
     def Value(self):
-        if self.__id__ == 67:
+        if self.__id__ == 68:
             return\
  u'Microsoft:Definition\\118C3BE5-0D31-4804-85F0-5C6074ABEA8F\\Default'
-        elif self.__id__ == 71:
+        elif self.__id__ == 72:
             return u'Microsoft Synthetic Disk Drive'
-        elif self.__id__ == 75:
+        elif self.__id__ == 76:
             return None
-        elif self.__id__ == 79:
+        elif self.__id__ == 80:
             return u'Hard Drive'
-        elif self.__id__ == 83:
+        elif self.__id__ == 84:
             return u'Settings for the Microsoft Virtual Hard Drive.'
-        elif self.__id__ == 87:
+        elif self.__id__ == 88:
             return None
-        elif self.__id__ == 91:
+        elif self.__id__ == 92:
             return u'1'
-        elif self.__id__ == 95:
+        elif self.__id__ == 96:
             return True
-        elif self.__id__ == 99:
+        elif self.__id__ == 100:
             return True
-        elif self.__id__ == 103:
+        elif self.__id__ == 104:
             return u'Microsoft:118C3BE5-0D31-4804-85F0-5C6074ABEA8F\\Root'
-        elif self.__id__ == 107:
+        elif self.__id__ == 108:
             return u'1'
-        elif self.__id__ == 111:
+        elif self.__id__ == 112:
             return u'Hard Drives'
-        elif self.__id__ == 115:
+        elif self.__id__ == 116:
             return None
-        elif self.__id__ == 119:
+        elif self.__id__ == 120:
             return None
-        elif self.__id__ == 123:
+        elif self.__id__ == 124:
             return None
-        elif self.__id__ == 127:
+        elif self.__id__ == 128:
             return u'Hard Drive'
-        elif self.__id__ == 131:
+        elif self.__id__ == 132:
             return None
-        elif self.__id__ == 135:
+        elif self.__id__ == 136:
             return u'1'
-        elif self.__id__ == 139:
+        elif self.__id__ == 140:
             return 22
-        elif self.__id__ == 143:
+        elif self.__id__ == 144:
             return 0
-        elif self.__id__ == 149:
+        elif self.__id__ == 150:
             return None
-        elif self.__id__ == 161:
+        elif self.__id__ == 162:
             return\
  u'Microsoft:Definition\\70BB60D2-A9D3-46AA-B654-3DE53004B4F8\\Default'
-        elif self.__id__ == 165:
+        elif self.__id__ == 166:
             return u'Microsoft Virtual Hard Disk'
-        elif self.__id__ == 169:
+        elif self.__id__ == 170:
             return None
-        elif self.__id__ == 173:
+        elif self.__id__ == 174:
             return u'Hard Disk Image'
-        elif self.__id__ == 177:
+        elif self.__id__ == 178:
             return u'Settings for the Microsoft Hard Disk Image.'
-        elif self.__id__ == 181:
+        elif self.__id__ == 182:
             return None
-        elif self.__id__ == 185:
+        elif self.__id__ == 186:
             return u'1'
-        elif self.__id__ == 189:
+        elif self.__id__ == 190:
             return True
-        elif self.__id__ == 193:
+        elif self.__id__ == 194:
             return True
-        elif self.__id__ == 197:
+        elif self.__id__ == 198:
             return u'Microsoft:70BB60D2-A9D3-46aa-B654-3DE53004B4F8\\Root'
-        elif self.__id__ == 201:
+        elif self.__id__ == 202:
             return u'1'
-        elif self.__id__ == 205:
+        elif self.__id__ == 206:
             return u'Disks'
-        elif self.__id__ == 209:
+        elif self.__id__ == 210:
             return None
-        elif self.__id__ == 213:
+        elif self.__id__ == 214:
             return None
-        elif self.__id__ == 217:
+        elif self.__id__ == 218:
             return None
-        elif self.__id__ == 221:
+        elif self.__id__ == 222:
             return u'Hard Disk Image'
-        elif self.__id__ == 225:
+        elif self.__id__ == 226:
             return None
-        elif self.__id__ == 229:
+        elif self.__id__ == 230:
             return u'1'
-        elif self.__id__ == 233:
+        elif self.__id__ == 234:
             return 21
-        elif self.__id__ == 237:
+        elif self.__id__ == 238:
             return 0
-        elif self.__id__ == 243:
+        elif self.__id__ == 244:
             return None
-        elif self.__id__ == 256:
+        elif self.__id__ == 257:
             return\
  u'Microsoft:Definition\\BDE5D4D6-E450-46D2-B925-976CA3E989B4\\Default'
-        elif self.__id__ == 260:
+        elif self.__id__ == 261:
             return u'Microsoft Synthetic SCSI Controller'
-        elif self.__id__ == 264:
+        elif self.__id__ == 265:
             return None
-        elif self.__id__ == 268:
+        elif self.__id__ == 269:
             return u'SCSI Controller'
-        elif self.__id__ == 272:
+        elif self.__id__ == 273:
             return u'Settings for the Microsoft Synthetic SCSI Controller.'
-        elif self.__id__ == 276:
+        elif self.__id__ == 277:
             return None
-        elif self.__id__ == 280:
+        elif self.__id__ == 281:
             return u'1'
-        elif self.__id__ == 284:
+        elif self.__id__ == 285:
             return True
-        elif self.__id__ == 288:
+        elif self.__id__ == 289:
             return True
-        elif self.__id__ == 292:
+        elif self.__id__ == 293:
             return u'Microsoft:bde5d4d6-e450-46d2-b925-976ca3e989b4\\Root'
-        elif self.__id__ == 296:
+        elif self.__id__ == 297:
             return u'1'
-        elif self.__id__ == 300:
+        elif self.__id__ == 301:
             return u'Controllers'
-        elif self.__id__ == 304:
+        elif self.__id__ == 305:
             return None
-        elif self.__id__ == 308:
+        elif self.__id__ == 309:
             return None
-        elif self.__id__ == 312:
+        elif self.__id__ == 313:
             return None
-        elif self.__id__ == 316:
+        elif self.__id__ == 317:
             return u'SCSI Controller'
-        elif self.__id__ == 320:
+        elif self.__id__ == 321:
             return None
-        elif self.__id__ == 324:
+        elif self.__id__ == 325:
             return u'1'
-        elif self.__id__ == 328:
+        elif self.__id__ == 329:
             return 6
-        elif self.__id__ == 332:
+        elif self.__id__ == 333:
             return 0
-        elif self.__id__ == 338:
+        elif self.__id__ == 339:
             return None
 
     @Value.setter
     def Value(self, value):
         pass
 
-
     def __call__(self, *args):
-        if len(args) == 0 and self.__id__ == 152:
+        if len(args) == 0 and self.__id__ == 153:
             return\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ResourceAllocationSettingData.In\
-stanceID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE\\\\83F8638B-8DCA-4152\
+stanceID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04\\\\83F8638B-8DCA-4152\
 -9EDA-2CA8B33039B4\\\\0"'
-        elif len(args) == 0 and self.__id__ == 156:
+        elif len(args) == 0 and self.__id__ == 157:
             return\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"'
-        elif len(args) == 0 and self.__id__ == 249:
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"'
+        elif len(args) == 0 and self.__id__ == 250:
             return\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"'
-        elif len(args) == 0 and self.__id__ == 344:
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"'
+        elif len(args) == 0 and self.__id__ == 345:
             return\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"'
-        elif len(args) == 0 and self.__id__ == 44:
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"'
+        elif len(args) == 0 and self.__id__ == 45:
             return\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"'
-        elif len(args) == 0 and self.__id__ == 47:
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"'
+        elif len(args) == 0 and self.__id__ == 48:
             return\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"'
-        elif len(args) == 0 and self.__id__ == 350:
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"'
+        elif len(args) == 0 and self.__id__ == 351:
             return\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"'
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"'
         elif len(args) == 0 and self.__id__ == 373:
             return\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_VirtualSystemSettingData.Instanc\
-eID="Microsoft:E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"'
+eID="Microsoft:3755DA23-3B95-4B27-BE7B-B6C617FE1F04"'
         elif len(args) == 0 and self.__id__ == 407:
             return\
  u'\\\\HV12OSDEMO1\\root\\virtualization:Msvm_ComputerSystem.CreationClassName\
-="Msvm_ComputerSystem",Name="E927FF62-0A23-4E56-8F93-C2B00FFBF5BE"'
+="Msvm_ComputerSystem",Name="3755DA23-3B95-4B27-BE7B-B6C617FE1F04"'
 
-
-    def Item(self, strName='<PyOleMissing object at 0x040917C0>', iFlags=0):
-        if self.__id__ == 66 and strName == u'InstanceID':
-            v = CDispatch()
-            v.__instance_id__ = 67
-            return v
-        elif self.__id__ == 70 and strName == u'ResourceSubType':
-            v = CDispatch()
-            v.__instance_id__ = 71
-            return v
-        elif self.__id__ == 74 and strName == u'HostResource':
-            v = CDispatch()
-            v.__instance_id__ = 75
-            return v
-        elif self.__id__ == 78 and strName == u'ElementName':
-            v = CDispatch()
-            v.__instance_id__ = 79
-            return v
-        elif self.__id__ == 82 and strName == u'Description':
-            v = CDispatch()
-            v.__instance_id__ = 83
-            return v
-        elif self.__id__ == 86 and strName == u'Parent':
-            v = CDispatch()
-            v.__instance_id__ = 87
-            return v
-        elif self.__id__ == 90 and strName == u'VirtualQuantity':
-            v = CDispatch()
-            v.__instance_id__ = 91
-            return v
-        elif self.__id__ == 94 and strName == u'AutomaticDeallocation':
-            v = CDispatch()
-            v.__instance_id__ = 95
-            return v
-        elif self.__id__ == 98 and strName == u'AutomaticAllocation':
-            v = CDispatch()
-            v.__instance_id__ = 99
-            return v
-        elif self.__id__ == 102 and strName == u'PoolID':
-            v = CDispatch()
-            v.__instance_id__ = 103
-            return v
-        elif self.__id__ == 106 and strName == u'Reservation':
-            v = CDispatch()
-            v.__instance_id__ = 107
-            return v
-        elif self.__id__ == 110 and strName == u'AllocationUnits':
-            v = CDispatch()
-            v.__instance_id__ = 111
-            return v
-        elif self.__id__ == 114 and strName == u'MappingBehavior':
-            v = CDispatch()
-            v.__instance_id__ = 115
-            return v
-        elif self.__id__ == 118 and strName == u'Address':
-            v = CDispatch()
-            v.__instance_id__ = 119
-            return v
-        elif self.__id__ == 122 and strName == u'OtherResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 123
-            return v
-        elif self.__id__ == 126 and strName == u'Caption':
-            v = CDispatch()
-            v.__instance_id__ = 127
-            return v
-        elif self.__id__ == 130 and strName == u'ConsumerVisibility':
-            v = CDispatch()
-            v.__instance_id__ = 131
-            return v
-        elif self.__id__ == 134 and strName == u'Limit':
-            v = CDispatch()
-            v.__instance_id__ = 135
-            return v
-        elif self.__id__ == 138 and strName == u'ResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 139
-            return v
-        elif self.__id__ == 142 and strName == u'Weight':
-            v = CDispatch()
-            v.__instance_id__ = 143
-            return v
-        elif self.__id__ == 148 and strName == u'Connection':
-            v = CDispatch()
-            v.__instance_id__ = 149
-            return v
-        elif self.__id__ == 160 and strName == u'InstanceID':
-            v = CDispatch()
-            v.__instance_id__ = 161
-            return v
-        elif self.__id__ == 164 and strName == u'ResourceSubType':
-            v = CDispatch()
-            v.__instance_id__ = 165
-            return v
-        elif self.__id__ == 168 and strName == u'HostResource':
-            v = CDispatch()
-            v.__instance_id__ = 169
-            return v
-        elif self.__id__ == 172 and strName == u'ElementName':
-            v = CDispatch()
-            v.__instance_id__ = 173
-            return v
-        elif self.__id__ == 176 and strName == u'Description':
-            v = CDispatch()
-            v.__instance_id__ = 177
-            return v
-        elif self.__id__ == 180 and strName == u'Parent':
-            v = CDispatch()
-            v.__instance_id__ = 181
-            return v
-        elif self.__id__ == 184 and strName == u'VirtualQuantity':
-            v = CDispatch()
-            v.__instance_id__ = 185
-            return v
-        elif self.__id__ == 188 and strName == u'AutomaticDeallocation':
-            v = CDispatch()
-            v.__instance_id__ = 189
-            return v
-        elif self.__id__ == 192 and strName == u'AutomaticAllocation':
-            v = CDispatch()
-            v.__instance_id__ = 193
-            return v
-        elif self.__id__ == 196 and strName == u'PoolID':
-            v = CDispatch()
-            v.__instance_id__ = 197
-            return v
-        elif self.__id__ == 200 and strName == u'Reservation':
-            v = CDispatch()
-            v.__instance_id__ = 201
-            return v
-        elif self.__id__ == 204 and strName == u'AllocationUnits':
-            v = CDispatch()
-            v.__instance_id__ = 205
-            return v
-        elif self.__id__ == 208 and strName == u'MappingBehavior':
-            v = CDispatch()
-            v.__instance_id__ = 209
-            return v
-        elif self.__id__ == 212 and strName == u'Address':
-            v = CDispatch()
-            v.__instance_id__ = 213
-            return v
-        elif self.__id__ == 216 and strName == u'OtherResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 217
-            return v
-        elif self.__id__ == 220 and strName == u'Caption':
-            v = CDispatch()
-            v.__instance_id__ = 221
-            return v
-        elif self.__id__ == 224 and strName == u'ConsumerVisibility':
-            v = CDispatch()
-            v.__instance_id__ = 225
-            return v
-        elif self.__id__ == 228 and strName == u'Limit':
-            v = CDispatch()
-            v.__instance_id__ = 229
-            return v
-        elif self.__id__ == 232 and strName == u'ResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 233
-            return v
-        elif self.__id__ == 236 and strName == u'Weight':
-            v = CDispatch()
-            v.__instance_id__ = 237
-            return v
-        elif self.__id__ == 242 and strName == u'Connection':
-            v = CDispatch()
-            v.__instance_id__ = 243
-            return v
-        elif self.__id__ == 255 and strName == u'InstanceID':
-            v = CDispatch()
-            v.__instance_id__ = 256
-            return v
-        elif self.__id__ == 259 and strName == u'ResourceSubType':
-            v = CDispatch()
-            v.__instance_id__ = 260
-            return v
-        elif self.__id__ == 263 and strName == u'HostResource':
-            v = CDispatch()
-            v.__instance_id__ = 264
-            return v
-        elif self.__id__ == 267 and strName == u'ElementName':
-            v = CDispatch()
-            v.__instance_id__ = 268
-            return v
-        elif self.__id__ == 271 and strName == u'Description':
-            v = CDispatch()
-            v.__instance_id__ = 272
-            return v
-        elif self.__id__ == 275 and strName == u'Parent':
-            v = CDispatch()
-            v.__instance_id__ = 276
-            return v
-        elif self.__id__ == 279 and strName == u'VirtualQuantity':
-            v = CDispatch()
-            v.__instance_id__ = 280
-            return v
-        elif self.__id__ == 283 and strName == u'AutomaticDeallocation':
-            v = CDispatch()
-            v.__instance_id__ = 284
-            return v
-        elif self.__id__ == 287 and strName == u'AutomaticAllocation':
-            v = CDispatch()
-            v.__instance_id__ = 288
-            return v
-        elif self.__id__ == 291 and strName == u'PoolID':
-            v = CDispatch()
-            v.__instance_id__ = 292
-            return v
-        elif self.__id__ == 295 and strName == u'Reservation':
-            v = CDispatch()
-            v.__instance_id__ = 296
-            return v
-        elif self.__id__ == 299 and strName == u'AllocationUnits':
-            v = CDispatch()
-            v.__instance_id__ = 300
-            return v
-        elif self.__id__ == 303 and strName == u'MappingBehavior':
-            v = CDispatch()
-            v.__instance_id__ = 304
-            return v
-        elif self.__id__ == 307 and strName == u'Address':
-            v = CDispatch()
-            v.__instance_id__ = 308
-            return v
-        elif self.__id__ == 311 and strName == u'OtherResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 312
-            return v
-        elif self.__id__ == 315 and strName == u'Caption':
-            v = CDispatch()
-            v.__instance_id__ = 316
-            return v
-        elif self.__id__ == 319 and strName == u'ConsumerVisibility':
-            v = CDispatch()
-            v.__instance_id__ = 320
-            return v
-        elif self.__id__ == 323 and strName == u'Limit':
-            v = CDispatch()
-            v.__instance_id__ = 324
-            return v
-        elif self.__id__ == 327 and strName == u'ResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 328
-            return v
-        elif self.__id__ == 331 and strName == u'Weight':
-            v = CDispatch()
-            v.__instance_id__ = 332
-            return v
-        elif self.__id__ == 337 and strName == u'Connection':
-            v = CDispatch()
-            v.__instance_id__ = 338
-            return v
-        elif self.__id__ == 68 and strName == u'InstanceID':
-            v = CDispatch()
-            v.__instance_id__ = 69
-            return v
-        elif self.__id__ == 72 and strName == u'ResourceSubType':
-            v = CDispatch()
-            v.__instance_id__ = 73
-            return v
-        elif self.__id__ == 76 and strName == u'HostResource':
-            v = CDispatch()
-            v.__instance_id__ = 77
-            return v
-        elif self.__id__ == 80 and strName == u'ElementName':
-            v = CDispatch()
-            v.__instance_id__ = 81
-            return v
-        elif self.__id__ == 84 and strName == u'Description':
-            v = CDispatch()
-            v.__instance_id__ = 85
-            return v
-        elif self.__id__ == 88 and strName == u'Parent':
-            v = CDispatch()
-            v.__instance_id__ = 89
-            return v
-        elif self.__id__ == 92 and strName == u'VirtualQuantity':
-            v = CDispatch()
-            v.__instance_id__ = 93
-            return v
-        elif self.__id__ == 96 and strName == u'AutomaticDeallocation':
-            v = CDispatch()
-            v.__instance_id__ = 97
-            return v
-        elif self.__id__ == 100 and strName == u'AutomaticAllocation':
-            v = CDispatch()
-            v.__instance_id__ = 101
-            return v
-        elif self.__id__ == 104 and strName == u'PoolID':
-            v = CDispatch()
-            v.__instance_id__ = 105
-            return v
-        elif self.__id__ == 108 and strName == u'Reservation':
-            v = CDispatch()
-            v.__instance_id__ = 109
-            return v
-        elif self.__id__ == 112 and strName == u'AllocationUnits':
-            v = CDispatch()
-            v.__instance_id__ = 113
-            return v
-        elif self.__id__ == 116 and strName == u'MappingBehavior':
-            v = CDispatch()
-            v.__instance_id__ = 117
-            return v
-        elif self.__id__ == 120 and strName == u'Address':
-            v = CDispatch()
-            v.__instance_id__ = 121
-            return v
-        elif self.__id__ == 124 and strName == u'OtherResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 125
-            return v
-        elif self.__id__ == 128 and strName == u'Caption':
-            v = CDispatch()
-            v.__instance_id__ = 129
-            return v
-        elif self.__id__ == 132 and strName == u'ConsumerVisibility':
-            v = CDispatch()
-            v.__instance_id__ = 133
-            return v
-        elif self.__id__ == 136 and strName == u'Limit':
-            v = CDispatch()
-            v.__instance_id__ = 137
-            return v
-        elif self.__id__ == 140 and strName == u'ResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 141
-            return v
-        elif self.__id__ == 144 and strName == u'Weight':
-            v = CDispatch()
-            v.__instance_id__ = 145
-            return v
-        elif self.__id__ == 146 and strName == u'VirtualSystemIdentifiers':
-            v = CDispatch()
-            v.__instance_id__ = 147
-            return v
-        elif self.__id__ == 150 and strName == u'Connection':
-            v = CDispatch()
-            v.__instance_id__ = 151
-            return v
-        elif self.__id__ == 162 and strName == u'InstanceID':
-            v = CDispatch()
-            v.__instance_id__ = 163
-            return v
-        elif self.__id__ == 166 and strName == u'ResourceSubType':
-            v = CDispatch()
-            v.__instance_id__ = 167
-            return v
-        elif self.__id__ == 170 and strName == u'HostResource':
-            v = CDispatch()
-            v.__instance_id__ = 171
-            return v
-        elif self.__id__ == 174 and strName == u'ElementName':
-            v = CDispatch()
-            v.__instance_id__ = 175
-            return v
-        elif self.__id__ == 178 and strName == u'Description':
-            v = CDispatch()
-            v.__instance_id__ = 179
-            return v
-        elif self.__id__ == 182 and strName == u'Parent':
-            v = CDispatch()
-            v.__instance_id__ = 183
-            return v
-        elif self.__id__ == 186 and strName == u'VirtualQuantity':
-            v = CDispatch()
-            v.__instance_id__ = 187
-            return v
-        elif self.__id__ == 190 and strName == u'AutomaticDeallocation':
-            v = CDispatch()
-            v.__instance_id__ = 191
-            return v
-        elif self.__id__ == 194 and strName == u'AutomaticAllocation':
-            v = CDispatch()
-            v.__instance_id__ = 195
-            return v
-        elif self.__id__ == 198 and strName == u'PoolID':
-            v = CDispatch()
-            v.__instance_id__ = 199
-            return v
-        elif self.__id__ == 202 and strName == u'Reservation':
-            v = CDispatch()
-            v.__instance_id__ = 203
-            return v
-        elif self.__id__ == 206 and strName == u'AllocationUnits':
-            v = CDispatch()
-            v.__instance_id__ = 207
-            return v
-        elif self.__id__ == 210 and strName == u'MappingBehavior':
-            v = CDispatch()
-            v.__instance_id__ = 211
-            return v
-        elif self.__id__ == 214 and strName == u'Address':
-            v = CDispatch()
-            v.__instance_id__ = 215
-            return v
-        elif self.__id__ == 218 and strName == u'OtherResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 219
-            return v
-        elif self.__id__ == 222 and strName == u'Caption':
-            v = CDispatch()
-            v.__instance_id__ = 223
-            return v
-        elif self.__id__ == 226 and strName == u'ConsumerVisibility':
-            v = CDispatch()
-            v.__instance_id__ = 227
-            return v
-        elif self.__id__ == 230 and strName == u'Limit':
-            v = CDispatch()
-            v.__instance_id__ = 231
-            return v
-        elif self.__id__ == 234 and strName == u'ResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 235
-            return v
-        elif self.__id__ == 238 and strName == u'Weight':
-            v = CDispatch()
-            v.__instance_id__ = 239
-            return v
-        elif self.__id__ == 240 and strName == u'VirtualSystemIdentifiers':
-            v = CDispatch()
-            v.__instance_id__ = 241
-            return v
-        elif self.__id__ == 244 and strName == u'Connection':
-            v = CDispatch()
-            v.__instance_id__ = 245
-            return v
-        elif self.__id__ == 257 and strName == u'InstanceID':
-            v = CDispatch()
-            v.__instance_id__ = 258
-            return v
-        elif self.__id__ == 261 and strName == u'ResourceSubType':
-            v = CDispatch()
-            v.__instance_id__ = 262
-            return v
-        elif self.__id__ == 265 and strName == u'HostResource':
-            v = CDispatch()
-            v.__instance_id__ = 266
-            return v
-        elif self.__id__ == 269 and strName == u'ElementName':
-            v = CDispatch()
-            v.__instance_id__ = 270
-            return v
-        elif self.__id__ == 273 and strName == u'Description':
-            v = CDispatch()
-            v.__instance_id__ = 274
-            return v
-        elif self.__id__ == 277 and strName == u'Parent':
-            v = CDispatch()
-            v.__instance_id__ = 278
-            return v
-        elif self.__id__ == 281 and strName == u'VirtualQuantity':
-            v = CDispatch()
-            v.__instance_id__ = 282
-            return v
-        elif self.__id__ == 285 and strName == u'AutomaticDeallocation':
-            v = CDispatch()
-            v.__instance_id__ = 286
-            return v
-        elif self.__id__ == 289 and strName == u'AutomaticAllocation':
-            v = CDispatch()
-            v.__instance_id__ = 290
-            return v
-        elif self.__id__ == 293 and strName == u'PoolID':
-            v = CDispatch()
-            v.__instance_id__ = 294
-            return v
-        elif self.__id__ == 297 and strName == u'Reservation':
-            v = CDispatch()
-            v.__instance_id__ = 298
-            return v
-        elif self.__id__ == 301 and strName == u'AllocationUnits':
-            v = CDispatch()
-            v.__instance_id__ = 302
-            return v
-        elif self.__id__ == 305 and strName == u'MappingBehavior':
-            v = CDispatch()
-            v.__instance_id__ = 306
-            return v
-        elif self.__id__ == 309 and strName == u'Address':
-            v = CDispatch()
-            v.__instance_id__ = 310
-            return v
-        elif self.__id__ == 313 and strName == u'OtherResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 314
-            return v
-        elif self.__id__ == 317 and strName == u'Caption':
-            v = CDispatch()
-            v.__instance_id__ = 318
-            return v
-        elif self.__id__ == 321 and strName == u'ConsumerVisibility':
-            v = CDispatch()
-            v.__instance_id__ = 322
-            return v
-        elif self.__id__ == 325 and strName == u'Limit':
-            v = CDispatch()
-            v.__instance_id__ = 326
-            return v
-        elif self.__id__ == 329 and strName == u'ResourceType':
-            v = CDispatch()
-            v.__instance_id__ = 330
-            return v
-        elif self.__id__ == 333 and strName == u'Weight':
-            v = CDispatch()
-            v.__instance_id__ = 334
-            return v
-        elif self.__id__ == 335 and strName == u'VirtualSystemIdentifiers':
-            v = CDispatch()
-            v.__instance_id__ = 336
-            return v
-        elif self.__id__ == 339 and strName == u'Connection':
-            v = CDispatch()
-            v.__instance_id__ = 340
+    def Item(self, strName='<PyOleMissing object at 0x03237588>', iFlags=0):
+        if self.__id__ == 67 and strName == u'InstanceID':
+            v = CDispatch(68)
+            return v
+        elif self.__id__ == 71 and strName == u'ResourceSubType':
+            v = CDispatch(72)
+            return v
+        elif self.__id__ == 75 and strName == u'HostResource':
+            v = CDispatch(76)
+            return v
+        elif self.__id__ == 79 and strName == u'ElementName':
+            v = CDispatch(80)
+            return v
+        elif self.__id__ == 83 and strName == u'Description':
+            v = CDispatch(84)
+            return v
+        elif self.__id__ == 87 and strName == u'Parent':
+            v = CDispatch(88)
+            return v
+        elif self.__id__ == 91 and strName == u'VirtualQuantity':
+            v = CDispatch(92)
+            return v
+        elif self.__id__ == 95 and strName == u'AutomaticDeallocation':
+            v = CDispatch(96)
+            return v
+        elif self.__id__ == 99 and strName == u'AutomaticAllocation':
+            v = CDispatch(100)
+            return v
+        elif self.__id__ == 103 and strName == u'PoolID':
+            v = CDispatch(104)
+            return v
+        elif self.__id__ == 107 and strName == u'Reservation':
+            v = CDispatch(108)
+            return v
+        elif self.__id__ == 111 and strName == u'AllocationUnits':
+            v = CDispatch(112)
+            return v
+        elif self.__id__ == 115 and strName == u'MappingBehavior':
+            v = CDispatch(116)
+            return v
+        elif self.__id__ == 119 and strName == u'Address':
+            v = CDispatch(120)
+            return v
+        elif self.__id__ == 123 and strName == u'OtherResourceType':
+            v = CDispatch(124)
+            return v
+        elif self.__id__ == 127 and strName == u'Caption':
+            v = CDispatch(128)
+            return v
+        elif self.__id__ == 131 and strName == u'ConsumerVisibility':
+            v = CDispatch(132)
+            return v
+        elif self.__id__ == 135 and strName == u'Limit':
+            v = CDispatch(136)
+            return v
+        elif self.__id__ == 139 and strName == u'ResourceType':
+            v = CDispatch(140)
+            return v
+        elif self.__id__ == 143 and strName == u'Weight':
+            v = CDispatch(144)
+            return v
+        elif self.__id__ == 149 and strName == u'Connection':
+            v = CDispatch(150)
+            return v
+        elif self.__id__ == 161 and strName == u'InstanceID':
+            v = CDispatch(162)
+            return v
+        elif self.__id__ == 165 and strName == u'ResourceSubType':
+            v = CDispatch(166)
+            return v
+        elif self.__id__ == 169 and strName == u'HostResource':
+            v = CDispatch(170)
+            return v
+        elif self.__id__ == 173 and strName == u'ElementName':
+            v = CDispatch(174)
+            return v
+        elif self.__id__ == 177 and strName == u'Description':
+            v = CDispatch(178)
+            return v
+        elif self.__id__ == 181 and strName == u'Parent':
+            v = CDispatch(182)
+            return v
+        elif self.__id__ == 185 and strName == u'VirtualQuantity':
+            v = CDispatch(186)
+            return v
+        elif self.__id__ == 189 and strName == u'AutomaticDeallocation':
+            v = CDispatch(190)
+            return v
+        elif self.__id__ == 193 and strName == u'AutomaticAllocation':
+            v = CDispatch(194)
+            return v
+        elif self.__id__ == 197 and strName == u'PoolID':
+            v = CDispatch(198)
+            return v
+        elif self.__id__ == 201 and strName == u'Reservation':
+            v = CDispatch(202)
+            return v
+        elif self.__id__ == 205 and strName == u'AllocationUnits':
+            v = CDispatch(206)
+            return v
+        elif self.__id__ == 209 and strName == u'MappingBehavior':
+            v = CDispatch(210)
+            return v
+        elif self.__id__ == 213 and strName == u'Address':
+            v = CDispatch(214)
+            return v
+        elif self.__id__ == 217 and strName == u'OtherResourceType':
+            v = CDispatch(218)
+            return v
+        elif self.__id__ == 221 and strName == u'Caption':
+            v = CDispatch(222)
+            return v
+        elif self.__id__ == 225 and strName == u'ConsumerVisibility':
+            v = CDispatch(226)
+            return v
+        elif self.__id__ == 229 and strName == u'Limit':
+            v = CDispatch(230)
+            return v
+        elif self.__id__ == 233 and strName == u'ResourceType':
+            v = CDispatch(234)
+            return v
+        elif self.__id__ == 237 and strName == u'Weight':
+            v = CDispatch(238)
+            return v
+        elif self.__id__ == 243 and strName == u'Connection':
+            v = CDispatch(244)
+            return v
+        elif self.__id__ == 256 and strName == u'InstanceID':
+            v = CDispatch(257)
+            return v
+        elif self.__id__ == 260 and strName == u'ResourceSubType':
+            v = CDispatch(261)
+            return v
+        elif self.__id__ == 264 and strName == u'HostResource':
+            v = CDispatch(265)
+            return v
+        elif self.__id__ == 268 and strName == u'ElementName':
+            v = CDispatch(269)
+            return v
+        elif self.__id__ == 272 and strName == u'Description':
+            v = CDispatch(273)
+            return v
+        elif self.__id__ == 276 and strName == u'Parent':
+            v = CDispatch(277)
+            return v
+        elif self.__id__ == 280 and strName == u'VirtualQuantity':
+            v = CDispatch(281)
+            return v
+        elif self.__id__ == 284 and strName == u'AutomaticDeallocation':
+            v = CDispatch(285)
+            return v
+        elif self.__id__ == 288 and strName == u'AutomaticAllocation':
+            v = CDispatch(289)
+            return v
+        elif self.__id__ == 292 and strName == u'PoolID':
+            v = CDispatch(293)
+            return v
+        elif self.__id__ == 296 and strName == u'Reservation':
+            v = CDispatch(297)
+            return v
+        elif self.__id__ == 300 and strName == u'AllocationUnits':
+            v = CDispatch(301)
+            return v
+        elif self.__id__ == 304 and strName == u'MappingBehavior':
+            v = CDispatch(305)
+            return v
+        elif self.__id__ == 308 and strName == u'Address':
+            v = CDispatch(309)
+            return v
+        elif self.__id__ == 312 and strName == u'OtherResourceType':
+            v = CDispatch(313)
+            return v
+        elif self.__id__ == 316 and strName == u'Caption':
+            v = CDispatch(317)
+            return v
+        elif self.__id__ == 320 and strName == u'ConsumerVisibility':
+            v = CDispatch(321)
+            return v
+        elif self.__id__ == 324 and strName == u'Limit':
+            v = CDispatch(325)
+            return v
+        elif self.__id__ == 328 and strName == u'ResourceType':
+            v = CDispatch(329)
+            return v
+        elif self.__id__ == 332 and strName == u'Weight':
+            v = CDispatch(333)
+            return v
+        elif self.__id__ == 338 and strName == u'Connection':
+            v = CDispatch(339)
+            return v
+        elif self.__id__ == 69 and strName == u'InstanceID':
+            v = CDispatch(70)
+            return v
+        elif self.__id__ == 73 and strName == u'ResourceSubType':
+            v = CDispatch(74)
+            return v
+        elif self.__id__ == 77 and strName == u'HostResource':
+            v = CDispatch(78)
+            return v
+        elif self.__id__ == 81 and strName == u'ElementName':
+            v = CDispatch(82)
+            return v
+        elif self.__id__ == 85 and strName == u'Description':
+            v = CDispatch(86)
+            return v
+        elif self.__id__ == 89 and strName == u'Parent':
+            v = CDispatch(90)
+            return v
+        elif self.__id__ == 93 and strName == u'VirtualQuantity':
+            v = CDispatch(94)
+            return v
+        elif self.__id__ == 97 and strName == u'AutomaticDeallocation':
+            v = CDispatch(98)
+            return v
+        elif self.__id__ == 101 and strName == u'AutomaticAllocation':
+            v = CDispatch(102)
+            return v
+        elif self.__id__ == 105 and strName == u'PoolID':
+            v = CDispatch(106)
+            return v
+        elif self.__id__ == 109 and strName == u'Reservation':
+            v = CDispatch(110)
+            return v
+        elif self.__id__ == 113 and strName == u'AllocationUnits':
+            v = CDispatch(114)
+            return v
+        elif self.__id__ == 117 and strName == u'MappingBehavior':
+            v = CDispatch(118)
+            return v
+        elif self.__id__ == 121 and strName == u'Address':
+            v = CDispatch(122)
+            return v
+        elif self.__id__ == 125 and strName == u'OtherResourceType':
+            v = CDispatch(126)
+            return v
+        elif self.__id__ == 129 and strName == u'Caption':
+            v = CDispatch(130)
+            return v
+        elif self.__id__ == 133 and strName == u'ConsumerVisibility':
+            v = CDispatch(134)
+            return v
+        elif self.__id__ == 137 and strName == u'Limit':
+            v = CDispatch(138)
+            return v
+        elif self.__id__ == 141 and strName == u'ResourceType':
+            v = CDispatch(142)
+            return v
+        elif self.__id__ == 145 and strName == u'Weight':
+            v = CDispatch(146)
+            return v
+        elif self.__id__ == 147 and strName == u'VirtualSystemIdentifiers':
+            v = CDispatch(148)
+            return v
+        elif self.__id__ == 151 and strName == u'Connection':
+            v = CDispatch(152)
+            return v
+        elif self.__id__ == 163 and strName == u'InstanceID':
+            v = CDispatch(164)
+            return v
+        elif self.__id__ == 167 and strName == u'ResourceSubType':
+            v = CDispatch(168)
+            return v
+        elif self.__id__ == 171 and strName == u'HostResource':
+            v = CDispatch(172)
+            return v
+        elif self.__id__ == 175 and strName == u'ElementName':
+            v = CDispatch(176)
+            return v
+        elif self.__id__ == 179 and strName == u'Description':
+            v = CDispatch(180)
+            return v
+        elif self.__id__ == 183 and strName == u'Parent':
+            v = CDispatch(184)
+            return v
+        elif self.__id__ == 187 and strName == u'VirtualQuantity':
+            v = CDispatch(188)
+            return v
+        elif self.__id__ == 191 and strName == u'AutomaticDeallocation':
+            v = CDispatch(192)
+            return v
+        elif self.__id__ == 195 and strName == u'AutomaticAllocation':
+            v = CDispatch(196)
+            return v
+        elif self.__id__ == 199 and strName == u'PoolID':
+            v = CDispatch(200)
+            return v
+        elif self.__id__ == 203 and strName == u'Reservation':
+            v = CDispatch(204)
+            return v
+        elif self.__id__ == 207 and strName == u'AllocationUnits':
+            v = CDispatch(208)
+            return v
+        elif self.__id__ == 211 and strName == u'MappingBehavior':
+            v = CDispatch(212)
+            return v
+        elif self.__id__ == 215 and strName == u'Address':
+            v = CDispatch(216)
+            return v
+        elif self.__id__ == 219 and strName == u'OtherResourceType':
+            v = CDispatch(220)
+            return v
+        elif self.__id__ == 223 and strName == u'Caption':
+            v = CDispatch(224)
+            return v
+        elif self.__id__ == 227 and strName == u'ConsumerVisibility':
+            v = CDispatch(228)
+            return v
+        elif self.__id__ == 231 and strName == u'Limit':
+            v = CDispatch(232)
+            return v
+        elif self.__id__ == 235 and strName == u'ResourceType':
+            v = CDispatch(236)
+            return v
+        elif self.__id__ == 239 and strName == u'Weight':
+            v = CDispatch(240)
+            return v
+        elif self.__id__ == 241 and strName == u'VirtualSystemIdentifiers':
+            v = CDispatch(242)
+            return v
+        elif self.__id__ == 245 and strName == u'Connection':
+            v = CDispatch(246)
+            return v
+        elif self.__id__ == 258 and strName == u'InstanceID':
+            v = CDispatch(259)
+            return v
+        elif self.__id__ == 262 and strName == u'ResourceSubType':
+            v = CDispatch(263)
+            return v
+        elif self.__id__ == 266 and strName == u'HostResource':
+            v = CDispatch(267)
+            return v
+        elif self.__id__ == 270 and strName == u'ElementName':
+            v = CDispatch(271)
+            return v
+        elif self.__id__ == 274 and strName == u'Description':
+            v = CDispatch(275)
+            return v
+        elif self.__id__ == 278 and strName == u'Parent':
+            v = CDispatch(279)
+            return v
+        elif self.__id__ == 282 and strName == u'VirtualQuantity':
+            v = CDispatch(283)
+            return v
+        elif self.__id__ == 286 and strName == u'AutomaticDeallocation':
+            v = CDispatch(287)
+            return v
+        elif self.__id__ == 290 and strName == u'AutomaticAllocation':
+            v = CDispatch(291)
+            return v
+        elif self.__id__ == 294 and strName == u'PoolID':
+            v = CDispatch(295)
+            return v
+        elif self.__id__ == 298 and strName == u'Reservation':
+            v = CDispatch(299)
+            return v
+        elif self.__id__ == 302 and strName == u'AllocationUnits':
+            v = CDispatch(303)
+            return v
+        elif self.__id__ == 306 and strName == u'MappingBehavior':
+            v = CDispatch(307)
+            return v
+        elif self.__id__ == 310 and strName == u'Address':
+            v = CDispatch(311)
+            return v
+        elif self.__id__ == 314 and strName == u'OtherResourceType':
+            v = CDispatch(315)
+            return v
+        elif self.__id__ == 318 and strName == u'Caption':
+            v = CDispatch(319)
+            return v
+        elif self.__id__ == 322 and strName == u'ConsumerVisibility':
+            v = CDispatch(323)
+            return v
+        elif self.__id__ == 326 and strName == u'Limit':
+            v = CDispatch(327)
+            return v
+        elif self.__id__ == 330 and strName == u'ResourceType':
+            v = CDispatch(331)
+            return v
+        elif self.__id__ == 334 and strName == u'Weight':
+            v = CDispatch(335)
+            return v
+        elif self.__id__ == 336 and strName == u'VirtualSystemIdentifiers':
+            v = CDispatch(337)
+            return v
+        elif self.__id__ == 340 and strName == u'Connection':
+            v = CDispatch(341)
             return v

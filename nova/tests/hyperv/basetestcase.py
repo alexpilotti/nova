@@ -125,8 +125,20 @@ class BaseTestCase(test.TestCase):
         pe = pythonemitter.PythonEmitter()
         for name, mp in self._mps.items():
             path = self._get_stub_file_path(self.id(), name)
-            with open(path, 'wb') as f:
-                f.write(self._copyright_info)
-                for (module_name, python_code) in pe.emit(mp,
-                        include_imports=False).items():
-                    f.write(python_code)
+            if os.path.exists(path):
+                os.remove(path)
+
+            emitted_code = pe.emit(mp, include_imports=False).items()
+
+            write_file = False
+            # Avoid writing empty files
+            for (module_name, python_code) in emitted_code:
+                if python_code:
+                    write_file = True
+                    break
+
+            if write_file:
+                with open(path, 'wb') as f:
+                    f.write(self._copyright_info)
+                    for (module_name, python_code) in emitted_code:
+                        f.write(python_code)

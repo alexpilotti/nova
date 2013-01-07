@@ -22,8 +22,8 @@ path = sys.modules[__name__]
 
 def makedirs(name, mode=511):
     if name ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714\
--1054db0f506d':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46\
+-ccfbbb618bf0':
         return None
     elif name == 'C:\\Hyper-V\\test\\instances\\_base':
         return None
@@ -31,17 +31,17 @@ def makedirs(name, mode=511):
 
 def join(a, *p):
     if len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d':
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714\
--1054db0f506d'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46\
+-ccfbbb618bf0'
     elif len(p) == 1 and a ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714\
--1054db0f506d' and p[0] ==\
- 'openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d.vhd':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46\
+-ccfbbb618bf0' and p[0] ==\
+ 'openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0.vhd':
         return\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714\
--1054db0f506d\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d.vhd'
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46\
+-ccfbbb618bf0\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0.vhd'
     elif len(p) == 1 and a == 'C:\\Hyper-V\\test\\instances' and p[0] ==\
  '_base':
         return 'C:\\Hyper-V\\test\\instances\\_base'
@@ -52,12 +52,12 @@ def join(a, *p):
 
 def exists(path):
     if path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714\
--1054db0f506d':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46\
+-ccfbbb618bf0':
         return False
     elif path ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714\
--1054db0f506d\\openstack_unit_test_vm_e8d0288a-15ba-4647-a714-1054db0f506d.vhd\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46\
+-ccfbbb618bf0\\openstack_unit_test_vm_fe88a3b0-6f96-4fa7-bf46-ccfbbb618bf0.vhd\
 ':
         return False
     elif path == 'C:\\Hyper-V\\test\\instances\\_base':

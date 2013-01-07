@@ -37,8 +37,9 @@ class MockProxy(object):
         elif isinstance(obj, tuple):
             p = tuple(self._get_proxy_object(i) for i in obj)
         elif isinstance(obj, dict):
-            p = {self._get_proxy_object(i[0]): self._get_proxy_object(i[1])
-                for i in obj.items()}
+            p = {}
+            for k, v in obj.items():
+                p[self._get_proxy_object(k)] = self._get_proxy_object(v)
         elif hasattr(obj, '__dict__'):
             p = MockProxy(obj, self._id_sequence)
         else:
@@ -111,7 +112,7 @@ class MockProxy(object):
 
     def __getitem__(self, key):
         p = self._get_proxy_object(self._wrapped[key])
-        self._add_recorded_ret_value('__getitem__', str(key), p)
+        self._add_recorded_ret_value('__getitem__', ((str(key),), ()), p)
         return p
 
     def __call__(self, *args, **kwargs):

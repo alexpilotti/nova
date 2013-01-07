@@ -38,7 +38,5 @@ def sleep(seconds=0):
             v = None
         elif _sleep_count_0 == 7:
             v = None
-        elif _sleep_count_0 == 8:
-            v = None
         _sleep_count_0 += 1
         return v

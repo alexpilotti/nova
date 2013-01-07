@@ -18,17 +18,17 @@ This file contains auto generated mock classes and functions.
 
 def generate_uid(topic, size=8):
     if topic == 'r':
-        return 'r-dofatgbz'
+        return 'r-a65c095n'
 
 
 def execute(*cmd, **kwargs):
     if len(cmd) == 8 and kwargs.get('attempts') == 1 and cmd[1] ==\
  'qemu-img.exe' and cmd[2] == 'convert' and cmd[3] == '-f' and cmd[4] == 'raw'\
  and cmd[5] == '-O' and cmd[6] == 'vpc' and cmd[7] ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff\\configdrive.iso' and cmd[8] ==\
- 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_ac388e12-d662-48a1-b444\
--fa15482b40ff\\configdrive.vhd':
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8\\configdrive.iso' and cmd[8] ==\
+ 'C:\\Hyper-V\\test\\instances\\openstack_unit_test_vm_4978e512-aa2d-492f-ac9f\
+-09ed770c00d8\\configdrive.vhd':
         v = ()
         v1 = ''
         v += (v1,)
